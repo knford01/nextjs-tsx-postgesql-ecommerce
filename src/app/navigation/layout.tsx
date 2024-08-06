@@ -1,7 +1,7 @@
 //Partial Rendering - One benefit of using layouts in Next.js is that on navigation, only the page components update while the layout won't re-render
 import { Metadata } from 'next';
 import { inter } from '@/styles/fonts';
-import "./globals.css";
+import "../globals.css";
 
 export const metadata: Metadata = {
   title: {

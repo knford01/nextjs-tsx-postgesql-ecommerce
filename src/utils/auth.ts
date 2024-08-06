@@ -18,6 +18,7 @@ async function getUser(email: string): Promise<User | undefined> {
 }
 
 export default async function verifyUserCredentials(email: string, password: string): Promise<User | null> {
+
     try {
         // Fetch the user by email
         const user = await getUser(email);
