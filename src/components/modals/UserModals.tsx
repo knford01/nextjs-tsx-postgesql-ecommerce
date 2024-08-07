@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { Box, Button, MenuItem, Modal, TextField, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { setUserStatus, fetchUserRoles, createUser, updateUser } from '@/db/user-data';
+import Image from 'next/image';
 
 interface UserModalProps {
     open: boolean;
@@ -222,10 +223,16 @@ export const UserModal: React.FC<UserModalProps> = ({ open, onClose, onSubmit, i
 
                 {formData.avatar && (
                     <Box sx={{ display: 'flex', justifyContent: 'center', my: 2 }}>
-                        <img
+                        <Image
                             src={formData.avatar}
                             alt="Avatar"
-                            style={{ width: '150px', height: '150px', borderRadius: '50%', border: `2px solid ${theme.palette.primary.main}`, imageRendering: 'auto' }}
+                            width={150}
+                            height={150}
+                            style={{
+                                borderRadius: '50%',
+                                border: `2px solid ${theme.palette.primary.main}`,
+                                objectFit: 'cover', // Replaces imageRendering: 'auto'
+                            }}
                         />
                     </Box>
                 )}

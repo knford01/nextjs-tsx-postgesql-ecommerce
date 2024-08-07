@@ -28,10 +28,15 @@ const UserDataGrid: React.FC<UserDataGridProps> = ({ filterId }) => {
     const [users, setUsers] = useState<User[]>([]);
     const [tooltipInfo, setTooltipInfo] = useState<{ rowId: string | number, field: string } | null>(null);
 
+    const loadUsers = useCallback(async () => {
+        const usersData = await fetchUsers();
+        setUsers(usersData);
+    }, []);
+
     useEffect(() => {
         loadUsers();
         console.log('UseEffect');
-    }, []);
+    }, [loadUsers]);
 
     // const interval = setInterval(() => {
     //     console.log('setInterval');
@@ -39,11 +44,6 @@ const UserDataGrid: React.FC<UserDataGridProps> = ({ filterId }) => {
     //     loadUsers();
     //     return () => clearInterval(interval); // Cleanup interval on unmount
     // }, 25000); // 25 seconds
-
-    const loadUsers = useCallback(async () => {
-        const usersData = await fetchUsers();
-        setUsers(usersData);
-    }, []);
 
     const handleCellClick = (params: GridCellParams) => {
         if (params.field !== 'avatar' && params.value) {
