@@ -1,6 +1,10 @@
 {
   "compilerOptions": {
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -17,10 +21,29 @@
         "name": "next"
       }
     ],
+    "baseUrl": ".", //Added
     "paths": {
-      "@/*": ["./src/*"]
-    }
+      "@/*": [
+        "./src/*"
+      ],
+      "@mui/*": [
+        "node_modules/@mui/*" //Added
+      ]
+    },
+    "types": [ //Added
+      "@types/node",
+      "@types/react",
+      "@mui/x-data-grid/themeAugmentation"
+    ]
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules"]
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "src/**/*" //Added
+  ],
+  "exclude": [
+    "node_modules"
+  ],
 }

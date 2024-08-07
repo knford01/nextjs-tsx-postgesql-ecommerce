@@ -1,25 +1,55 @@
-//Partial Rendering - One benefit of using layouts in Next.js is that on navigation, only the page components update while the layout won't re-render
-import { Metadata } from 'next';
-import { inter } from '@/styles/fonts';
-import "../globals.css";
+'use client';
 
-export const metadata: Metadata = {
-  title: {
-    template: '%s | AR-Source Dashboard',
-    default: 'AR-Source Software',
-  },
-  description: 'The official AR-Source Software Website.',
-  metadataBase: new URL('https://www.arsourcesoftware.com/'),
+import { Box } from '@mui/material';
+import React, { createContext, useState, useContext, ReactNode } from 'react';
+import { ThemeProvider, Theme } from '@mui/material/styles';
+import { defaultTheme } from '@/components/layout/themes';
+import SideNav from '@/components/layout/sidenav';
+import TopNav from '@/components/layout/topnav';
+
+interface ThemeContextProps {
+  theme: Theme;
+  setTheme: (theme: Theme) => void;
+}
+
+const ThemeContext = createContext<ThemeContextProps | undefined>(undefined);
+
+export const useThemeContext = () => {
+  const context = useContext(ThemeContext);
+  if (!context) {
+    throw new Error('useThemeContext must be used within a ThemeProvider');
+  }
+  return context;
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function Layout({ children }: { children: ReactNode }) {
+  const [collapsed, setCollapsed] = useState(false);
+  const [theme, setTheme] = useState<Theme>(defaultTheme);
+
   return (
-    <html lang="en">
-      <body className={`${inter.className} antialiased`}>{children}</body>
-    </html>
+    <ThemeContext.Provider value={{ theme, setTheme }}>
+      <ThemeProvider theme={theme}>
+        <div className="flex h-screen overflow-hidden">
+          <SideNav collapsed={collapsed} setCollapsed={setCollapsed} />
+          <div className="flex flex-col flex-grow">
+            <TopNav collapsed={collapsed} />
+            <Box
+              sx={{
+                flexGrow: 1,
+                overflowY: 'auto',
+                backgroundColor: theme.palette.background.paper, // Use theme background color
+                padding: { xs: 6 },
+                transition: 'all 0.3s',
+                marginLeft: collapsed ? '4rem' : '15rem',
+                paddingTop: '1rem',
+              }}
+            >
+              <Box sx={{ m: 5 }}></Box>
+              {children}
+            </Box>
+          </div>
+        </div>
+      </ThemeProvider>
+    </ThemeContext.Provider>
   );
-} 
+}

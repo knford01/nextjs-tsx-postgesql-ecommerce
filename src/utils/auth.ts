@@ -9,7 +9,7 @@ async function getUser(email: string): Promise<User | undefined> {
             u.id, u.first_name, u.last_name, u.email, u.role, ur.display as role_display, u.active, u.password 
         FROM users u 
         LEFT JOIN user_roles ur ON ur.id = u.role 
-        WHERE u.email=${email}`;
+        WHERE u.email=${email} and u.active=1`;
         return user.rows[0];
     } catch (error) {
         console.error('Failed to fetch user:', error);

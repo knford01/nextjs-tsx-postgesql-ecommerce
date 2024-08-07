@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { AtSymbolIcon, KeyIcon, ExclamationCircleIcon, ArrowLeftIcon } from '@heroicons/react/24/outline';
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
-import { Button } from '../ui/button';
+import { Button } from '../ui/Buttons';
 import Link from 'next/link';
 
 export default function LoginForm() {
