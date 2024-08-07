@@ -126,4 +126,16 @@ export async function setUserTheme(id: string, theme: string) {
     } catch (error) {
         return { message: 'Database Error: Failed to Update Theme.' };
     }
-}  
+}
+
+export async function fetchUserTheme(id: string) {
+    noStore();
+    try {
+        const data = await sql<User>`SELECT theme FROM users WHERE id = ${id}`;
+        const users = data.rows;
+        return users;
+    } catch (err) {
+        console.error('Database Error:', err);
+        throw new Error('Failed to fetch user theme.');
+    }
+}

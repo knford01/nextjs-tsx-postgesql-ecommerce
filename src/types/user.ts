@@ -7,6 +7,7 @@ export type User = {
     password: string;
     role: string;
     role_display: string;
+    theme: string;
     active: string;
 };
 

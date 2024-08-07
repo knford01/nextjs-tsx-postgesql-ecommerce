@@ -1,3 +1,5 @@
+// src/ components/layout/topnav.tsx
+
 'use client';
 
 import React from 'react';
@@ -7,12 +9,16 @@ import PaletteIcon from '@mui/icons-material/Palette';
 import { useThemeContext } from '@/app/navigation/layout';
 import { lightTheme, darkTheme, defaultTheme } from './themes';
 import { COMPANY_NAME } from '@/constants/appConstants';
+import { setUserTheme } from '@/db/user-data';
+import useSession from '@/hooks/useSession';
 
 interface TopNavProps {
     collapsed: boolean;
 }
 
 const TopNav: FC<TopNavProps> = ({ collapsed }) => {
+    const { user } = useSession();
+    let userId = user?.id;
 
     const { setTheme } = useThemeContext();
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -20,6 +26,17 @@ const TopNav: FC<TopNavProps> = ({ collapsed }) => {
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
+    };
+
+    const updateThemeInDatabase = async (theme: 'lightTheme' | 'darkTheme' | 'defaultTheme') => {
+        try {
+            if (!userId) {
+                throw new Error('User ID is undefined');
+            }
+            await setUserTheme(userId, theme);
+        } catch (error) {
+            console.error('Error updating theme in database:', error);
+        }
     };
 
     const handleClose = () => {
@@ -70,9 +87,9 @@ const TopNav: FC<TopNavProps> = ({ collapsed }) => {
                     },
                 }}
             >
-                <MenuItem onClick={() => { setTheme(lightTheme); handleClose(); }}>Light Theme</MenuItem>
-                <MenuItem onClick={() => { setTheme(darkTheme); handleClose(); }}>Dark Theme</MenuItem>
-                <MenuItem onClick={() => { setTheme(defaultTheme); handleClose(); }}>Default Theme</MenuItem>
+                <MenuItem onClick={() => { setTheme(lightTheme); updateThemeInDatabase('lightTheme'); handleClose(); }}>Light Theme</MenuItem>
+                <MenuItem onClick={() => { setTheme(darkTheme); updateThemeInDatabase('darkTheme'); handleClose(); }}>Dark Theme</MenuItem>
+                <MenuItem onClick={() => { setTheme(defaultTheme); updateThemeInDatabase('defaultTheme'); handleClose(); }}>Default Theme</MenuItem>
             </Menu>
         </Box>
     );

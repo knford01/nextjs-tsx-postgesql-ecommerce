@@ -24,6 +24,7 @@ export default function Dashboard() {
     return (
         <div>
             <h1>Welcome, {user.first_name} {user.last_name}</h1>
+            <p>ID: {user.id}</p>
             <p>Email: {user.email}</p>
             <p>Role: {user.role_display}</p>
             <p>Status: {user.active ? 'Active' : 'Inactive'}</p>

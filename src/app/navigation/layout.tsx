@@ -3,10 +3,11 @@
 import { Box } from '@mui/material';
 import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react';
 import { ThemeProvider, Theme } from '@mui/material/styles';
-import { defaultTheme } from '@/components/layout/themes';
+import { lightTheme, darkTheme, defaultTheme } from '@/components/layout/themes';
 import SideNav from '@/components/layout/sidenav';
 import TopNav from '@/components/layout/topnav';
 import { useRouter } from 'next/navigation';
+import { fetchUserTheme } from '@/db/user-data';
 
 interface ThemeContextProps {
   theme: Theme;
@@ -25,6 +26,7 @@ export const useThemeContext = () => {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   const router = useRouter();
+  const [theme, setTheme] = useState<Theme>(defaultTheme);
 
   useEffect(() => {
     const checkSession = async () => {
@@ -33,6 +35,24 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       if (!response.ok) {
         console.log('Bad Response');
         router.push('/logout'); // Redirect to the logout page if the session is not valid
+      } else {
+        const session = await response.json();
+        const userTheme = await fetchUserTheme(session.user.id);
+
+        // Assuming userTheme is an array and contains the user's theme as a string
+        const themeName = userTheme[0]?.theme || 'defaultTheme';
+        setTheme(defaultTheme);
+
+        switch (themeName) {
+          case 'lightTheme':
+            setTheme(lightTheme);
+            break;
+          case 'darkTheme':
+            setTheme(darkTheme);
+            break;
+          default:
+            setTheme(defaultTheme);
+        }
       }
     };
 
@@ -40,7 +60,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   }, [router]);
 
   const [collapsed, setCollapsed] = useState(false);
-  const [theme, setTheme] = useState<Theme>(defaultTheme);
 
   return (
     <ThemeContext.Provider value={{ theme, setTheme }}>
