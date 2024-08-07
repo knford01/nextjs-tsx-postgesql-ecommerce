@@ -15,7 +15,7 @@ export default function Dashboard() {
     if (!user) {
         return (
             <div>
-                <LogoutButton />
+                {/* <LogoutButton /> */}
                 <p>Not authenticated</p>
             </div>
         );
@@ -27,7 +27,7 @@ export default function Dashboard() {
             <p>Email: {user.email}</p>
             <p>Role: {user.role_display}</p>
             <p>Status: {user.active ? 'Active' : 'Inactive'}</p>
-            <LogoutButton /> {/* Logout button to log the user out */}
+            {/* <LogoutButton /> Logout button to log the user out */}
         </div>
     );
 }

@@ -1,11 +1,12 @@
 'use client';
 
 import { Box } from '@mui/material';
-import React, { createContext, useState, useContext, ReactNode } from 'react';
+import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react';
 import { ThemeProvider, Theme } from '@mui/material/styles';
 import { defaultTheme } from '@/components/layout/themes';
 import SideNav from '@/components/layout/sidenav';
 import TopNav from '@/components/layout/topnav';
+import { useRouter } from 'next/navigation';
 
 interface ThemeContextProps {
   theme: Theme;
@@ -23,6 +24,21 @@ export const useThemeContext = () => {
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
+  const router = useRouter();
+
+  useEffect(() => {
+    const checkSession = async () => {
+      const response = await fetch('/api/auth/session');
+
+      if (!response.ok) {
+        console.log('Bad Response');
+        router.push('/logout'); // Redirect to the logout page if the session is not valid
+      }
+    };
+
+    checkSession();
+  }, [router]);
+
   const [collapsed, setCollapsed] = useState(false);
   const [theme, setTheme] = useState<Theme>(defaultTheme);
 

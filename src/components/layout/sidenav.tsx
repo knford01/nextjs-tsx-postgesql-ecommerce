@@ -1,31 +1,17 @@
-// src/components/layout/layout.tsx
+// src/components/layout/sidenav.tsx
 
 'use client';
 
-import { ChevronLeftIcon, PowerIcon } from '@heroicons/react/24/outline';
+import { ChevronLeftIcon } from '@heroicons/react/24/outline';
 import NavLinks from '@/components/layout/nav-links';
 import { useTheme, Box, Button } from '@mui/material';
-import { useRouter } from 'next/navigation';
+import LogoutButton from '../ui/LogoutButton';
 
 export default function SideNav({ collapsed, setCollapsed }: { collapsed: boolean, setCollapsed: (collapsed: boolean) => void }) {
   const theme = useTheme();
 
   const toggleCollapse = () => {
     setCollapsed(!collapsed);
-  };
-
-  const router = useRouter();
-
-  const handleLogout = async () => {
-    const response = await fetch('/api/auth/logout', {
-      method: 'GET',
-    });
-
-    console.log(response);
-
-    if (response.ok) {
-      router.push('/login'); // Redirect to login page after successful logout
-    }
   };
 
   return (
@@ -52,34 +38,7 @@ export default function SideNav({ collapsed, setCollapsed }: { collapsed: boolea
         <NavLinks collapsed={collapsed} />
       </Box>
       <Box sx={{ mb: 1, ml: 1, mr: 1 }}>
-        <Box
-          component="button"
-          onClick={handleLogout} // Attach onClick event here
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 2,
-            height: 48,
-            textDecoration: 'none',
-            fontWeight: 'medium',
-            borderColor: 'black',
-            backgroundColor: `${theme.palette.warning.main} !important`,
-            color: theme.palette.text.primary,
-            '&:hover': {
-              backgroundColor: `${theme.palette.warning.dark} !important`,
-              color: theme.palette.text.secondary,
-            },
-            width: '100%',
-            transition: 'background-color 0.3s, color 0.3s',
-            borderRadius: 2,
-            marginRight: 1,
-            marginBottom: 1,
-          }}
-        >
-          <PowerIcon className="w-6 ml-3" />
-          {!collapsed && <div>Sign Out</div>}
-        </Box>
-
+        <LogoutButton theme={theme} collapsed={collapsed} />
       </Box>
     </Box>
   );
