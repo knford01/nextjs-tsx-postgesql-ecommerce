@@ -22,7 +22,7 @@ export const useThemeContext = () => {
   return context;
 };
 
-export default function Layout({ children }: { children: ReactNode }) {
+export default function RootLayout({ children }: { children: ReactNode }) {
   const [collapsed, setCollapsed] = useState(false);
   const [theme, setTheme] = useState<Theme>(defaultTheme);
 

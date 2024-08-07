@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { AtSymbolIcon, KeyIcon, ExclamationCircleIcon, ArrowLeftIcon } from '@heroicons/react/24/outline';
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
-import { Button } from '../ui/Buttons';
+import { FormButton } from '../ui/Buttons';
 import Link from 'next/link';
 
 export default function LoginForm() {
@@ -114,18 +114,18 @@ export default function LoginForm() {
 
 function LoginButton() {
   return (
-    <Button type="submit" className="mt-4 w-full hover:scale-105" style={{ backgroundColor: '#26394e' }}>
+    <FormButton type="submit" className="mt-4 w-full hover:scale-105" style={{ backgroundColor: '#26394e' }}>
       Log in <ArrowRightIcon className="ml-auto h-5 w-5 text-gray-50" />
-    </Button>
+    </FormButton>
   );
 }
 
 function CancelButton() {
   return (
     <Link href="/">
-      <Button type="button" className="mt-4 w-full hover:scale-105" style={{ backgroundColor: '#eb3c00' }}>
+      <FormButton type="button" className="mt-4 w-full hover:scale-105" style={{ backgroundColor: '#eb3c00' }}>
         Cancel <ArrowLeftIcon className="ml-auto h-5 w-5 text-gray-50" />
-      </Button>
+      </FormButton>
     </Link>
   );
 }
