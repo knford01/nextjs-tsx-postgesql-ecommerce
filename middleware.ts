@@ -2,14 +2,17 @@
 
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { getSession } from './src/utils/session'; // Update the import path as needed
+import { getSession } from './src/utils/session'; // Ensure this is compatible with the Edge runtime
 
 export async function middleware(req: NextRequest) {
+    // Get the session (make sure this function is compatible with Next.js Edge middleware)
     const session = await getSession(req);
+
+    console.log(session);
 
     // Check if the user session exists
     if (!session || !session.user) {
-        // If not, redirect to the login page
+        // Redirect to login page
         const loginUrl = new URL('/login', req.url);
         return NextResponse.redirect(loginUrl);
     }
@@ -18,7 +21,8 @@ export async function middleware(req: NextRequest) {
     return NextResponse.next();
 }
 
-// Specify which paths the middleware should run on
+// Configure the middleware to run on specific paths
 export const config = {
-    matcher: ['/((?!api|_next/static|_next/image|.*\\.png$).*)'],//specify specific paths to run on\\
+    matcher: ['/((?!api|_next/static|_next/image|.*\\.(png|jpg|jpeg|gif|svg|webp)$).*)'],
 };
+

@@ -21,6 +21,8 @@ export default function SideNav({ collapsed, setCollapsed }: { collapsed: boolea
       method: 'GET',
     });
 
+    console.log(response);
+
     if (response.ok) {
       router.push('/login'); // Redirect to login page after successful logout
     }
@@ -50,35 +52,34 @@ export default function SideNav({ collapsed, setCollapsed }: { collapsed: boolea
         <NavLinks collapsed={collapsed} />
       </Box>
       <Box sx={{ mb: 1, ml: 1, mr: 1 }}>
-        <form onClick={handleLogout}>
-          <Box
-            component="button"
-            type="submit"
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 2,
-              height: 48,
-              textDecoration: 'none',
-              fontWeight: 'medium',
-              borderColor: 'black',
-              backgroundColor: `${theme.palette.warning.main} !important`,
-              color: theme.palette.text.primary,
-              '&:hover': {
-                backgroundColor: `${theme.palette.warning.dark} !important`,
-                color: theme.palette.text.secondary,
-              },
-              width: '100%',
-              transition: 'background-color 0.3s, color 0.3s',
-              borderRadius: 2,
-              marginRight: 1,
-              marginBottom: 1,
-            }}
-          >
-            <PowerIcon className="w-6 ml-3" />
-            {!collapsed && <div>Sign Out</div>}
-          </Box>
-        </form>
+        <Box
+          component="button"
+          onClick={handleLogout} // Attach onClick event here
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 2,
+            height: 48,
+            textDecoration: 'none',
+            fontWeight: 'medium',
+            borderColor: 'black',
+            backgroundColor: `${theme.palette.warning.main} !important`,
+            color: theme.palette.text.primary,
+            '&:hover': {
+              backgroundColor: `${theme.palette.warning.dark} !important`,
+              color: theme.palette.text.secondary,
+            },
+            width: '100%',
+            transition: 'background-color 0.3s, color 0.3s',
+            borderRadius: 2,
+            marginRight: 1,
+            marginBottom: 1,
+          }}
+        >
+          <PowerIcon className="w-6 ml-3" />
+          {!collapsed && <div>Sign Out</div>}
+        </Box>
+
       </Box>
     </Box>
   );

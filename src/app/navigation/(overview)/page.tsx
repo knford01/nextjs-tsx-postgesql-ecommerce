@@ -3,6 +3,7 @@
 'use client';
 
 import useSession from '@/hooks/useSession';
+import LogoutButton from '@/components/ui/LogoutButton';
 
 export default function Dashboard() {
     const { user, loading } = useSession();
@@ -12,7 +13,12 @@ export default function Dashboard() {
     }
 
     if (!user) {
-        return <p>Not authenticated</p>;
+        return (
+            <div>
+                <LogoutButton />
+                <p>Not authenticated</p>
+            </div>
+        );
     }
 
     return (
@@ -21,6 +27,7 @@ export default function Dashboard() {
             <p>Email: {user.email}</p>
             <p>Role: {user.role_display}</p>
             <p>Status: {user.active ? 'Active' : 'Inactive'}</p>
+            <LogoutButton /> {/* Logout button to log the user out */}
         </div>
     );
 }

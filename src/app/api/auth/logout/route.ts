@@ -15,4 +15,4 @@ export async function GET() {
     const response = NextResponse.json({ success: true });
     response.headers.set('Set-Cookie', cookie);
     return response;
-}
+} 
