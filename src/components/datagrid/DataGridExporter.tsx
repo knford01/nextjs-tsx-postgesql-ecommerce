@@ -1,4 +1,4 @@
-// app/ui/components/DataGridExporter.tsx
+// src/components/datagrid/DataGridExporter.tsx
 
 'use client';
 

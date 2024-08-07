@@ -40,6 +40,7 @@ export const UserModal: React.FC<UserModalProps> = ({ open, onClose, onSubmit, i
         InputProps: {
             sx: {
                 '& .MuiInputBase-input': {
+                    bgcolor: `${theme.palette.text.primary} !important`,
                     color: `${theme.palette.primary.main} !important`,
                     height: '2.5em',
                     padding: '10px 14px',
@@ -231,7 +232,7 @@ export const UserModal: React.FC<UserModalProps> = ({ open, onClose, onSubmit, i
                             style={{
                                 borderRadius: '50%',
                                 border: `2px solid ${theme.palette.primary.main}`,
-                                objectFit: 'cover', // Replaces imageRendering: 'auto'
+                                objectFit: 'cover', // Replaces imageRendering: 'auto' 
                             }}
                         />
                     </Box>

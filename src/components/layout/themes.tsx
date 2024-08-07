@@ -72,6 +72,14 @@ export const lightTheme = createTheme({
                         color: '#000000', // Black text color for menu
                     },
                 },
+                row: {
+                    '&.Mui-selected': {
+                        backgroundColor: '#b2ebf2',
+                        '&:hover': {
+                            backgroundColor: '#b2ebf2', // Ensure the background remains the same on hover
+                        },
+                    },
+                },
             },
         },
         MuiSvgIcon: {
@@ -179,6 +187,14 @@ export const darkTheme = createTheme({
                     '& .MuiPaper-root': {
                         backgroundColor: '#2c2c2c', // Dark gray for menu background
                         color: '#ffffff', // White text color for menu
+                    },
+                },
+                row: {
+                    '&.Mui-selected': {
+                        backgroundColor: '#444444',
+                        '&:hover': {
+                            backgroundColor: '#444444', // Ensure the background remains the same on hover
+                        },
                     },
                 },
             },
@@ -290,8 +306,17 @@ export const defaultTheme = createTheme({
                         color: '#ffffff',
                     },
                 },
+                row: {
+                    '&.Mui-selected': {
+                        backgroundColor: '#494B68',
+                        '&:hover': {
+                            backgroundColor: '#494B68', // Ensure the background remains the same on hover
+                        },
+                    },
+                },
             },
         },
+
         MuiSvgIcon: {
             styleOverrides: {
                 root: {
