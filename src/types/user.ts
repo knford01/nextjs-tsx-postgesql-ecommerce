@@ -8,6 +8,7 @@ export type User = {
     role: string;
     role_display: string;
     theme: string;
+    avatar: string;
     active: string;
 };
 

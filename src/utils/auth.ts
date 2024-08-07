@@ -6,7 +6,7 @@ async function getUser(email: string): Promise<User | undefined> {
     try {
         const user = await sql<User>`
         SELECT 
-            u.id, u.first_name, u.last_name, u.email, u.role, ur.display as role_display, u.active, u.password 
+            u.id, u.first_name, u.last_name, u.email, u.role, ur.display as role_display, u.avatar, u.active, u.password 
         FROM users u 
         LEFT JOIN user_roles ur ON ur.id = u.role 
         WHERE u.email=${email} and u.active=1`;

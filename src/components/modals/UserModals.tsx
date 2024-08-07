@@ -194,7 +194,7 @@ export const UserModal: React.FC<UserModalProps> = ({ open, onClose, onSubmit, i
                 <TextField
                     label="Password"
                     name="password"
-                    value={formData.password || ''}
+                    value={id ? 'Enter New Password to Change' : ''}
                     onChange={handleChange}
                     required
                     error={errors.password}

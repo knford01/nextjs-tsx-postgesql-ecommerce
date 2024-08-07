@@ -33,15 +33,18 @@ const UserDataGrid: React.FC<UserDataGridProps> = ({ filterId }) => {
             flex: 0.2,
             sortable: false,
             renderCell: (params) => (
-                <Image
-                    src={params.value}
-                    alt="Avatar"
-                    width={35}
-                    height={35}
-                    style={{ borderRadius: '50%', marginTop: '8px', maxWidth: 35, maxHeight: 35 }}
-                />
+                params.value ? (
+                    <Image
+                        src={params.value}
+                        alt="Avatar"
+                        width={35}
+                        height={35}
+                        style={{ borderRadius: '50%', marginTop: '8px', maxWidth: 35, maxHeight: 35 }}
+                    />
+                ) : null // If no avatar, render nothing
             ),
         },
+
         {
             field: 'first_name',
             headerName: 'First Name',
