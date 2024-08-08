@@ -26,7 +26,7 @@ export const UserModal: React.FC<UserModalProps> = ({ open, onClose, onSubmit, i
 
     useEffect(() => {
         const fetchRoles = async () => {
-            const roles = await fetchUserRoles();
+            const roles = await fetchUserRoles(1);
             setRoles(roles);
         };
         fetchRoles();

@@ -7,18 +7,6 @@ import { revalidatePath } from 'next/cache'; //clear this cache that stores the 
 import { unstable_noStore as noStore } from 'next/cache';
 import { User, UserRole } from '@/types/user';
 
-export async function fetchUserRoles() {
-    noStore();
-    try {
-        const data = await sql<UserRole>`SELECT id, role, display FROM user_roles ORDER BY role ASC`;
-        const users = data.rows;
-        return users;
-    } catch (err) {
-        console.error('Database Error:', err);
-        throw new Error('Failed to fetch all rolls.');
-    }
-}
-
 export async function fetchUsers() {
     noStore();
     try {
@@ -118,6 +106,18 @@ export async function setUserStatus(id: string, active: number) {
     }
 }
 
+export async function fetchUserTheme(id: string) {
+    noStore();
+    try {
+        const data = await sql<User>`SELECT theme FROM users WHERE id = ${id}`;
+        const users = data.rows;
+        return users;
+    } catch (err) {
+        console.error('Database Error:', err);
+        throw new Error('Failed to fetch user theme.');
+    }
+}
+
 export async function setUserTheme(id: string, theme: string) {
     try {
         await sql`UPDATE users set theme = ${theme} WHERE id = ${id}`;
@@ -128,14 +128,45 @@ export async function setUserTheme(id: string, theme: string) {
     }
 }
 
-export async function fetchUserTheme(id: string) {
+export async function fetchUserRoles(active?: number) {
     noStore();
     try {
-        const data = await sql<User>`SELECT theme FROM users WHERE id = ${id}`;
+        let data;
+
+        if (active === 1 || active === 2) {
+            // Query with WHERE clause
+            data = await sql<UserRole>`SELECT id, role, display, active FROM user_roles WHERE active = ${active} ORDER BY role ASC`;
+        } else {
+            // Query without WHERE clause
+            data = await sql<UserRole>`SELECT id, role, display, active FROM user_roles ORDER BY role ASC`;
+        }
+
         const users = data.rows;
         return users;
     } catch (err) {
         console.error('Database Error:', err);
-        throw new Error('Failed to fetch user theme.');
+        throw new Error('Failed to fetch user roles.');
+    }
+}
+
+export async function setUserRoles(id: number, data: any) {
+    try {
+        await sql`UPDATE user_roles SET role = ${data.role}, display = ${data.display}, active = ${data.active} WHERE id = ${id}`;
+    } catch (error) {
+        throw new Error('Database Error: Failed to Update User.');
+    }
+}
+
+export async function createRole(data: any) {
+    console.log(data);
+
+    try {
+        await sql`
+            INSERT INTO user_roles 
+                (role, display, active)
+            VALUES 
+                (${data.role}, ${data.display}, 1)`;
+    } catch (error) {
+        throw new Error('Failed to Create User');
     }
 }

@@ -1,34 +1,19 @@
-// src/pages/dashboard.tsx
+// src/app/navigation/settings/page.tsx
 
 'use client';
 
+import SettingsDashboard from '@/components/cards/SettingsDashboard';
 import useSession from '@/hooks/useSession';
-import LogoutButton from '@/components/ui/LogoutButton';
+import { Container } from '@mui/material';
 
-export default function Dashboard() {
+export default function Settings() {
     const { user, loading } = useSession();
 
-    if (loading) {
-        return <p>Loading...</p>;
-    }
-
-    if (!user) {
-        return (
-            <div>
-                {/* <LogoutButton /> */}
-                <p>Not authenticated</p>
-            </div>
-        );
-    }
+    if (loading) return <div>Loading...</div>;
 
     return (
-        <div style={{ marginTop: 40 }}>
-            <h1>Welcome, {user.first_name} {user.last_name}</h1>
-            <p>ID: {user.id}</p>
-            <p>Email: {user.email}</p>
-            <p>Role: {user.role_display}</p>
-            <p>Status: {user.active ? 'Active' : 'Inactive'}</p>
-            {/* <LogoutButton /> Logout button to log the user out */}
-        </div>
+        <Container sx={{ pt: 6 }}>
+            <SettingsDashboard />
+        </Container>
     );
 }

@@ -16,6 +16,7 @@ export type UserRole = {
     id: number;
     role: string;
     display: string;
+    active: number;
 };
 
 export interface UserProfile {
