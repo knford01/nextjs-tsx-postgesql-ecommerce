@@ -1,3 +1,5 @@
+// src/app/navigation/layout.tsx
+
 'use client';
 
 import { Box } from '@mui/material';
@@ -27,6 +29,7 @@ export const useThemeContext = () => {
 export default function RootLayout({ children }: { children: ReactNode }) {
   const router = useRouter();
   const [theme, setTheme] = useState<Theme>(defaultTheme);
+  const [collapsed, setCollapsed] = useState(false);
 
   useEffect(() => {
     const checkSession = async () => {
@@ -39,7 +42,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         const session = await response.json();
         const userTheme = await fetchUserTheme(session.user.id);
 
-        // Assuming userTheme is an array and contains the user's theme as a string
         const themeName = userTheme[0]?.theme || 'defaultTheme';
         setTheme(defaultTheme);
 
@@ -59,30 +61,34 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     checkSession();
   }, [router]);
 
-  const [collapsed, setCollapsed] = useState(false);
-
   return (
     <ThemeContext.Provider value={{ theme, setTheme }}>
       <ThemeProvider theme={theme}>
         <div className="flex h-screen overflow-hidden">
           <SideNav collapsed={collapsed} setCollapsed={setCollapsed} />
-          <div className="flex flex-col flex-grow">
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              flexGrow: 1,
+              transition: 'margin-left 0.3s',
+              marginLeft: collapsed ? '64px' : '240px', // Adjust based on collapsed state
+            }}
+          >
             <TopNav collapsed={collapsed} />
             <Box
               sx={{
                 flexGrow: 1,
                 overflowY: 'auto',
-                backgroundColor: theme.palette.background.paper, // Use theme background color
-                padding: { xs: 6 },
+                backgroundColor: theme.palette.background.paper,
+                padding: { xs: 4 },
                 transition: 'all 0.3s',
-                marginLeft: collapsed ? '4rem' : '15rem',
                 paddingTop: '1rem',
               }}
             >
-              <Box sx={{ m: 5 }}></Box>
               {children}
             </Box>
-          </div>
+          </Box>
         </div>
       </ThemeProvider>
     </ThemeContext.Provider>

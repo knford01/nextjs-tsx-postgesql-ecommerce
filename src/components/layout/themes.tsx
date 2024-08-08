@@ -323,6 +323,14 @@ export const defaultTheme = createTheme({
                     color: '#ffffff',
                 },
             },
-        }
+        },
+
+        MuiSelect: {
+            styleOverrides: {
+                icon: {
+                    color: '#ffffff', // Color of the down arrow icon in the select component
+                },
+            },
+        },
     },
 });

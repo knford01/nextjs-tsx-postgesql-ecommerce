@@ -22,7 +22,7 @@ export default function Dashboard() {
     }
 
     return (
-        <div>
+        <div style={{ marginTop: 40 }}>
             <h1>Welcome, {user.first_name} {user.last_name}</h1>
             <p>ID: {user.id}</p>
             <p>Email: {user.email}</p>

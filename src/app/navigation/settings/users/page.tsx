@@ -2,15 +2,9 @@
 
 import React from 'react';
 import Container from '@mui/material/Container';
-import { Metadata } from 'next';
 import dynamic from 'next/dynamic';
 
-// Dynamically import the UserDataGrid component
 const UserDataGrid = dynamic(() => import('@/components/datagrid/UserDataGrid'), { ssr: false });
-
-export const metadata: Metadata = {
-    title: 'Users',
-};
 
 export default function Page({
     searchParams,
@@ -22,8 +16,17 @@ export default function Page({
     };
 }) {
     return (
-        <Container maxWidth="xl" sx={{ m: 0, mt: 5, width: '100%', height: '85%' }}>
+        <Container
+            maxWidth={false}
+            sx={{
+                m: 0,
+                mt: 5,
+                width: 'auto', // Ensure it takes full width of the parent container
+                height: 'auto',
+                transition: 'all 0.3s', // Transition for smooth resizing
+            }}
+        >
             <UserDataGrid filterId={searchParams?.id} />
         </Container>
     );
-} 
+}

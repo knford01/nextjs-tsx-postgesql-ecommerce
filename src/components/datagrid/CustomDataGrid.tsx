@@ -77,7 +77,7 @@ const CustomDataGrid: React.FC<CustomDataGridProps> = ({
     });
 
     return (
-        <Box sx={{ height: '100%', width: '100%', borderRadius: 2 }}>
+        <Box sx={{ borderRadius: 2, width: '100%', flexGrow: 1 }}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1, alignItems: 'center' }}>
                 <DataGridExporter data={filteredSelectedRows} fileName={`${fileName}.xlsx`} />
                 <Box sx={{ display: 'flex', gap: 1 }}>
@@ -96,6 +96,7 @@ const CustomDataGrid: React.FC<CustomDataGridProps> = ({
                 onRowSelectionModelChange={handleSelectionChange}
             />
         </Box>
+
     );
 };
 
