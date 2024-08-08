@@ -10,7 +10,6 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import EditIcon from '@mui/icons-material/Edit';
 import { useThemeContext } from '@/app/navigation/layout';
 import { lightTheme, darkTheme, defaultTheme } from './themes';
-import { COMPANY_NAME } from '@/constants/appConstants';
 import { setUserTheme } from '@/db/user-data';
 import useSession from '@/hooks/useSession';
 import { UserModal } from '../modals/UserModals';
@@ -88,9 +87,7 @@ const TopNav: FC<TopNavProps> = ({ collapsed }) => {
                 marginLeft: collapsed ? '64px' : '240px',
             }}
         >
-            <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center', pl: 2 }}>
-                <h1 className="text-lg font-bold">{COMPANY_NAME}</h1>
-            </Box>
+            <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center', pl: 2 }}></Box>
 
             {/* Greeting and Avatar/Icon */}
             <Box
@@ -108,7 +105,7 @@ const TopNav: FC<TopNavProps> = ({ collapsed }) => {
                 onClick={(event: React.MouseEvent<HTMLDivElement>) => handleMenuClick(event as unknown as React.MouseEvent<HTMLButtonElement>)}
             >
                 <Typography variant="body1" sx={{ mr: 1 }}>
-                    Hello, {userName}
+                    Hello {userName}
                 </Typography>
                 <IconButton
                     sx={{

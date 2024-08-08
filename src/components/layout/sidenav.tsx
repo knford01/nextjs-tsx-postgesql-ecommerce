@@ -1,11 +1,10 @@
-// src/components/layout/sidenav.tsx
-
 'use client';
 
 import { ChevronLeftIcon } from '@heroicons/react/24/outline';
 import NavLinks from '@/components/layout/nav-links';
-import { useTheme, Box, Button } from '@mui/material';
+import { useTheme, Box, Button, Typography } from '@mui/material';
 import LogoutButton from '../ui/LogoutButton';
+import { COMPANY_NAME } from '@/constants/appConstants';
 
 export default function SideNav({ collapsed, setCollapsed }: { collapsed: boolean, setCollapsed: (collapsed: boolean) => void }) {
   const theme = useTheme();
@@ -29,14 +28,28 @@ export default function SideNav({ collapsed, setCollapsed }: { collapsed: boolea
         flexDirection: 'column',
       }}
     >
-      <Box sx={{ display: 'flex', justifyContent: 'end', padding: '16px' }}>
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          padding: '16px'
+        }}
+      >
+        {!collapsed && (
+          <Typography sx={{ color: 'white', fontWeight: 'bold', pl: 2 }}>
+            {COMPANY_NAME}
+          </Typography>
+        )}
         <Button onClick={toggleCollapse} sx={{ color: 'white', minWidth: 0, padding: 0 }}>
           <ChevronLeftIcon className={`w-6 transform ${collapsed ? 'rotate-180' : ''}`} />
         </Button>
       </Box>
+
       <Box sx={{ flexGrow: 1 }}>
         <NavLinks collapsed={collapsed} />
       </Box>
+
       <Box sx={{ mb: 1, ml: 1, mr: 1 }}>
         <LogoutButton theme={theme} collapsed={collapsed} />
       </Box>
