@@ -3,17 +3,12 @@
 'use client';
 
 import SettingsDashboard from '@/components/cards/SettingsDashboard';
-import useSession from '@/hooks/useSession';
 import { Container } from '@mui/material';
 
 export default function Settings() {
-    const { user, loading } = useSession();
-
-    if (loading) return <div>Loading...</div>;
-
     return (
-        <Container sx={{ pt: 6 }}>
+        <Container sx={{ pt: 2 }}>
             <SettingsDashboard />
         </Container>
     );
-}
+} 

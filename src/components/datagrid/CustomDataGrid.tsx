@@ -6,7 +6,7 @@ import React, { useState } from 'react';
 import Box from '@mui/material/Box';
 import { DataGrid, GridColDef, GridCellParams, GridRowSelectionModel } from '@mui/x-data-grid';
 import Tooltip from '@mui/material/Tooltip';
-import { Button, useTheme } from '@mui/material';
+import { useTheme } from '@mui/material';
 import DataGridExporter from './DataGridExporter';
 
 interface CustomDataGridProps {

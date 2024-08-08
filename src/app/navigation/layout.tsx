@@ -2,7 +2,7 @@
 
 'use client';
 
-import { Box } from '@mui/material';
+import { Box, Container } from '@mui/material';
 import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react';
 import { ThemeProvider, Theme } from '@mui/material/styles';
 import { lightTheme, darkTheme, defaultTheme } from '@/components/layout/themes';
@@ -10,6 +10,7 @@ import SideNav from '@/components/layout/sidenav';
 import TopNav from '@/components/layout/topnav';
 import { useRouter } from 'next/navigation';
 import { fetchUserTheme } from '@/db/user-data';
+import Breadcrumbs from '@/components/ui/Breadcrumbs';
 
 interface ThemeContextProps {
   theme: Theme;
@@ -86,6 +87,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                 paddingTop: '1rem',
               }}
             >
+              <Box sx={{ pt: 5, pl: 1 }}> {/* Adjust padding-left (pl) to control alignment */}
+                <Breadcrumbs />
+              </Box>
               {children}
             </Box>
           </Box>
