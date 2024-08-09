@@ -15,7 +15,7 @@ const links = [
   { id: 3, name: 'Employees', href: '/navigation/hr', icon: UserGroupIcon },
   { id: 4, name: 'Project Manager', href: '/navigation/pm', icon: RectangleGroupIcon },
   { id: 5, name: 'Warehousing', href: '/navigation/wm', icon: TruckIcon },
-  { id: 6, name: 'Settings', href: '/navigation/settings', icon: CogIcon } // Update name and icon
+  { id: 6, name: 'Settings', href: '/navigation/settings', icon: CogIcon }
 ];
 
 export default function NavLinks({ collapsed }: { collapsed: boolean }) {
@@ -40,7 +40,12 @@ export default function NavLinks({ collapsed }: { collapsed: boolean }) {
                 textDecoration: 'none',
                 fontWeight: 'medium',
                 borderColor: 'black',
-                backgroundColor: pathname === link.href ? theme.palette.action.selected : theme.palette.primary.main,
+                backgroundColor:
+                  link.href !== '/navigation' && pathname.includes(link.href)
+                    ? theme.palette.action.selected
+                    : link.href === '/navigation' && pathname === '/navigation'
+                      ? theme.palette.action.selected
+                      : theme.palette.primary.main,
                 color: theme.palette.text.primary,
                 '&:hover': {
                   backgroundColor: theme.palette.action.hover,
