@@ -149,6 +149,18 @@ export async function fetchUserRoles(active?: number) {
     }
 }
 
+export async function fetchRoleById(id: string) {
+    noStore();
+    try {
+        let data = await sql<UserRole>`SELECT id, role, display, active FROM user_roles WHERE id = ${id} ORDER BY role ASC`;
+        const users = data.rows;
+        return users;
+    } catch (err) {
+        console.error('Database Error:', err);
+        throw new Error('Failed to fetch user roles.');
+    }
+}
+
 export async function setUserRoles(id: number, data: any) {
     try {
         await sql`UPDATE user_roles SET role = ${data.role}, display = ${data.display}, active = ${data.active} WHERE id = ${id}`;

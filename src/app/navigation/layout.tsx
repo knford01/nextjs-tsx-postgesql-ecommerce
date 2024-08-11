@@ -11,6 +11,7 @@ import TopNav from '@/components/layout/topnav';
 import { useRouter } from 'next/navigation';
 import { fetchUserTheme } from '@/db/user-data';
 import Breadcrumbs from '@/components/ui/Breadcrumbs';
+import { ToastContainer, toast } from 'react-toastify';
 
 interface ThemeContextProps {
   theme: Theme;
@@ -87,8 +88,20 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                 paddingTop: '1rem',
               }}
             >
-              <Box sx={{ pt: 5, pl: 1 }}> {/* Adjust padding-left (pl) to control alignment */}
+              <Box sx={{ pt: 5, pl: 1, display: 'flex', justifyContent: 'space-between' }}>
                 <Breadcrumbs />
+                <ToastContainer
+                  position="top-right"
+                  autoClose={5000}
+                  hideProgressBar={false}
+                  newestOnTop={false}
+                  closeOnClick
+                  rtl={false}
+                  pauseOnFocusLoss
+                  draggable
+                  pauseOnHover
+                  theme="colored"
+                />
               </Box>
               {children}
             </Box>
