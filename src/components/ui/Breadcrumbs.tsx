@@ -33,7 +33,7 @@ const Breadcrumbs: React.FC = () => {
                 const to = `/${pathnames.slice(0, index + 1).join('/')}`;
 
                 return isLast ? (
-                    <Typography color="textPrimary" key={to} sx={{ color: theme.palette.primary.main }}>
+                    <Typography color="textPrimary" key={to} sx={{ color: theme.palette.primary.main, fontSize: '18px', fontWeight: 'bold' }}>
                         {value.slice() == 'navigation' ? 'Dashboard' : value.charAt(0).toUpperCase() + value.slice(1)}
                     </Typography>
                 ) : (

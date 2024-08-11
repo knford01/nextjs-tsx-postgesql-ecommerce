@@ -2,20 +2,24 @@
 
 'use client';
 
-import { Card, CardContent, Typography, Grid, Box } from '@mui/material';
 import Link from 'next/link';
 import { useTheme } from '@mui/material';
+import { Card, CardContent, Typography, Grid, Box } from '@mui/material';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
 import PeopleIcon from '@mui/icons-material/People';
 import SecurityIcon from '@mui/icons-material/Security';
 import SettingsIcon from '@mui/icons-material/Settings';
+import InventoryIcon from '@mui/icons-material/Inventory';
 
 export default function SettingsDashboard() {
     const theme = useTheme();
 
     const settingsItems = [
-        { id: 'roles_access', name: 'Role Access', description: 'Assign roles their access levels', icon: <SecurityIcon /> },
-        { id: 'access', name: 'System Access', description: 'Define system-wide access', icon: <SettingsIcon /> },
-        { id: 'users', name: 'Users', description: 'Manage users and their permissions', icon: <PeopleIcon /> },
+        { id: 'addresses', name: 'Addresses', description: 'Create and update system addresses', icon: <LocationOnIcon /> },
+        { id: 'items', name: 'Items', description: 'Create and update items', icon: <InventoryIcon /> },
+        { id: 'access', name: 'Role Access', description: 'Assign roles their access levels', icon: <SecurityIcon /> },
+        { id: 'permissions', name: 'System Permissions', description: 'Define system-wide permissions', icon: <SettingsIcon /> },
+        { id: 'users', name: 'Users', description: 'Manage users and their individual permissions', icon: <PeopleIcon /> },
         { id: 'roles', name: 'User Roles', description: 'Manage user roles', icon: <SecurityIcon /> },
     ];
 
@@ -42,7 +46,7 @@ export default function SettingsDashboard() {
                                             {item.name}
                                         </Typography>
                                     </Box>
-                                    <hr></hr>
+                                    <hr style={{ borderColor: theme.palette.warning.main }}></hr>
                                     <Typography variant="body2" color={theme.palette.text.primary} mt={1}>
                                         {item.description}
                                     </Typography>

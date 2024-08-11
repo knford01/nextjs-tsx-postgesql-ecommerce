@@ -2,7 +2,7 @@
 
 'use client';
 
-import { HomeIcon, UserPlusIcon, ShoppingCartIcon, RectangleGroupIcon, TruckIcon, UserGroupIcon, CogIcon } from '@heroicons/react/24/outline';
+import { CalendarIcon, HomeIcon, UserPlusIcon, ShoppingCartIcon, RectangleGroupIcon, TruckIcon, UserGroupIcon, CogIcon, ArchiveBoxIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useTheme, Box, Tooltip } from '@mui/material';
@@ -10,12 +10,14 @@ import clsx from 'clsx';
 
 const links = [
   { id: 0, name: 'Dashboard', href: '/navigation', icon: HomeIcon },
-  { id: 1, name: 'Customers', href: '/navigation/crm', icon: UserPlusIcon },
-  { id: 2, name: 'EDI Fulfillment', href: '/navigation/edi', icon: ShoppingCartIcon },
-  { id: 3, name: 'Employees', href: '/navigation/hr', icon: UserGroupIcon },
-  { id: 4, name: 'Project Manager', href: '/navigation/pm', icon: RectangleGroupIcon },
-  { id: 5, name: 'Warehousing', href: '/navigation/wm', icon: TruckIcon },
-  { id: 6, name: 'Settings', href: '/navigation/settings', icon: CogIcon }
+  { id: 2, name: 'Calendar', href: '/navigation/calendar', icon: CalendarIcon },
+  { id: 3, name: 'Customers', href: '/navigation/crm', icon: UserPlusIcon },
+  { id: 4, name: 'EDI Fulfillment', href: '/navigation/edi', icon: ShoppingCartIcon },
+  { id: 5, name: 'Employees', href: '/navigation/hr', icon: UserGroupIcon },
+  { id: 6, name: 'Inventory', href: '/navigation/inventory', icon: ArchiveBoxIcon },
+  { id: 7, name: 'Project Manager', href: '/navigation/pm', icon: RectangleGroupIcon },
+  { id: 8, name: 'Warehousing', href: '/navigation/wm', icon: TruckIcon },
+  { id: 9, name: 'Settings', href: '/navigation/settings', icon: CogIcon }
 ];
 
 export default function NavLinks({ collapsed }: { collapsed: boolean }) {
