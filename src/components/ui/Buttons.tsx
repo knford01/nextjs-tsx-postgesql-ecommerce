@@ -1,8 +1,10 @@
+import { useRouter } from 'next/navigation';
 import clsx from 'clsx';
 import React, { useState } from 'react';
 import { Button } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { PencilIcon, PlusIcon, TrashIcon, StarIcon } from '@heroicons/react/24/outline';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { UserModal, UserStatusModal } from '@/components/modals/UserModals';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -98,6 +100,41 @@ export const UpdateUser: React.FC<UpdateUserProps> = ({ id, row, loadUsers }) =>
       >
       </Button>
       <UserModal open={open} onClose={handleClose} onSubmit={handleSubmit} id={id} row={row} />
+    </>
+  );
+}
+
+interface UserAccessProps {
+  id: string;
+}
+
+export const UserAccess: React.FC<UserAccessProps> = ({ id }) => {
+  const theme = useTheme();
+  const router = useRouter(); // Initialize useRouter
+
+  const handleRedirect = () => {
+    router.push(`/navigation/settings/users/${id}`);
+  };
+
+  return (
+    <>
+      <Button
+        variant="outlined"
+        color="primary"
+        onClick={handleRedirect} // Use the handleRedirect function
+        startIcon={<LockOutlinedIcon className="w-5" />}
+        sx={{
+          p: 1, pr: 0, mr: 1,
+          backgroundColor: `${theme.palette.error.main} !important`,
+          color: `${theme.palette.text.primary} !important`,
+          borderColor: `${theme.palette.text.primary} !important`,
+          '&:hover': {
+            backgroundColor: `${theme.palette.error.dark} !important`,
+            color: `${theme.palette.text.secondary} !important`,
+          },
+        }}
+      >
+      </Button>
     </>
   );
 }

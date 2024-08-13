@@ -5,6 +5,7 @@ import { Box, Button, MenuItem, Modal, TextField, Typography } from '@mui/materi
 import { useTheme } from '@mui/material/styles';
 import { setUserStatus, fetchUserRoles, createUser, updateUser } from '@/db/user-data';
 import Image from 'next/image';
+import { showSuccessToast } from '../ui/ButteredToast';
 
 interface UserModalProps {
     open: boolean;
@@ -124,8 +125,10 @@ export const UserModal: React.FC<UserModalProps> = ({ open, onClose, onSubmit, i
 
             if (id) {
                 await updateUser(id, data);
+                showSuccessToast('User Updated');
             } else {
                 await createUser(data);
+                showSuccessToast('User created');
             }
 
             onSubmit(data);
@@ -271,6 +274,7 @@ export const UserStatusModal: React.FC<UserStatusModalProps> = ({ open, onClose,
 
     const handleConfirm = async () => {
         await setUserStatus(userId, curStatus === 1 ? 0 : 1);
+        showSuccessToast('User Status Updated');
         onConfirm();
     };
 

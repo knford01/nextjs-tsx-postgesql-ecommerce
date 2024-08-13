@@ -5,7 +5,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { GridColDef } from '@mui/x-data-grid';
 import Image from 'next/image';
-import { AddUser, UpdateUser, UserStatus } from '@/components/ui/Buttons';
+import { AddUser, UpdateUser, UserAccess, UserStatus } from '@/components/ui/Buttons';
 import { User } from '@/types/user';
 import { fetchUsers } from '@/db/user-data';
 import CustomDataGrid from './CustomDataGrid';
@@ -76,11 +76,12 @@ const UserDataGrid: React.FC<UserDataGridProps> = ({ filterId }) => {
         {
             field: 'actions',
             headerName: 'Actions',
-            flex: .75,
+            flex: 1,
             sortable: false,
             renderCell: (params) => (
                 <>
                     <UpdateUser id={params.row.id} row={params.row} loadUsers={loadUsers} />
+                    <UserAccess id={params.row.id} />
                     <UserStatus id={params.row.id} curStatus={params.row.active === 'Yes' ? 1 : 0} loadUsers={loadUsers} />
                 </>
             ),

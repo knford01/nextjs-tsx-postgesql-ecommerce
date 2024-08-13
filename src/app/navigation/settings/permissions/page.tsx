@@ -8,6 +8,7 @@ import AddIcon from '@mui/icons-material/Add';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { useTheme } from '@mui/material';
+import { showErrorToast, showSuccessToast } from '@/components/ui/ButteredToast';
 
 const SystemAccess = () => {
     const theme = useTheme();
@@ -52,26 +53,41 @@ const SystemAccess = () => {
             let updatedPermissions: Permission[] = []; // Explicitly type the array
 
             if (editingPermission) {
-                const updatedPermission = await updatePermission(editingPermission.id, formattedArea, formattedSubAreas) as Permission;
-                updatedPermissions = permissions.map((perm) => (perm.id === editingPermission.id ? updatedPermission : perm)) as Permission[];
+                try {
+                    const updatedPermission = await updatePermission(editingPermission.id, formattedArea, formattedSubAreas) as Permission;
+                    updatedPermissions = permissions.map((perm) => (perm.id === editingPermission.id ? updatedPermission : perm)) as Permission[];
+                    setPermissions(updatedPermissions);
+                    setIsModalOpen(false);
+
+                    // Redirect after 3 seconds
+                    showSuccessToast('Permissions Updated');
+                } catch (error) {
+                    showErrorToast('Permissions failed to update');
+                }
             } else {
-                const newPermission = await createPermission(formattedArea, formattedSubAreas) as Permission;
-                updatedPermissions = [...permissions, newPermission] as Permission[];
+                try {
+                    const newPermission = await createPermission(formattedArea, formattedSubAreas) as Permission;
+                    updatedPermissions = [...permissions, newPermission] as Permission[];
+                    setPermissions(updatedPermissions);
+                    setIsModalOpen(false);
+
+                    // Redirect after 3 seconds
+                    showSuccessToast('Permissions created');
+                } catch (error) {
+                    showErrorToast('Permissions failed to create');
+                }
             }
 
-            setPermissions(updatedPermissions); // Set state with the explicitly typed array
-            setIsModalOpen(false);
+
         } catch (error) {
             console.error('Error saving permission:', error);
         }
     };
 
-
     const toPascalCase = (str: string) => {
         return str
             .replace(/_/g, ' ')  // Replace underscores with spaces (if any)
-            .replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()) // Convert to Pascal Case
-            .replace(/\s+/g, ''); // Remove spaces
+            .replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()) // Convert to Pascal Case 
     };
 
     return (

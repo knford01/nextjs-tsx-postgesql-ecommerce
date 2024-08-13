@@ -9,6 +9,7 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import { useTheme } from '@mui/material';
 import { UserRole } from '@/types/user';
 import { fetchUserRoles, createRole, setUserRoles } from '@/db/user-data'; // Assuming these functions are in your data layer
+import { showSuccessToast } from '@/components/ui/ButteredToast';
 
 export default function RolesPage() {
     const theme = useTheme();
@@ -53,9 +54,11 @@ export default function RolesPage() {
             if (selectedRole) {
                 // Update existing role
                 await setUserRoles(selectedRole.id, formData);
+                showSuccessToast('Role Updated');
             } else {
                 // Create new role
                 await createRole(formData);
+                showSuccessToast('Role Created');
             }
             setIsModalOpen(false);
             setFormData({ role: '', display: '', active: 1 });
@@ -142,8 +145,8 @@ export default function RolesPage() {
                         value={formData.active}
                         onChange={(e) => setFormData({ ...formData, active: Number(e.target.value) })}
                         options={[
-                            { id: 1, display: 'Yes' },
-                            { id: 0, display: 'No' }
+                            { value: 1, display: 'Yes' },
+                            { value: 0, display: 'No' }
                         ]}
                     />
                     <Box sx={{ pt: 3, display: 'flex', justifyContent: 'center', gap: 2 }}>

@@ -310,8 +310,30 @@ export const defaultTheme = createTheme({
                     '&.Mui-selected': {
                         backgroundColor: '#494B68',
                         '&:hover': {
-                            backgroundColor: '#494B68', // Ensure the background remains the same on hover
+                            backgroundColor: '#494B68',
                         },
+                    },
+                },
+            },
+        },
+
+        MuiPopover: {
+            styleOverrides: {
+                paper: {
+                    backgroundColor: '#265077', // Background color of the popover (filter box)
+                    color: '#ffffff', // Text color inside the popover
+                },
+            },
+        },
+
+        MuiPaper: {
+            styleOverrides: {
+                root: {
+                    '& .MuiInputBase-root': {
+                        color: '#1E4258', // Input text color in filter panel
+                    },
+                    '& .MuiButtonBase-root': {
+                        color: '#ffffff', // Button color in filter panel
                     },
                 },
             },

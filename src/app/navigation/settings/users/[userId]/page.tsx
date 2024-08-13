@@ -3,10 +3,11 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Typography, Grid, Paper, Checkbox, FormControlLabel, Button } from '@mui/material';
 import { useRouter, useParams } from 'next/navigation';
-import { fetchRoleById } from '@/db/user-data';
-import { getAllActivePermissions, getRolePermissions, saveRolePermission } from '@/db/permissions';
+import { fetchUserById } from '@/db/user-data';
+import { getAllActivePermissions, getUserPermissions, saveUserPermission } from '@/db/permissions';
 import { useTheme } from '@mui/material';
 import { showErrorToast, showSuccessToast } from '@/components/ui/ButteredToast';
+import { User } from '@/types/user';
 
 interface RolePermission {
     role_id: number;
@@ -43,22 +44,25 @@ const toLowerSnakeCase = (str: string) => {
 export default function RolePermissionsPage() {
     const theme = useTheme();
     const router = useRouter();
-    const { roleId } = useParams();
+    const { userId } = useParams();
 
-    const [selectedRole, setSelectedRole] = useState<Role[] | null>(null);
+    const [selectedUser, setSelectedUser] = useState<User | null>(null);
     const [permissions, setPermissions] = useState<Permission[]>([]);
     const [enabledSubAreas, setEnabledSubAreas] = useState<{ [key: string]: boolean }>({});
     const [selectedSubAreas, setSelectedSubAreas] = useState<{ [key: string]: string[] }>({});
 
     useEffect(() => {
         const fetchRoleAndPermissions = async () => {
-            if (roleId) {
-                const role = await fetchRoleById(String(roleId));
-                setSelectedRole(role);
+            if (userId) {
+                const userResult = await fetchUserById(String(userId));
+                const user = userResult.rows[0]; // Extract user data from the QueryResult<User>
+                setSelectedUser(user);
 
-                const rolePermissions: RolePermission[] = await getRolePermissions(Number(roleId));
+                const rolePermissions: RolePermission[] = await getUserPermissions(Number(userId));
 
                 const permissionsData = await getAllActivePermissions();
+                console.log(getAllActivePermissions);
+
                 const formattedPermissions = permissionsData.map((permission: any) => {
                     const subAreas = permission.sub_areas.split(',').map((subArea: string) => toPascalCase(subArea.trim()));
                     return {
@@ -85,10 +89,12 @@ export default function RolePermissionsPage() {
 
                 setPermissions(formattedPermissions);
                 setSelectedSubAreas(initialSelectedSubAreas);
+            } else {
+                console.log("NO ID");
             }
         };
         fetchRoleAndPermissions();
-    }, [roleId]);
+    }, [userId]);
 
     const handleAreaCheckboxChange = (area: string) => {
         setEnabledSubAreas((prev) => ({
@@ -121,7 +127,7 @@ export default function RolePermissionsPage() {
 
     const handleSave = async () => {
         const selectedPermissions = permissions.map((permission) => ({
-            role_id: roleId,
+            user_id: userId,
             permission_id: permission.id,
             access: selectedSubAreas[permission.area]
                 ? selectedSubAreas[permission.area].map((subArea) => toLowerSnakeCase(subArea)).join(',')
@@ -129,10 +135,10 @@ export default function RolePermissionsPage() {
         }));
 
         try {
-            await saveRolePermission(selectedPermissions);
+            await saveUserPermission(selectedPermissions);
             // Redirect after 3 seconds
             showSuccessToast('Access Updated');
-            router.push('/navigation/settings/access');
+            router.push('/navigation/settings/users');
         } catch (error) {
             showErrorToast('Access failed to update');
         }
@@ -150,7 +156,7 @@ export default function RolePermissionsPage() {
                     textDecorationColor: theme.palette.warning.main,
                 }}
             >
-                Manage Permissions for Role {selectedRole && selectedRole[0].display}
+                Manage Permissions for User {selectedUser && selectedUser.first_name}
             </Typography>
             <Grid container spacing={2} mt={2}>
                 {permissions.map((permission) => (

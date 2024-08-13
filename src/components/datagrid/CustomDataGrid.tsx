@@ -27,7 +27,7 @@ const copyToClipboard = (text: string) => {
 
 const CustomDataGrid: React.FC<CustomDataGridProps> = ({
     rows,
-    columns,
+    columns = [],
     fileName,
     buttons,
     columnsToIgnore = [],

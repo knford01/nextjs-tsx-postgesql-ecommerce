@@ -23,7 +23,7 @@ export const updatePermission = async (id: number, area: string, subAreas: strin
   try {
     const result = await sql`
       UPDATE permissions
-      SET area = ${area.toLowerCase().replace(/ /g, '_')}, sub_areas = ${subAreas.toLowerCase().replace(/ /g, '_')}
+      SET area = ${area.toLowerCase().replace(/ /g, '_')}, sub_areas = ${subAreas.toLowerCase().replace(/ /g, '_')} 
       WHERE id = ${id}
       RETURNING id, area, sub_areas;
     `;
@@ -96,6 +96,34 @@ export const saveRolePermission = async (rolePermissions: any) => {
     for (const { role_id, permission_id, access } of rolePermissions) {
       await sql`DELETE FROM role_permissions WHERE role_id = ${role_id} AND permission_id = ${permission_id};`;
       await sql`INSERT INTO role_permissions (role_id, permission_id, access) VALUES (${role_id}, ${permission_id}, ${access});`;
+    }
+    console.log('Permissions updated successfully');
+  } catch (error) {
+    console.error('Error updating permission:', error);
+    throw new Error('Failed to update permission');
+  }
+};
+
+// Get all role permissions
+export const getUserPermissions = async (id: number): Promise<Permission[]> => {
+  try {
+    const result = await sql`SELECT user_id, permission_id, access FROM user_permissions WHERE user_id = ${id};`;
+    return result.rows as Permission[];
+  } catch (error) {
+    console.error('Error fetching user permissions:', error);
+    throw new Error('Failed to fetch user permissions');
+  }
+};
+
+// Update an existing permission
+export const saveUserPermission = async (rolePermissions: any) => {
+  try {
+    for (const { user_id, permission_id, access } of rolePermissions) {
+      if (access == '') {
+        continue;
+      }
+      await sql`DELETE FROM user_permissions WHERE user_id = ${user_id} AND permission_id = ${permission_id};`;
+      await sql`INSERT INTO user_permissions (user_id, permission_id, access) VALUES (${user_id}, ${permission_id}, ${access});`;
     }
     console.log('Permissions updated successfully');
   } catch (error) {
