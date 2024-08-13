@@ -30,7 +30,7 @@ export default async function verifyUserCredentials(email: string, password: str
 
         // Compare the provided password with the hashed password in the database
         const isPasswordValid = await bcrypt.compare(password, user.password);
-
+        user.password = '';
         // If the password is valid, return the user object, otherwise return null
         if (isPasswordValid) {
             return user;

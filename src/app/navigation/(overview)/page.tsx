@@ -6,6 +6,7 @@ import useSession from '@/hooks/useSession';
 
 export default function Dashboard() {
     const { user } = useSession();
+    console.log(user);
 
     if (!user) {
         return (
@@ -25,4 +26,4 @@ export default function Dashboard() {
             <p>Status: {user.active ? 'Active' : 'Inactive'}</p>
         </div>
     );
-}
+} 

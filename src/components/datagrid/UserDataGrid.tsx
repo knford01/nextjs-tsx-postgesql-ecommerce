@@ -9,6 +9,7 @@ import { AddUser, UpdateUser, UserAccess, UserStatus } from '@/components/ui/But
 import { User } from '@/types/user';
 import { fetchUsers } from '@/db/user-data';
 import CustomDataGrid from './CustomDataGrid';
+import EmulateUser from '../ui/EmulateUser';
 
 interface UserDataGridProps {
     filterId?: string;
@@ -45,41 +46,19 @@ const UserDataGrid: React.FC<UserDataGridProps> = ({ filterId }) => {
             ),
         },
 
-        {
-            field: 'first_name',
-            headerName: 'First Name',
-            flex: 1,
-        },
-        {
-            field: 'last_name',
-            headerName: 'Last Name',
-            flex: 1,
-        },
-        {
-            field: 'email',
-            headerName: 'Email',
-            type: 'string',
-            flex: 1.5,
-        },
-        {
-            field: 'role_display',
-            headerName: 'Role',
-            type: 'string',
-            flex: 1,
-        },
-        {
-            field: 'active',
-            headerName: 'Active',
-            type: 'string',
-            flex: 0.5,
-        },
+        { field: 'first_name', flex: 1, headerName: 'First Name', type: 'string' },
+        { field: 'last_name', flex: 1, headerName: 'Last Name', type: 'string' },
+        { field: 'email', flex: 1, headerName: 'Email', type: 'string' },
+        { field: 'role_display', flex: 1, headerName: 'Role', type: 'string' },
+        { field: 'active', flex: .5, headerName: 'Active', type: 'string' },
         {
             field: 'actions',
             headerName: 'Actions',
-            flex: 1,
             sortable: false,
+            flex: 1.5,
             renderCell: (params) => (
                 <>
+                    <EmulateUser row={params.row} />
                     <UpdateUser id={params.row.id} row={params.row} loadUsers={loadUsers} />
                     <UserAccess id={params.row.id} />
                     <UserStatus id={params.row.id} curStatus={params.row.active === 'Yes' ? 1 : 0} loadUsers={loadUsers} />
@@ -94,7 +73,7 @@ const UserDataGrid: React.FC<UserDataGridProps> = ({ filterId }) => {
             columns={columns}
             fileName="users_export"
             buttons={<AddUser loadUsers={loadUsers} />}
-            columnsToIgnore={['avatar', 'actions']}
+            columnsToIgnore={['avatar', 'emulate', 'actions']}
         />
     );
 };

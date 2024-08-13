@@ -288,7 +288,7 @@ export default function Page() {
                     "Warehousing and Inventory Software",
                     "Warehousing and Inventory Software optimizes inventory and warehouse management. It includes features like inventory tracking, order management, and warehouse organization. This software helps businesses track stock levels, manage shipments, and improve inventory accuracy. Advanced features such as barcode scanning and real-time analytics enhance its capabilities, making it essential for modern supply chain operations."
                   )}>
-                  <TruckIcon className="wpicon h-5 w-5 mr-2" />Warehousing Management
+                  <TruckIcon className="wpicon h-5 w-5 mr-2" />Warehouse Management
                 </li>
               </ul>
             </div>

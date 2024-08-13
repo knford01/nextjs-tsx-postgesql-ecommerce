@@ -7,6 +7,8 @@ export type User = {
     password: string;
     role: string;
     role_display: string;
+    emulating_user_id: string;
+    emulating_user_name: string;
     theme: string;
     avatar: string;
     active: string;

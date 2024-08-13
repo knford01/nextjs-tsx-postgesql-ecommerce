@@ -41,14 +41,20 @@ export async function fetchUserById(id: string) {
     try {
         const data = await sql<User>`
         SELECT
-          id,
-          first_name,
-          email, 
+          u.id,
+          u.first_name,
+          u.last_name,
+          u.avatar,
+          u.role,
+          ur.display as role_display,
+          u.email, 
           '' as password
-        FROM users
-        WHERE id = ${id};`;
+        FROM users u
+        left join user_roles ur on ur.id = u.role
+        WHERE u.id = ${id};`;
 
         return data;
+        // return data.rows[0] || null;
     } catch (error) {
         console.error('Database Error:', error);
         throw new Error('Failed to fetch user.');

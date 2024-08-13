@@ -23,6 +23,7 @@ const TopNav: FC<TopNavProps> = ({ collapsed }) => {
     const { user } = useSession();
     const userId = user?.id;
     const userName = user?.first_name || 'User';
+    const greeting = user?.emulating_user_id ? 'Emulating' : 'Hello';
 
     const { setTheme } = useThemeContext();
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -66,7 +67,6 @@ const TopNav: FC<TopNavProps> = ({ collapsed }) => {
     };
 
     const handleSubmit = (data: any) => {
-        console.log('Update User Data:', data);
         handleUserModalClose();
     };
 
@@ -105,7 +105,7 @@ const TopNav: FC<TopNavProps> = ({ collapsed }) => {
                 onClick={(event: React.MouseEvent<HTMLDivElement>) => handleMenuClick(event as unknown as React.MouseEvent<HTMLButtonElement>)}
             >
                 <Typography variant="body1" sx={{ mr: 1 }}>
-                    Hello {userName}
+                    {greeting} {userName}
                 </Typography>
                 <IconButton
                     sx={{
