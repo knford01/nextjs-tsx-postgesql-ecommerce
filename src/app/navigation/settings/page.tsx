@@ -11,23 +11,30 @@ import SecurityIcon from '@mui/icons-material/Security';
 import SettingsIcon from '@mui/icons-material/Settings';
 import InventoryIcon from '@mui/icons-material/Inventory';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import { hasAccess } from '@/utils/permissions2';
+import { useCombinedPermissions } from '@/components/layout/combinedpermissions';
+
+const links = [
+    { id: 'addresses', name: 'Addresses', description: 'Create and update system addresses', icon: <LocationOnIcon /> },
+    { id: 'items', name: 'Items', description: 'Create and update items', icon: <InventoryIcon /> },
+    { id: 'access', name: 'Role Access', description: 'Assign roles their access levels', icon: <LockOutlinedIcon /> },
+    { id: 'permissions', name: 'System Permissions', description: 'Define system-wide permissions', icon: <SettingsIcon /> },
+    { id: 'users', name: 'Users', description: 'Manage users and their individual permissions', icon: <PeopleIcon /> },
+    { id: 'roles', name: 'User Roles', description: 'Manage user roles', icon: <SecurityIcon /> },
+];
 
 export default function SettingsDashboard() {
     const theme = useTheme();
+    const combinedPermissions = useCombinedPermissions();
 
-    const settingsItems = [
-        { id: 'addresses', name: 'Addresses', description: 'Create and update system addresses', icon: <LocationOnIcon /> },
-        { id: 'items', name: 'Items', description: 'Create and update items', icon: <InventoryIcon /> },
-        { id: 'access', name: 'Role Access', description: 'Assign roles their access levels', icon: <LockOutlinedIcon /> },
-        { id: 'permissions', name: 'System Permissions', description: 'Define system-wide permissions', icon: <SettingsIcon /> },
-        { id: 'users', name: 'Users', description: 'Manage users and their individual permissions', icon: <PeopleIcon /> },
-        { id: 'roles', name: 'User Roles', description: 'Manage user roles', icon: <SecurityIcon /> },
-    ];
+    const accessibleLinks = links.filter((link) => {
+        return link.id === '' || hasAccess(combinedPermissions, 'settings', link.id);
+    });
 
     return (
         <Box sx={{ mt: 2 }}>
             <Grid container spacing={4}>
-                {settingsItems.map(item => (
+                {accessibleLinks.map(item => (
                     <Grid item xs={12} sm={6} md={4} lg={3} key={item.id}>
                         <Link href={`/navigation/settings/${item.id}`} passHref>
                             <Card

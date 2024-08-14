@@ -22,3 +22,8 @@ type Permission = {
     permission_id: number;
     access: string;
 };
+
+type CombinedPermission = {
+    area: string;
+    access: string[];
+};

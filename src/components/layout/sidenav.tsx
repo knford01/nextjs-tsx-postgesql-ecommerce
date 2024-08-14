@@ -5,8 +5,13 @@ import NavLinks from '@/components/layout/nav-links';
 import { useTheme, Box, Button, Typography } from '@mui/material';
 import LogoutButton from '../ui/LogoutButton';
 import { COMPANY_NAME } from '@/constants/appConstants';
+import { User } from '@/types/user';
 
-export default function SideNav({ collapsed, setCollapsed }: { collapsed: boolean, setCollapsed: (collapsed: boolean) => void }) {
+export default function SideNav({ collapsed, setCollapsed, sessionUser, combinedPermissions }: { collapsed: boolean, setCollapsed: (collapsed: boolean) => void, sessionUser: User | null, combinedPermissions: CombinedPermission[] }) {
+  if (!sessionUser) {
+    return null; // or return a loading state or something else appropriate
+  }
+
   const theme = useTheme();
 
   const toggleCollapse = () => {
@@ -47,7 +52,7 @@ export default function SideNav({ collapsed, setCollapsed }: { collapsed: boolea
       </Box>
 
       <Box sx={{ flexGrow: 1 }}>
-        <NavLinks collapsed={collapsed} />
+        <NavLinks collapsed={collapsed} sessionUser={sessionUser} combinedPermissions={combinedPermissions} />
       </Box>
 
       <Box sx={{ mb: 1, ml: 1, mr: 1 }}>

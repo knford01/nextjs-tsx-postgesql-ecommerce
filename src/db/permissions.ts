@@ -82,7 +82,15 @@ export const getAllActivePermissions = async (): Promise<Permission[]> => {
 // Get all role permissions
 export const getRolePermissions = async (id: number): Promise<Permission[]> => {
   try {
-    const result = await sql`SELECT role_id, permission_id, access FROM role_permissions WHERE role_id = ${id};`;
+    const result = await sql`
+      SELECT 
+        rp.role_id, 
+        rp.permission_id, 
+        p.area,
+        rp.access 
+      FROM role_permissions rp
+      Left Join permissions p on p.id = rp.permission_id
+      WHERE rp.role_id = ${id};`;
     return result.rows as Permission[];
   } catch (error) {
     console.error('Error fetching role permissions:', error);
@@ -104,10 +112,18 @@ export const saveRolePermission = async (rolePermissions: any) => {
   }
 };
 
-// Get all role permissions
-export const getUserPermissions = async (id: number): Promise<Permission[]> => {
+// Get all user permissions
+export const getUserPermissions = async (id: any): Promise<Permission[]> => {
   try {
-    const result = await sql`SELECT user_id, permission_id, access FROM user_permissions WHERE user_id = ${id};`;
+    const result = await sql`
+      SELECT 
+        up.user_id, 
+        up.permission_id, 
+        p.area,
+        up.access 
+      FROM user_permissions up 
+      left join permissions p on p.id = up.permission_id
+      WHERE up.user_id = ${id}`;
     return result.rows as Permission[];
   } catch (error) {
     console.error('Error fetching user permissions:', error);

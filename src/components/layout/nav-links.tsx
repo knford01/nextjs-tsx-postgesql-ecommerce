@@ -1,5 +1,3 @@
-// src/components/layout/nav-links.tsx
-
 'use client';
 
 import { CalendarIcon, HomeIcon, UserPlusIcon, ShoppingCartIcon, RectangleGroupIcon, TruckIcon, UserGroupIcon, CogIcon, ArchiveBoxIcon } from '@heroicons/react/24/outline';
@@ -7,26 +5,32 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useTheme, Box, Tooltip } from '@mui/material';
 import clsx from 'clsx';
+import { hasAccess } from '@/utils/permissions2';
+import { User } from '@/types/user';
 
 const links = [
-  { id: 0, name: 'Dashboard', href: '/navigation', icon: HomeIcon },
-  { id: 2, name: 'Calendar', href: '/navigation/calendar', icon: CalendarIcon },
-  { id: 3, name: 'Customers', href: '/navigation/crm', icon: UserPlusIcon },
-  { id: 4, name: 'EDI Fulfillment', href: '/navigation/edi', icon: ShoppingCartIcon },
-  { id: 5, name: 'Employees', href: '/navigation/hr', icon: UserGroupIcon },
-  { id: 6, name: 'Inventory', href: '/navigation/inventory', icon: ArchiveBoxIcon },
-  { id: 7, name: 'Project Manager', href: '/navigation/pm', icon: RectangleGroupIcon },
-  { id: 8, name: 'Warehousing', href: '/navigation/wm', icon: TruckIcon },
-  { id: 9, name: 'Settings', href: '/navigation/settings', icon: CogIcon }
+  { id: 0, name: 'Dashboard', href: '/navigation', icon: HomeIcon, access: '' },
+  { id: 2, name: 'Calendar', href: '/navigation/calendar', icon: CalendarIcon, access: 'calendar' },
+  { id: 3, name: 'Customers', href: '/navigation/crm', icon: UserPlusIcon, access: 'customers' },
+  { id: 4, name: 'EDI Fulfillment', href: '/navigation/edi', icon: ShoppingCartIcon, access: 'edi_fulfillment' },
+  { id: 5, name: 'Employees', href: '/navigation/hr', icon: UserGroupIcon, access: 'employees' },
+  { id: 6, name: 'Inventory', href: '/navigation/inventory', icon: ArchiveBoxIcon, access: 'inventory' },
+  { id: 7, name: 'Project Manager', href: '/navigation/pm', icon: RectangleGroupIcon, access: 'project_manager' },
+  { id: 8, name: 'Warehousing', href: '/navigation/wm', icon: TruckIcon, access: 'warehousing' },
+  { id: 9, name: 'Settings', href: '/navigation/settings', icon: CogIcon, access: 'settings' }
 ];
 
-export default function NavLinks({ collapsed }: { collapsed: boolean }) {
+export default function NavLinks({ collapsed, sessionUser, combinedPermissions }: { collapsed: boolean, sessionUser?: User, combinedPermissions: CombinedPermission[] }) {
   const pathname = usePathname();
   const theme = useTheme();
 
+  const accessibleLinks = links.filter((link) => {
+    return link.access === '' || hasAccess(combinedPermissions, 'navigation', link.access);
+  });
+
   return (
     <>
-      {links.map((link) => {
+      {accessibleLinks.map((link) => {
         const LinkIcon = link.icon;
         return (
           <Tooltip key={link.id} title={collapsed ? link.name : ''} placement="right">
@@ -72,4 +76,3 @@ export default function NavLinks({ collapsed }: { collapsed: boolean }) {
     </>
   );
 }
-

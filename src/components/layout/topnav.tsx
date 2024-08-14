@@ -1,34 +1,49 @@
-// src/components/layout/topnav.tsx
-
 'use client';
 
-import React, { useState } from 'react';
-import { FC } from 'react';
-import { Box, IconButton, Menu, MenuItem, Avatar, Typography, useTheme } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { Box, IconButton, Menu, MenuItem, Avatar, Typography, useTheme, Button } from '@mui/material';
 import PaletteIcon from '@mui/icons-material/Palette';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import EditIcon from '@mui/icons-material/Edit';
+import StopIcon from '@mui/icons-material/Stop';
+import useSession from '@/hooks/useSession';
 import { useThemeContext } from '@/app/navigation/layout';
 import { lightTheme, darkTheme, defaultTheme } from './themes';
 import { setUserTheme } from '@/db/user-data';
-import useSession from '@/hooks/useSession';
 import { UserModal } from '../modals/UserModals';
 
 interface TopNavProps {
     collapsed: boolean;
+    sessionUser: any;
+    setSessionUser: any;
 }
 
-const TopNav: FC<TopNavProps> = ({ collapsed }) => {
-    const theme = useTheme(); // Use the useTheme hook here
-    const { user } = useSession();
-    const userId = user?.id;
-    const userName = user?.first_name || 'User';
-    const greeting = user?.emulating_user_id ? 'Emulating' : 'Hello';
-
+const TopNav: React.FC<TopNavProps> = ({ collapsed, sessionUser, setSessionUser }) => {
+    const theme = useTheme();
     const { setTheme } = useThemeContext();
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const [menuAnchorEl, setMenuAnchorEl] = useState<null | HTMLElement>(null);
     const [isUserModalOpen, setIsUserModalOpen] = useState(false);
+    const [session, setSession] = useState<any>(sessionUser); // State to hold session data
+
+    const fetchSession = async () => {
+        const response = await fetch('/api/auth/session');
+        if (response.ok) {
+            const sessionData = await response.json();
+            setSession(sessionData);
+            setSessionUser(sessionData.user);
+        }
+    };
+
+    useEffect(() => {
+        fetchSession(); // Fetch session on component mount
+        const interval = setInterval(fetchSession, 15000); // Refresh session every 15 seconds
+        return () => clearInterval(interval); // Clean up the interval on component unmount
+    }, []);
+
+    const userId = session?.user?.id;
+    const userName = session?.user?.first_name || 'User';
+    const greeting = session?.user?.emulating_user_id ? 'Emulating' : 'Hello';
 
     const handleThemeClick = (event: React.MouseEvent<HTMLLIElement>) => {
         setAnchorEl(event.currentTarget);
@@ -64,6 +79,20 @@ const TopNav: FC<TopNavProps> = ({ collapsed }) => {
 
     const handleUserModalClose = () => {
         setIsUserModalOpen(false);
+    };
+
+    const handleStopEmulation = async () => {
+        if (session?.user?.emulating_user_id) {
+            await fetch('/api/auth/emulate', {
+                method: 'POST',
+                body: JSON.stringify({ emulate: false, emulating_user: session.user }),
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            fetchSession(); // Refresh the session data after stopping emulation 
+        }
+        handleMenuClose();
     };
 
     const handleSubmit = (data: any) => {
@@ -113,9 +142,9 @@ const TopNav: FC<TopNavProps> = ({ collapsed }) => {
                     }}
                     color="inherit"
                 >
-                    {user?.avatar ? (
+                    {session?.user?.avatar ? (
                         <Avatar
-                            src={user.avatar}
+                            src={session.user.avatar}
                             alt={`${userName}'s avatar`}
                             sx={{ width: 35, height: 35 }}
                         />
@@ -124,7 +153,6 @@ const TopNav: FC<TopNavProps> = ({ collapsed }) => {
                     )}
                 </IconButton>
             </Box>
-
 
             {/* User Menu Dropdown */}
             <Menu
@@ -138,6 +166,12 @@ const TopNav: FC<TopNavProps> = ({ collapsed }) => {
                     },
                 }}
             >
+                {session?.user?.emulating_user_id && (
+                    <MenuItem onClick={handleStopEmulation}>
+                        <StopIcon sx={{ mr: 1 }} />
+                        Stop Emulating
+                    </MenuItem>
+                )}
                 <MenuItem onClick={handleUserModalOpen}>
                     <EditIcon sx={{ mr: 1 }} />
                     Edit Profile
@@ -148,7 +182,6 @@ const TopNav: FC<TopNavProps> = ({ collapsed }) => {
                     <PaletteIcon sx={{ mr: 1 }} />
                     Change Theme
                 </MenuItem>
-
             </Menu>
 
             {/* Theme Palette Menu */}
@@ -175,7 +208,7 @@ const TopNav: FC<TopNavProps> = ({ collapsed }) => {
                     onClose={handleUserModalClose}
                     onSubmit={handleSubmit}
                     id={userId}
-                    row={user}
+                    row={session.user}
                 />
             )}
         </Box>
