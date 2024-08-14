@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Box, IconButton, Menu, MenuItem, Avatar, Typography, useTheme, Button } from '@mui/material';
 import PaletteIcon from '@mui/icons-material/Palette';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
@@ -26,20 +26,20 @@ const TopNav: React.FC<TopNavProps> = ({ collapsed, sessionUser, setSessionUser 
     const [isUserModalOpen, setIsUserModalOpen] = useState(false);
     const [session, setSession] = useState<any>(sessionUser); // State to hold session data
 
-    const fetchSession = async () => {
+    const fetchSession = useCallback(async () => {
         const response = await fetch('/api/auth/session');
         if (response.ok) {
             const sessionData = await response.json();
             setSession(sessionData);
             setSessionUser(sessionData.user);
         }
-    };
+    }, [setSessionUser]); // Empty dependency array ensures this function is stable
 
     useEffect(() => {
-        fetchSession(); // Fetch session on component mount
+        fetchSession();
         const interval = setInterval(fetchSession, 15000); // Refresh session every 15 seconds
-        return () => clearInterval(interval); // Clean up the interval on component unmount
-    }, []);
+        return () => clearInterval(interval);
+    }, [fetchSession]);
 
     const userId = session?.user?.id;
     const userName = session?.user?.first_name || 'User';

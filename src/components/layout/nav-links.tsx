@@ -4,6 +4,7 @@ import { CalendarIcon, HomeIcon, UserPlusIcon, ShoppingCartIcon, RectangleGroupI
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useTheme, Box, Tooltip } from '@mui/material';
+import { useCombinedPermissions } from '@/components/layout/combinedpermissions';
 import clsx from 'clsx';
 import { hasAccess } from '@/utils/permissions2';
 import { User } from '@/types/user';
@@ -20,9 +21,10 @@ const links = [
   { id: 9, name: 'Settings', href: '/navigation/settings', icon: CogIcon, access: 'settings' }
 ];
 
-export default function NavLinks({ collapsed, sessionUser, combinedPermissions }: { collapsed: boolean, sessionUser?: User, combinedPermissions: CombinedPermission[] }) {
+export default function NavLinks({ collapsed, sessionUser }: { collapsed: boolean, sessionUser?: User }) {
   const pathname = usePathname();
   const theme = useTheme();
+  const combinedPermissions = useCombinedPermissions();
 
   const accessibleLinks = links.filter((link) => {
     return link.access === '' || hasAccess(combinedPermissions, 'navigation', link.access);

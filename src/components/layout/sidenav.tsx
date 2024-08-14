@@ -7,12 +7,12 @@ import LogoutButton from '../ui/LogoutButton';
 import { COMPANY_NAME } from '@/constants/appConstants';
 import { User } from '@/types/user';
 
-export default function SideNav({ collapsed, setCollapsed, sessionUser, combinedPermissions }: { collapsed: boolean, setCollapsed: (collapsed: boolean) => void, sessionUser: User | null, combinedPermissions: CombinedPermission[] }) {
+export default function SideNav({ collapsed, setCollapsed, sessionUser }: { collapsed: boolean, setCollapsed: (collapsed: boolean) => void, sessionUser: User | null }) {
+  const theme = useTheme();
+
   if (!sessionUser) {
     return null; // or return a loading state or something else appropriate
   }
-
-  const theme = useTheme();
 
   const toggleCollapse = () => {
     setCollapsed(!collapsed);
@@ -52,7 +52,7 @@ export default function SideNav({ collapsed, setCollapsed, sessionUser, combined
       </Box>
 
       <Box sx={{ flexGrow: 1 }}>
-        <NavLinks collapsed={collapsed} sessionUser={sessionUser} combinedPermissions={combinedPermissions} />
+        <NavLinks collapsed={collapsed} sessionUser={sessionUser} />
       </Box>
 
       <Box sx={{ mb: 1, ml: 1, mr: 1 }}>

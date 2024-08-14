@@ -78,7 +78,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <ThemeProvider theme={theme}>
         <CombinedPermissionsProvider combinedPermissions={combinedPermissions}>
           <div className="flex h-screen overflow-hidden">
-            <SideNav collapsed={collapsed} setCollapsed={setCollapsed} sessionUser={sessionUser} combinedPermissions={combinedPermissions} />
+            <SideNav collapsed={collapsed} setCollapsed={setCollapsed} sessionUser={sessionUser} />
             <Box
               sx={{
                 display: 'flex',
