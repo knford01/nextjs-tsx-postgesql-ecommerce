@@ -12,7 +12,7 @@ import { User } from '@/types/user';
 const links = [
   { id: 0, name: 'Dashboard', href: '/navigation', icon: HomeIcon, access: '' },
   { id: 2, name: 'Calendar', href: '/navigation/calendar', icon: CalendarIcon, access: 'calendar' },
-  { id: 3, name: 'Customers', href: '/navigation/crm', icon: UserPlusIcon, access: 'customers' },
+  { id: 3, name: 'Customers', href: '/navigation/customers', icon: UserPlusIcon, access: 'customers' },
   { id: 4, name: 'EDI Fulfillment', href: '/navigation/edi', icon: ShoppingCartIcon, access: 'edi_fulfillment' },
   { id: 5, name: 'Employees', href: '/navigation/hr', icon: UserGroupIcon, access: 'employees' },
   { id: 6, name: 'Inventory', href: '/navigation/inventory', icon: ArchiveBoxIcon, access: 'inventory' },

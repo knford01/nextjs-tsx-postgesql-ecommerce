@@ -27,3 +27,38 @@ type CombinedPermission = {
     area: string;
     access: string[];
 };
+
+// src/types/Customer.ts
+
+type Customer = {
+    id: number;
+    status_id?: number;
+    manager_id?: number;
+    industry_id?: number;
+    source_id?: number;
+    source_note?: string;
+    name: string;
+    address: string;
+    address2?: string;
+    city: string;
+    state: string;
+    zip: string;
+    contact_name?: string;
+    contact_phone?: string;
+    contact_email?: string;
+    vendor_number?: string;
+    isa_qualifier?: string;
+    isa_id?: string;
+    version?: number;
+    delimiter?: string;
+    terms?: string;
+    logo?: string;
+    lead?: number;
+    date_converted?: string;
+    strength?: number;
+    frequency?: number;
+    parent_company?: number;
+    avatar?: string;
+    active: number;
+    date_created: string;
+};

@@ -354,5 +354,28 @@ export const defaultTheme = createTheme({
                 },
             },
         },
+
+        MuiTabs: {
+            styleOverrides: {
+                indicator: {
+                    // Indicator styling for the selected tab
+                    backgroundColor: '#1E4258', // You can change the indicator color here
+                },
+            },
+        },
+
+        MuiTab: {
+            styleOverrides: {
+                root: {
+                    textTransform: 'none', // Disable uppercase transformation
+                    fontWeight: 500, // Default weight for inactive tabs
+                    color: '#265077', // Inactive tab color
+                    '&.Mui-selected': {
+                        fontWeight: 700, // Bold font for active tab
+                        color: '#1E4258', // Active tab color
+                    },
+                },
+            },
+        },
     },
 });
