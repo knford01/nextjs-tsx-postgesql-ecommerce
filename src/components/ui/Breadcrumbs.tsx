@@ -14,6 +14,7 @@ const Breadcrumbs: React.FC = () => {
 
     // Split the pathname into parts
     const pathnames = pathname ? pathname.split('/').filter((x) => x) : [];
+    const filteredPathnames = pathnames.filter((value) => value !== 'navigation');
 
     const handleNavigation = (href: string) => {
         router.push(href);
@@ -28,17 +29,16 @@ const Breadcrumbs: React.FC = () => {
             <Link color="inherit" href="/navigation" onClick={() => handleNavigation('/')}>
                 <HomeIcon fontSize="small" sx={{ color: theme.palette.primary.main }} />
             </Link>
-            {pathnames.map((value, index) => {
+            {filteredPathnames.map((value, index) => {
                 const isLast = index === pathnames.length - 1;
                 const to = `/${pathnames.slice(0, index + 1).join('/')}`;
-
                 return isLast ? (
                     <Typography color="textPrimary" key={to} sx={{ color: theme.palette.primary.main, fontSize: '18px', fontWeight: 'bold' }}>
-                        {value.slice() == 'navigation' ? 'Dashboard' : value.charAt(0).toUpperCase() + value.slice(1)}
+                        {value.charAt(0).toUpperCase() + value.slice(1)}
                     </Typography>
                 ) : (
                     <Link color="inherit" href={to} onClick={() => handleNavigation(to)} key={to} sx={{ color: theme.palette.primary.main }}>
-                        {value.slice() == 'navigation' ? 'Dashboard' : value.charAt(0).toUpperCase() + value.slice(1)}
+                        {value.charAt(0).toUpperCase() + value.slice(1)}
                     </Link>
                 );
             })}

@@ -14,10 +14,10 @@ const links = [
   { id: 2, name: 'Calendar', href: '/navigation/calendar', icon: CalendarIcon, access: 'calendar' },
   { id: 3, name: 'Customers', href: '/navigation/customers', icon: UserPlusIcon, access: 'customers' },
   { id: 4, name: 'EDI Fulfillment', href: '/navigation/edi', icon: ShoppingCartIcon, access: 'edi_fulfillment' },
-  { id: 5, name: 'Employees', href: '/navigation/hr', icon: UserGroupIcon, access: 'employees' },
+  { id: 5, name: 'Employees', href: '/navigation/employees', icon: UserGroupIcon, access: 'employees' },
   { id: 6, name: 'Inventory', href: '/navigation/inventory', icon: ArchiveBoxIcon, access: 'inventory' },
-  { id: 7, name: 'Project Manager', href: '/navigation/pm', icon: RectangleGroupIcon, access: 'project_manager' },
-  { id: 8, name: 'Warehousing', href: '/navigation/wm', icon: TruckIcon, access: 'warehousing' },
+  { id: 7, name: 'Projects', href: '/navigation/projects', icon: RectangleGroupIcon, access: 'project_manager' },
+  { id: 8, name: 'Warehousing', href: '/navigation/warehousing', icon: TruckIcon, access: 'warehousing' },
   { id: 9, name: 'Settings', href: '/navigation/settings', icon: CogIcon, access: 'settings' }
 ];
 
