@@ -122,7 +122,7 @@ const CustomersPage = () => {
                                         {customer.address}, {customer.city}, {customer.state} {customer.zip}
                                     </Typography>
                                     <Typography variant="body2" color={theme.palette.text.secondary}>
-                                        {customer.contact_name} - {customer.contact_phone}
+                                        {customer.contact_name} {customer.contact_name && customer.contact_phone ? '-' : ''} {customer.contact_phone}
                                     </Typography>
                                 </CardContent>
                             </Card>
@@ -131,9 +131,9 @@ const CustomersPage = () => {
                 ))}
             </Grid>
 
-            <CustomerModal open={openModal} handleClose={handleCloseModal} /> {/* Use the modal here */}
+            <CustomerModal open={openModal} handleClose={handleCloseModal} onSave={handleCloseModal} /> {/* Use the modal here */}
         </Box>
     );
 };
 
-export default CustomersPage;
+export default CustomersPage; 

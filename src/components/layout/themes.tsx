@@ -358,8 +358,10 @@ export const defaultTheme = createTheme({
         MuiTabs: {
             styleOverrides: {
                 indicator: {
-                    // Indicator styling for the selected tab
-                    backgroundColor: '#1E4258', // You can change the indicator color here
+                    backgroundColor: '#1E4258', // Indicator color for the selected tab
+                },
+                flexContainer: {
+                    borderBottom: '2px solid #d8d8d8', // Border for the entire tab container
                 },
             },
         },
@@ -370,9 +372,14 @@ export const defaultTheme = createTheme({
                     textTransform: 'none', // Disable uppercase transformation
                     fontWeight: 500, // Default weight for inactive tabs
                     color: '#265077', // Inactive tab color
+                    borderBottom: '2px solid transparent', // Start with no border
+                    '&:not(.Mui-selected)': {
+                        borderBottom: '2px solid #d8d8d8', // Border for inactive tabs
+                    },
                     '&.Mui-selected': {
                         fontWeight: 700, // Bold font for active tab
                         color: '#1E4258', // Active tab color
+                        borderBottom: '2px solid #1E4258', // Border for the active tab
                     },
                 },
             },

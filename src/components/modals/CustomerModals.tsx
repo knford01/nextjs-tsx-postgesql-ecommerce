@@ -1,17 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Modal, Button, Paper, Typography, Box } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
+import Image from 'next/image';
 import { StyledTextField } from '@/styles/StyledTextField';
 import { showErrorToast, showSuccessToast } from '@/components/ui/ButteredToast';
-import { createCustomer } from '@/db/customer-data';
+import { createCustomer, updateCustomer, fetchCustomerById } from '@/db/customer-data';
 import { useRouter } from 'next/navigation';
 
 interface CustomerModalProps {
     open: boolean;
     handleClose: () => void;
+    customerId?: number; // Optional customer ID for editing
+    onSave: () => void;
 }
 
-const CustomerModal: React.FC<CustomerModalProps> = ({ open, handleClose }) => {
+const CustomerModal: React.FC<CustomerModalProps> = ({ open, handleClose, customerId, onSave }) => {
     const theme = useTheme();
     const router = useRouter();
 
@@ -23,11 +26,37 @@ const CustomerModal: React.FC<CustomerModalProps> = ({ open, handleClose }) => {
         zip: '',
         phone: '',
         email: '',
+        avatar: '', // New field for avatar
     });
 
     const [errors, setErrors] = useState({
         name: false,
     });
+
+    useEffect(() => {
+        if (customerId) {
+            // Fetch customer data if editing
+            const loadCustomerData = async () => {
+                try {
+                    const data = await fetchCustomerById(customerId);
+                    setCustomerData(prevData => ({
+                        ...prevData,
+                        name: data.name || '',
+                        address: data.address || '',
+                        city: data.city || '',
+                        state: data.state || '',
+                        zip: data.zip || '',
+                        phone: data.contact_phone || '',
+                        email: data.contact_email || '',
+                        avatar: data.avatar || '',
+                    }));
+                } catch (error) {
+                    showErrorToast('Failed to load customer data');
+                }
+            };
+            loadCustomerData();
+        }
+    }, [customerId]);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -43,6 +72,20 @@ const CustomerModal: React.FC<CustomerModalProps> = ({ open, handleClose }) => {
         }
     };
 
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = () => {
+                setCustomerData((prevData) => ({
+                    ...prevData,
+                    avatar: reader.result as string, // Assuming base64 string for simplicity
+                }));
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
     const handleSubmit = async () => {
         if (customerData.name.trim() === '') {
             setErrors((prevErrors) => ({ ...prevErrors, name: true }));
@@ -50,12 +93,18 @@ const CustomerModal: React.FC<CustomerModalProps> = ({ open, handleClose }) => {
         }
 
         try {
-            const customerId = await createCustomer(customerData); // Get the new customer ID
-            showSuccessToast('Customer Created Successfully');
+            if (customerId) {
+                await updateCustomer(customerId, customerData); // Update customer
+                showSuccessToast('Customer Updated Successfully');
+            } else {
+                const newCustomerId = await createCustomer(customerData); // Create customer
+                showSuccessToast('Customer Created Successfully');
+                router.push(`/navigation/customers/${newCustomerId}`); // Redirect to new customer profile
+            }
             handleClose();
-            router.push(`/navigation/customers/${customerId}`); // Redirect to the customer's profile page
+            onSave(); // Trigger the save callback
         } catch (error) {
-            showErrorToast('Failed to Create Customer');
+            showErrorToast('Failed to Save Customer');
         }
     };
 
@@ -66,8 +115,41 @@ const CustomerModal: React.FC<CustomerModalProps> = ({ open, handleClose }) => {
                     sx={{ mb: 1, textAlign: 'center', fontWeight: 'bold', color: `${theme.palette.primary.main} !important` }}
                     variant="h6"
                 >
-                    {'Create Customer'}
+                    {customerId ? 'Edit Customer' : 'Create Customer'}
                 </Typography>
+
+                {customerData.avatar && (
+                    <Box sx={{ display: 'flex', justifyContent: 'center', my: 2 }}>
+                        <Image
+                            src={customerData.avatar}
+                            alt="Avatar"
+                            width={150}
+                            height={150}
+                            style={{
+                                borderRadius: '50%',
+                                border: `2px solid ${theme.palette.primary.main}`,
+                                objectFit: 'cover',
+                            }}
+                        />
+                    </Box>
+                )}
+
+                <Box sx={{ m: 2 }}>
+                    <Button
+                        variant="contained"
+                        component="label"
+                        fullWidth
+                        sx={{
+                            backgroundColor: `${theme.palette.info.main} !important`,
+                            color: `${theme.palette.text.primary} !important`,
+                            '&:hover': { backgroundColor: `${theme.palette.info.dark} !important` },
+                        }}
+                    >
+                        Upload New Image
+                        <input type="file" hidden onChange={handleFileChange} />
+                    </Button>
+                </Box>
+
                 <StyledTextField
                     label="Name"
                     name="name"

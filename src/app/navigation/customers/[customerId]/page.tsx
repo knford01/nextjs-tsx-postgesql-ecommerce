@@ -3,66 +3,35 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Box, Grid, Card, CardContent, Typography, Tabs, Tab, Button, IconButton, Link, useTheme, Avatar, Divider } from '@mui/material';
-import { fetchCustomerById } from '@/db/customer-data';
+import { fetchCustomerById, fetchCustomerEmails } from '@/db/customer-data';
 import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
 import EmailIcon from '@mui/icons-material/Email';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import PersonIcon from '@mui/icons-material/Person';
-
-const contacts = [
-    {
-        name: 'John Doe',
-        phone: '555-123-4567',
-        isPrimary: true,
-    },
-    {
-        name: 'Jane Smith',
-        phone: '555-234-5678',
-        isPrimary: false,
-    },
-    {
-        name: 'Emily Johnson',
-        phone: '555-345-6789',
-        isPrimary: false,
-    },
-    {
-        name: 'Michael Brown',
-        phone: '555-456-7890',
-        isPrimary: false,
-    },
-];
-
-const emails = [
-    {
-        dateTime: '2024-08-14 10:00 AM',
-        subject: 'Welcome!',
-    },
-    {
-        dateTime: '2024-08-13 03:45 PM',
-        subject: 'Invoice Attached',
-    },
-    {
-        dateTime: '2024-08-12 11:30 AM',
-        subject: 'Follow-up',
-    },
-    {
-        dateTime: '2024-08-11 01:00 PM',
-        subject: 'Meeting Scheduled',
-    },
-    {
-        dateTime: '2024-08-10 09:15 AM',
-        subject: 'Thank You',
-    },
-];
+import CustomerModal from '@/components/modals/CustomerModals';
+import ContactModal from '@/components/modals/ContactModal'; // Import ContactModal
+import { fetchContactsByCustomerId } from '@/db/contact-data';
+import CustomerEmailModal from '@/components/modals/EmailModals';
 
 const CustomerProfilePage = ({ params }: any) => {
     const theme = useTheme();
-    const [customer, setCustomer] = useState<any>(null); // Set type to any
-    const [activeTab, setActiveTab] = useState<any>(0); // Set type to any
+    const [customer, setCustomer] = useState<any>(null);
+    const [contacts, setContacts] = useState<any>([]);
+    const [activeTab, setActiveTab] = useState<any>(0);
+    const [isCustomerModalOpen, setIsCustomerModalOpen] = useState(false);
+    const [isContactModalOpen, setIsContactModalOpen] = useState(false);
+    const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
+    const [selectedContactId, setSelectedContactId] = useState<string | null>(null);
     const router = useRouter();
-
     const { customerId } = params;
+
+    const [emails, setEmails] = useState<any>([]);
+    const [emailFormData, setEmailFormData] = useState({
+        subject: '',
+        body: '',
+        recipients: []
+    });
 
     useEffect(() => {
         const loadCustomer = async () => {
@@ -71,22 +40,70 @@ const CustomerProfilePage = ({ params }: any) => {
         };
 
         loadCustomer();
+
+        const loadContacts = async () => {
+            const contactData = await fetchContactsByCustomerId(customerId);
+            setContacts(contactData);
+        };
+
+        loadContacts();
+
+        const loadEmails = async () => {
+            const emailData = await fetchCustomerEmails(customerId);
+            setEmails(emailData);
+        };
+
+        loadEmails();
     }, [customerId]);
 
-    const handleTabChange = (event: any, newValue: any) => { // Set parameter types to any
+    const handleTabChange = (event: any, newValue: any) => {
         setActiveTab(newValue);
     };
 
     const handleEditClick = () => {
-        // Logic to enable editing of customer details
+        setIsCustomerModalOpen(true);
+    };
+
+    const handleCustomerModalClose = () => {
+        setIsCustomerModalOpen(false);
+    };
+
+    const handleCustomerModalSave = async () => {
+        const updatedCustomer = await fetchCustomerById(customerId);
+        setCustomer(updatedCustomer);
+        setIsCustomerModalOpen(false);
     };
 
     const handleAddContact = () => {
-        // Logic to add a new contact
+        setSelectedContactId(null); // Clear selectedContactId to add new contact
+        setIsContactModalOpen(true);
+    };
+
+    const handleEditContact = (contactId: string) => {
+        setSelectedContactId(contactId); // Set the contact ID to edit
+        setIsContactModalOpen(true);
+    };
+
+    const handleContactModalClose = () => {
+        setIsContactModalOpen(false);
+        setSelectedContactId(null); // Clear selected contact ID after closing modal
+    };
+
+    const handleContactModalSave = async () => {
+        const updatedContacts = await fetchContactsByCustomerId(customerId);
+        setContacts(updatedContacts);
+        setIsContactModalOpen(false);
+        setSelectedContactId(null); // Clear selected contact ID after saving
     };
 
     const handleSendEmail = () => {
-        // Logic to send an email
+        setIsEmailModalOpen(true);
+    };
+
+    const handleEmailModalSave = async () => {
+        const updatedEmails = await fetchCustomerEmails(customerId);
+        setEmails(updatedEmails);
+        setIsEmailModalOpen(false);
     };
 
     if (!customer) {
@@ -95,19 +112,18 @@ const CustomerProfilePage = ({ params }: any) => {
 
     return (
         <Box sx={{ mt: 2, mx: 4 }}>
-            <Tabs value={activeTab} onChange={handleTabChange} aria-label="customer-profile-tabs" sx={{ '.MuiTab-root': { textTransform: 'none', }, }}>
+            <Tabs value={activeTab} onChange={handleTabChange} aria-label="customer-profile-tabs" sx={{ '.MuiTab-root': { textTransform: 'none' }, }}>
                 <Tab label="Details" />
+                <Tab label="Reports" />
                 <Tab label="Logs" />
             </Tabs>
 
             {activeTab === 0 && (
-
                 <Grid container spacing={2} sx={{ mt: 2 }}>
                     {/* Customer Details Card */}
                     <Grid item xs={12} sm={12} md={4}>
                         <Card sx={{ backgroundColor: theme.palette.secondary.main, color: theme.palette.text.primary }}>
                             <CardContent sx={{ position: 'relative' }}>
-                                {/* Edit Icon at the top right */}
                                 <IconButton
                                     onClick={handleEditClick}
                                     sx={{ position: 'absolute', top: 8, right: 8 }}
@@ -119,7 +135,7 @@ const CustomerProfilePage = ({ params }: any) => {
                                 <Box display="flex" flexDirection="column" alignItems="center" mb={2}>
                                     <Avatar
                                         alt={customer.name}
-                                        src={customer.avatarUrl || ''}
+                                        src={customer.avatar || ''}
                                         sx={{ width: 100, height: 100, backgroundColor: theme.palette.primary.main }}
                                     >
                                         {!customer.avatarUrl && <PersonIcon sx={{ fontSize: 60, color: theme.palette.text.primary }} />}
@@ -156,9 +172,9 @@ const CustomerProfilePage = ({ params }: any) => {
                                         <Divider sx={{ bgcolor: theme.palette.divider }} />
                                         <Typography sx={{ p: 1 }}>{customer.zip}</Typography>
                                         <Divider sx={{ bgcolor: theme.palette.divider }} />
-                                        <Typography sx={{ p: 1 }}>{customer.phone}</Typography>
+                                        <Typography sx={{ p: 1 }}>{customer.contact_phone}</Typography>
                                         <Divider sx={{ bgcolor: theme.palette.divider }} />
-                                        <Typography sx={{ p: 1 }}>{customer.email}</Typography>
+                                        <Typography sx={{ p: 1 }}>{customer.contact_email}</Typography>
                                     </Grid>
                                 </Grid>
                             </CardContent>
@@ -178,19 +194,23 @@ const CustomerProfilePage = ({ params }: any) => {
                                 <hr style={{ borderColor: theme.palette.warning.main, marginTop: 4, marginBottom: 4 }} />
 
                                 {contacts.map((contact: any, index: number) => (
-                                    <Grid container spacing={2} key={index} sx={{ mb: 2 }}>
+                                    <Grid
+                                        container
+                                        spacing={2}
+                                        key={index}
+                                        sx={{ mb: 2, cursor: 'pointer' }}  // Add cursor: pointer here
+                                        onClick={() => handleEditContact(contact.id)}
+                                    >
                                         <Grid item xs={4}>
-                                            <Typography>{contact.name}</Typography>
+                                            <Typography>{contact.first_name} {contact.last_name}</Typography>
                                             <Divider sx={{ bgcolor: theme.palette.divider }} />
-
                                         </Grid>
                                         <Grid item xs={4}>
-                                            <Typography>{contact.phone}</Typography>
+                                            <Typography>{contact.phone_number}</Typography>
                                             <Divider sx={{ bgcolor: theme.palette.divider }} />
-
                                         </Grid>
                                         <Grid item xs={4}>
-                                            {contact.isPrimary && (
+                                            {contact.main == 1 && (
                                                 <>
                                                     <Typography sx={{ fontWeight: 'bold', color: theme.palette.success.light }}>Primary Contact</Typography>
                                                     <Divider sx={{ bgcolor: theme.palette.divider }} />
@@ -211,14 +231,14 @@ const CustomerProfilePage = ({ params }: any) => {
                                     <EmailIcon />
                                 </IconButton>
                                 <Box display="flex" flexDirection="column" alignItems="center" mb={2}>
-                                    <Typography variant="h6">Send Email</Typography>
+                                    <Typography variant="h6">Sent Emails</Typography>
                                 </Box>
                                 <hr style={{ borderColor: theme.palette.warning.main, marginTop: 4, marginBottom: 4 }} />
 
-                                {emails.map((email, index) => (
+                                {emails.map((email: any, index: number) => (
                                     <Grid container spacing={2} key={index} sx={{ mb: 2 }}>
                                         <Grid item xs={6}>
-                                            <Typography>{email.dateTime}</Typography>
+                                            <Typography>{new Date(email.date_created).toLocaleString()}</Typography>
                                             <Divider sx={{ bgcolor: theme.palette.divider }} />
                                         </Grid>
                                         <Grid item xs={6}>
@@ -230,7 +250,11 @@ const CustomerProfilePage = ({ params }: any) => {
                             </CardContent>
                         </Card>
                     </Grid>
+                </Grid>
+            )}
 
+            {activeTab === 1 && (
+                <Box sx={{ mt: 2 }}>
                     {/* Reports Card */}
                     <Grid item xs={12} sm={12} md={4}>
                         <Card sx={{ backgroundColor: theme.palette.secondary.main, color: theme.palette.text.primary }}>
@@ -259,15 +283,38 @@ const CustomerProfilePage = ({ params }: any) => {
                             </CardContent>
                         </Card>
                     </Grid>
-
-                </Grid>
+                </Box>
             )}
 
-            {activeTab === 1 && (
+            {activeTab === 2 && (
                 <Box sx={{ mt: 2 }}>
                     <Typography>Logs section coming soon...</Typography>
                 </Box>
             )}
+
+            {/* Customer Modal */}
+            <CustomerModal
+                open={isCustomerModalOpen}
+                handleClose={handleCustomerModalClose}
+                customerId={customerId} // Pass customerId for editing
+                onSave={handleCustomerModalSave} // Trigger this when the modal is saved
+            />
+
+            {/* Contact Modal */}
+            <ContactModal
+                open={isContactModalOpen}
+                handleClose={handleContactModalClose}
+                contactId={selectedContactId || undefined} // Pass selected contact ID or undefined for new contact
+                customer_id={customerId || undefined}
+                onSave={handleContactModalSave} // Trigger this when the modal is saved
+            />
+
+            <CustomerEmailModal
+                open={isEmailModalOpen}
+                handleClose={() => setIsEmailModalOpen(false)}
+                customer_id={customerId}
+                onSave={handleEmailModalSave}
+            />
         </Box>
     );
 };

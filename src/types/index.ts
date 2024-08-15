@@ -62,3 +62,16 @@ type Customer = {
     active: number;
     date_created: string;
 };
+
+type Contact = {
+    id: number;
+    customer_id: number;
+    main: number;
+    first_name: string;
+    last_name: string;
+    phone_number: string;
+    ext: string;
+    email: string;
+    active: number;
+};
+
