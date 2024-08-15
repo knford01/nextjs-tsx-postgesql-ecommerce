@@ -57,7 +57,7 @@ export default function NavLinks({ collapsed, sessionUser }: { collapsed: boolea
                 color: theme.palette.text.primary,
                 '&:hover': {
                   backgroundColor: theme.palette.action.hover,
-                  color: theme.palette.text.secondary,
+                  color: theme.palette.text.primary,
                 },
                 transition: 'background-color 0.3s, color 0.3s',
                 borderRadius: 2,

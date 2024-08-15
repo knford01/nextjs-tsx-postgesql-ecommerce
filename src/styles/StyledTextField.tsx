@@ -11,7 +11,7 @@ export const StyledTextField = (props: any) => {
             sx: {
                 '& .MuiInputBase-input': {
                     bgcolor: `${theme.palette.text.primary} !important`,
-                    color: `${theme.palette.primary.main} !important`,
+                    color: `${theme.palette.text.secondary} !important`,
                     height: '2.5em',
                     padding: '10px 14px',
                     boxSizing: 'border-box',
@@ -23,7 +23,7 @@ export const StyledTextField = (props: any) => {
         InputLabelProps: {
             sx: {
                 '&.MuiInputLabel-shrink': {
-                    color: `${theme.palette.primary.main} !important`,
+                    color: `${theme.palette.text.secondary} !important`,
                     transform: 'translate(.5, -2.5px) scale(0.75)',
                 },
                 '&:not(.MuiInputLabel-shrink)': {
@@ -34,7 +34,7 @@ export const StyledTextField = (props: any) => {
         sx: {
             mt: 2,
             '& .MuiInputLabel-root': {
-                color: `${theme.palette.primary.main} !important`,
+                color: `${theme.palette.text.secondary} !important`,
             },
         },
     };
@@ -77,7 +77,7 @@ export const StyledSelectField: React.FC<StyledSelectFieldProps> = ({
     const selectTextFieldStyles = {
         '& .MuiInputBase-input': {
             backgroundColor: `${theme.palette.text.primary} !important`,
-            color: `${theme.palette.primary.main} !important`,
+            color: `${theme.palette.text.secondary} !important`,
             height: '2.5em',
             padding: '10px 14px',
             boxSizing: 'border-box',
@@ -85,17 +85,22 @@ export const StyledSelectField: React.FC<StyledSelectFieldProps> = ({
             alignItems: 'center',
         },
         '& .MuiInputLabel-root': {
-            color: `${theme.palette.primary.main} !important`,
+            color: `${theme.palette.text.secondary} !important`,
         },
         '& .MuiInputLabel-shrink': {
-            color: `${theme.palette.primary.main} !important`,
+            color: `${theme.palette.text.secondary} !important`,
             transform: 'translate(.5, -2.5px) scale(0.75)',
         },
         mt: 1,
     };
 
     const menuItemStyles = {
-        color: `${theme.palette.primary.main} !important`,
+        backgroundColor: `${theme.palette.background.paper} !important`,
+        color: `${theme.palette.text.secondary} !important`,
+        height: '2.5em',
+        boxSizing: 'border-box',
+        display: 'flex',
+        alignItems: 'center',
         '&:hover': {
             backgroundColor: `${theme.palette.action.hover} !important`,
             color: `${theme.palette.text.primary} !important`,

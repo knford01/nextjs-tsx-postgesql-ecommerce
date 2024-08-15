@@ -3,7 +3,7 @@
 import { Box } from '@mui/material';
 import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react';
 import { ThemeProvider, Theme } from '@mui/material/styles';
-import { lightTheme, darkTheme, defaultTheme } from '@/components/layout/themes';
+import { themes } from '@/components/layout/themes';
 import SideNav from '@/components/layout/sidenav';
 import TopNav from '@/components/layout/topnav';
 import { useRouter } from 'next/navigation';
@@ -31,7 +31,7 @@ export const useThemeContext = () => {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   const router = useRouter();
-  const [theme, setTheme] = useState<Theme>(defaultTheme);
+  const [theme, setTheme] = useState<Theme>(themes.defaultTheme);
   const [collapsed, setCollapsed] = useState(false);
   const [sessionUser, setSessionUser] = useState<User | null>(null);
   const [combinedPermissions, setCombinedPermissions] = useState<CombinedPermission[]>([]);
@@ -50,21 +50,19 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 
         // Fetch combined permissions and set them in state
         const permissions = await getCombinedPermissions(session.user.id, session.user.role);
-        // console.log(permissions);
         setCombinedPermissions(permissions);
 
         const themeName = userTheme[0]?.theme || 'defaultTheme';
-        setTheme(defaultTheme);
 
         switch (themeName) {
           case 'lightTheme':
-            setTheme(lightTheme);
+            setTheme(themes.lightTheme);
             break;
           case 'darkTheme':
-            setTheme(darkTheme);
+            setTheme(themes.darkTheme);
             break;
           default:
-            setTheme(defaultTheme);
+            setTheme(themes.defaultTheme);
         }
       }
     };
@@ -72,8 +70,10 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     checkSession();
   }, [router]);
 
+  // Ensure that theme is defined before rendering the layout
+  if (!theme) return null;
+
   return (
-    //Contexts allow you to structure you hieararchy and pass accessed to multiple components across different levels of your component tree\\
     <ThemeContext.Provider value={{ theme, setTheme }}>
       <ThemeProvider theme={theme}>
         <CombinedPermissionsProvider combinedPermissions={combinedPermissions}>
@@ -93,7 +93,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                 sx={{
                   flexGrow: 1,
                   overflowY: 'auto',
-                  backgroundColor: theme.palette.background.paper,
+                  backgroundColor: theme?.palette?.background?.paper || themes.defaultTheme.palette.background.paper,
                   padding: { xs: 4 },
                   transition: 'all 0.3s',
                   paddingTop: '1rem',

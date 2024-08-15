@@ -6,9 +6,8 @@ import PaletteIcon from '@mui/icons-material/Palette';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import EditIcon from '@mui/icons-material/Edit';
 import StopIcon from '@mui/icons-material/Stop';
-import useSession from '@/hooks/useSession';
 import { useThemeContext } from '@/app/navigation/layout';
-import { lightTheme, darkTheme, defaultTheme } from './themes';
+import { themes } from './themes';
 import { setUserTheme } from '@/db/user-data';
 import { UserModal } from '../modals/UserModals';
 
@@ -37,7 +36,7 @@ const TopNav: React.FC<TopNavProps> = ({ collapsed, sessionUser, setSessionUser 
 
     useEffect(() => {
         fetchSession();
-        const interval = setInterval(fetchSession, 15000); // Refresh session every 15 seconds
+        const interval = setInterval(fetchSession, 15000); // Refresh session every 15 seconds 
         return () => clearInterval(interval);
     }, [fetchSession]);
 
@@ -196,9 +195,9 @@ const TopNav: React.FC<TopNavProps> = ({ collapsed, sessionUser, setSessionUser 
                     },
                 }}
             >
-                <MenuItem onClick={() => { setTheme(lightTheme); updateThemeInDatabase('lightTheme'); handleClose(); }}>Light Theme</MenuItem>
-                <MenuItem onClick={() => { setTheme(darkTheme); updateThemeInDatabase('darkTheme'); handleClose(); }}>Dark Theme</MenuItem>
-                <MenuItem onClick={() => { setTheme(defaultTheme); updateThemeInDatabase('defaultTheme'); handleClose(); }}>Default Theme</MenuItem>
+                <MenuItem onClick={() => { setTheme(themes.lightTheme); updateThemeInDatabase('lightTheme'); handleClose(); }}>Light Theme</MenuItem>
+                <MenuItem onClick={() => { setTheme(themes.darkTheme); updateThemeInDatabase('darkTheme'); handleClose(); }}>Dark Theme</MenuItem>
+                <MenuItem onClick={() => { setTheme(themes.defaultTheme); updateThemeInDatabase('defaultTheme'); handleClose(); }}>Default Theme</MenuItem>
             </Menu>
 
             {/* UserModal Component */}

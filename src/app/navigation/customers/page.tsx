@@ -77,7 +77,7 @@ const CustomersPage = () => {
                             </InputAdornment>
                         ),
                         style: {
-                            color: theme.palette.primary.main,
+                            color: theme.palette.text.secondary,
                             fontWeight: 'bold',
                         },
                     }}
@@ -121,7 +121,7 @@ const CustomersPage = () => {
                                     <Typography variant="body2" color={theme.palette.text.primary}>
                                         {customer.address}, {customer.city}, {customer.state} {customer.zip}
                                     </Typography>
-                                    <Typography variant="body2" color={theme.palette.text.secondary}>
+                                    <Typography variant="body2" color={theme.palette.text.primary}>
                                         {customer.contact_name} {customer.contact_name && customer.contact_phone ? '-' : ''} {customer.contact_phone}
                                     </Typography>
                                 </CardContent>

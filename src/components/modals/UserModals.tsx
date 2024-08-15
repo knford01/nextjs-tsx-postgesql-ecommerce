@@ -42,7 +42,7 @@ export const UserModal: React.FC<UserModalProps> = ({ open, onClose, onSubmit, i
             sx: {
                 '& .MuiInputBase-input': {
                     bgcolor: `${theme.palette.text.primary} !important`,
-                    color: `${theme.palette.primary.main} !important`,
+                    color: `${theme.palette.text.secondary} !important`,
                     height: '2.5em',
                     padding: '10px 14px',
                     boxSizing: 'border-box',
@@ -54,10 +54,11 @@ export const UserModal: React.FC<UserModalProps> = ({ open, onClose, onSubmit, i
         InputLabelProps: {
             sx: {
                 '&.MuiInputLabel-shrink': {
-                    color: `${theme.palette.primary.main} !important`,
+                    color: `${theme.palette.text.secondary} !important`,
                     transform: 'translate(.5, -2.5px) scale(0.75)',
                 },
                 '&:not(.MuiInputLabel-shrink)': {
+                    color: `${theme.palette.text.secondary} !important`,
                     transform: 'translate(14px, 10px) scale(1)',
                 },
             },
@@ -65,7 +66,7 @@ export const UserModal: React.FC<UserModalProps> = ({ open, onClose, onSubmit, i
         sx: {
             mt: 2,
             '& .MuiInputLabel-root': {
-                color: `${theme.palette.primary.main} !important`,
+                color: `${theme.palette.text.secondary} !important`,
             },
         },
     };
@@ -78,7 +79,7 @@ export const UserModal: React.FC<UserModalProps> = ({ open, onClose, onSubmit, i
                     sx: {
                         bgcolor: `${theme.palette.background.paper} !important`,
                         '& .MuiMenuItem-root': {
-                            color: `${theme.palette.primary.main} !important`,
+                            color: `${theme.palette.text.secondary} !important`,
                             '&:hover': {
                                 bgcolor: `${theme.palette.action.hover} !important`,
                                 color: `${theme.palette.text.primary} !important`,
@@ -89,13 +90,13 @@ export const UserModal: React.FC<UserModalProps> = ({ open, onClose, onSubmit, i
             },
             sx: {
                 backgroundColor: `${theme.palette.text.primary} !important`,
-                color: `${theme.palette.primary.main} !important`,
+                color: `${theme.palette.text.secondary} !important`,
                 height: '2.5em',
                 boxSizing: 'border-box',
                 display: 'flex',
                 alignItems: 'center',
                 '& .MuiSelect-select': {
-                    color: `${theme.palette.primary.main} !important`,
+                    color: `${theme.palette.text.secondary} !important`,
                 },
             },
         },
