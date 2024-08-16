@@ -1,0 +1,68 @@
+/* src/app/navigation/calendar/CalendarPage.module.css */
+
+.react-calendar {
+    border-radius: 12px;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+}
+
+.react-calendar__viewContainer {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.react-calendar__tile {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-end;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    box-sizing: border-box;
+    padding: 8px;
+    height: 100%;
+}
+
+.react-calendar__tile--now {
+    background-color: #f0f0f0;
+    border-radius: 8px;
+}
+
+.react-calendar__tile--active {
+    background-color: #0288d1;
+    color: white;
+}
+
+.react-calendar__month-view__days__day {
+    flex-grow: 1;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-start;
+    padding: 8px;
+    width: 100%;
+    height: 100%;
+}
+
+.react-calendar__month-view__days__day--weekend {
+    border-radius: 8px;
+}
+
+.react-calendar__tile>abbr {
+    display: inline-block;
+    width: 100%;
+    text-align: right;
+}
+
+/* Enlarge the font size of the navigation buttons */
+.react-calendar__navigation button {
+    font-size: 1.2rem;
+    /* Increase the font size */
+    font-weight: bold;
+    /* Keep the text bold */
+    color: inherit;
+}
