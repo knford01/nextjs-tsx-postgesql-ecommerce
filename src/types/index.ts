@@ -75,3 +75,15 @@ type Contact = {
     active: number;
 };
 
+interface Notice {
+    id: number;
+    importance_id: number;
+    subject: string;
+    notice: string;
+    user_id: number;
+    date_created: string;
+    name?: string;
+    color?: string;
+    date_viewed: string;
+}
+
