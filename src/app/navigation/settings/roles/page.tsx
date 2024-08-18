@@ -10,22 +10,31 @@ import { useTheme } from '@mui/material';
 import { UserRole } from '@/types/user';
 import { fetchUserRoles, createRole, setUserRoles } from '@/db/user-data'; // Assuming these functions are in your data layer
 import { showSuccessToast } from '@/components/ui/ButteredToast';
+import { useRouter } from 'next/navigation';
+import { useCombinedPermissions } from '@/components/layout/combinedpermissions';
+import { hasAccess } from '@/utils/permissions2';
 
 export default function RolesPage() {
     const theme = useTheme();
+    const router = useRouter();
     const [roles, setRoles] = useState<UserRole[]>([]);
     const [formData, setFormData] = useState({ role: '', display: '', active: 1 });
     const [selectedRole, setSelectedRole] = useState<UserRole | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [errors, setErrors] = useState({ role: false, display: false });
 
+    const combinedPermissions = useCombinedPermissions();
     useEffect(() => {
         const fetchRoles = async () => {
             const rolesData = await fetchUserRoles();
             setRoles(rolesData);
         };
-        fetchRoles();
-    }, []);
+        if (!hasAccess(combinedPermissions, 'settings', 'roles')) {
+            router.push('/navigation/403');
+        } else {
+            fetchRoles();
+        }
+    }, [combinedPermissions, router]);
 
     const handleOpenModal = (role: UserRole | null = null) => {
         if (role) {
@@ -77,7 +86,7 @@ export default function RolesPage() {
             <Box display="flex" justifyContent="space-between" alignItems="center" mb={4}>
                 <Typography variant="h4">
                 </Typography>
-                <Button variant="contained" color="primary" startIcon={<AddIcon />} onClick={() => handleOpenModal()}>
+                <Button variant="contained" sx={{ backgroundColor: `${theme.palette.secondary.main} !important`, color: theme.palette.text.primary }} startIcon={<AddIcon />} onClick={() => handleOpenModal()}>
                     Create Role
                 </Button>
             </Box>

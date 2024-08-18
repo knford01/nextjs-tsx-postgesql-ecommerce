@@ -10,19 +10,27 @@ import { useTheme } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import { UserRole } from '@/types/user';
 import { fetchUserRoles } from '@/db/user-data';
+import { useCombinedPermissions } from '@/components/layout/combinedpermissions';
+import { hasAccess } from '@/utils/permissions2';
 
 export default function RolesPage() {
     const theme = useTheme();
     const router = useRouter();
     const [roles, setRoles] = useState<UserRole[]>([]);
+    const combinedPermissions = useCombinedPermissions();
+
+    const fetchRoles = async () => {
+        const rolesData = await fetchUserRoles();
+        setRoles(rolesData);
+    };
 
     useEffect(() => {
-        const fetchRoles = async () => {
-            const rolesData = await fetchUserRoles();
-            setRoles(rolesData);
-        };
-        fetchRoles();
-    }, []);
+        if (!hasAccess(combinedPermissions, 'settings', 'access')) {
+            router.push('/navigation/403');
+        } else {
+            fetchRoles();
+        }
+    }, [combinedPermissions, router]);
 
     const openPage = (role: UserRole) => {
         router.push(`/navigation/settings/access/${role.id}`);

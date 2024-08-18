@@ -7,28 +7,34 @@ import type { } from '@mui/x-data-grid/themeAugmentation';
 const colors = {
     lightTheme: {
         primaryMain: '#64b5f6',
+        primaryContrast: '#2D5F5D',
         secondaryMain: '#1976d2',
         actionHover: '#e3f2fd',
         actionSelected: '#bbdefb',
         backgroundPaper: '#ffffff',
+        backgroundLvl1: '#f5f5f5',
         borderBottom: '#d8d8d8',
         textPrimary: '#ffffff',
     },
     darkTheme: {
         primaryMain: '#320b86',
+        primaryContrast: '#2D5F5D',
         secondaryMain: '#022140',
         actionHover: '#37474f',
         actionSelected: '#546e7a',
         backgroundPaper: '#263238',
+        backgroundLvl1: '#f5f5f5',
         borderBottom: '#b0bec5',
         textPrimary: '#ffffff',
     },
     defaultTheme: {
         primaryMain: '#1E4258',
+        primaryContrast: '#2D5F5D',
         secondaryMain: '#265077',
         actionHover: '#022140',
         actionSelected: '#494B68',
         backgroundPaper: '#e8e8e8',
+        backgroundLvl1: '#f9fafb',
         borderBottom: '#d8d8d8',
         textPrimary: '#ffffff',
     },
@@ -43,11 +49,16 @@ const createAppTheme = (themeColors: typeof colors.lightTheme) =>
                 selected: themeColors.actionSelected,
             },
             background: {
-                default: themeColors.borderBottom,
+                default: themeColors.actionHover,
                 paper: themeColors.backgroundPaper,
+                level1: themeColors.backgroundLvl1,
+                level2: '#e0e0e0',
             },
             primary: {
                 main: themeColors.primaryMain,
+                contrastText: themeColors.primaryContrast
+                // light:,
+                // dark:,
             },
             secondary: {
                 main: themeColors.secondaryMain,
@@ -86,7 +97,7 @@ const createAppTheme = (themeColors: typeof colors.lightTheme) =>
                         color: themeColors.textPrimary,
                     },
                     columnHeaders: {
-                        backgroundColor: themeColors.actionHover,
+                        backgroundColor: themeColors.primaryMain,
                         '& .MuiDataGrid-columnHeaderTitle': {
                             color: themeColors.textPrimary,
                         },

@@ -1,7 +1,8 @@
+//src/app/navigation/layout.tsx
 'use client';
 
 import { Box } from '@mui/material';
-import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react';
+import React, { createContext, useState, useContext, ReactNode, useEffect, useCallback } from 'react';
 import { ThemeProvider, Theme } from '@mui/material/styles';
 import { themes } from '@/components/layout/themes';
 import SideNav from '@/components/layout/sidenav';
@@ -13,6 +14,7 @@ import { ToastContainer } from 'react-toastify';
 import { User } from '@/types/user';
 import { getCombinedPermissions } from '@/utils/permissions2';
 import { CombinedPermissionsProvider } from '@/components/layout/combinedpermissions';
+import { CheckSessionProvider } from '@/components/layout/checksession';
 
 interface ThemeContextProps {
   theme: Theme;
@@ -36,39 +38,39 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   const [sessionUser, setSessionUser] = useState<User | null>(null);
   const [combinedPermissions, setCombinedPermissions] = useState<CombinedPermission[]>([]);
 
-  useEffect(() => {
-    const checkSession = async () => {
-      const response = await fetch('/api/auth/session');
+  const checkSession = useCallback(async () => {
+    const response = await fetch('/api/auth/session');
 
-      if (!response.ok) {
-        console.log('Bad Response');
-        router.push('/logout'); // Redirect to the logout page if the session is not valid
-      } else {
-        const session = await response.json();
-        const userTheme = await fetchUserTheme(session.user.id);
-        setSessionUser(session.user);
+    if (!response.ok) {
+      console.log('Bad Response');
+      router.push('/logout'); // Redirect to the logout page if the session is not valid
+    } else {
+      const session = await response.json();
+      const userTheme = await fetchUserTheme(session.user.id);
+      setSessionUser(session.user);
 
-        // Fetch combined permissions and set them in state
-        const permissions = await getCombinedPermissions(session.user.id, session.user.role);
-        setCombinedPermissions(permissions);
+      // Fetch combined permissions and set them in state
+      const permissions = await getCombinedPermissions(session.user.id, session.user.role);
+      setCombinedPermissions(permissions);
 
-        const themeName = userTheme[0]?.theme || 'defaultTheme';
+      const themeName = userTheme[0]?.theme || 'defaultTheme';
 
-        switch (themeName) {
-          case 'lightTheme':
-            setTheme(themes.lightTheme);
-            break;
-          case 'darkTheme':
-            setTheme(themes.darkTheme);
-            break;
-          default:
-            setTheme(themes.defaultTheme);
-        }
+      switch (themeName) {
+        case 'lightTheme':
+          setTheme(themes.lightTheme);
+          break;
+        case 'darkTheme':
+          setTheme(themes.darkTheme);
+          break;
+        default:
+          setTheme(themes.defaultTheme);
       }
-    };
-
-    checkSession();
+    }
   }, [router]);
+
+  useEffect(() => {
+    checkSession();
+  }, [checkSession]);
 
   // Ensure that theme is defined before rendering the layout
   if (!theme) return null;
@@ -77,47 +79,53 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <ThemeContext.Provider value={{ theme, setTheme }}>
       <ThemeProvider theme={theme}>
         <CombinedPermissionsProvider combinedPermissions={combinedPermissions}>
-          <div className="flex h-screen overflow-hidden">
-            <SideNav collapsed={collapsed} setCollapsed={setCollapsed} sessionUser={sessionUser} />
-            <Box
-              sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                flexGrow: 1,
-                transition: 'margin-left 0.3s',
-                marginLeft: collapsed ? '64px' : '240px', // Adjust based on collapsed state
-              }}
-            >
-              <TopNav collapsed={collapsed} sessionUser={sessionUser} setSessionUser={setSessionUser} />
+          <CheckSessionProvider checkSession={checkSession}>
+            <div className="flex h-screen overflow-hidden">
+              <SideNav collapsed={collapsed} setCollapsed={setCollapsed} sessionUser={sessionUser} />
               <Box
                 sx={{
+                  display: 'flex',
+                  flexDirection: 'column',
                   flexGrow: 1,
-                  overflowY: 'auto',
-                  backgroundColor: theme?.palette?.background?.paper || themes.defaultTheme.palette.background.paper,
-                  padding: { xs: 4 },
-                  transition: 'all 0.3s',
-                  paddingTop: '1rem',
+                  transition: 'margin-left 0.3s',
+                  marginLeft: collapsed ? '64px' : '240px', // Adjust based on collapsed state
                 }}
               >
-                <Box sx={{ pt: 5, pl: 1, display: 'flex', justifyContent: 'space-between' }}>
-                  <Breadcrumbs />
-                  <ToastContainer
-                    position="top-right"
-                    autoClose={5000}
-                    hideProgressBar={false}
-                    newestOnTop={false}
-                    closeOnClick
-                    rtl={false}
-                    pauseOnFocusLoss
-                    draggable
-                    pauseOnHover
-                    theme="colored"
-                  />
+                <TopNav
+                  collapsed={collapsed}
+                  sessionUser={sessionUser}
+                  checkSession={checkSession}  // Pass checkSession to TopNav
+                />
+                <Box
+                  sx={{
+                    flexGrow: 1,
+                    overflowY: 'auto',
+                    backgroundColor: theme?.palette?.background?.paper || themes.defaultTheme.palette.background.paper,
+                    padding: { xs: 4 },
+                    transition: 'all 0.3s',
+                    paddingTop: '1rem',
+                  }}
+                >
+                  <Box sx={{ p: 0, pt: 5, display: 'flex', justifyContent: 'space-between' }}>
+                    <Breadcrumbs />
+                    <ToastContainer
+                      position="top-right"
+                      autoClose={5000}
+                      hideProgressBar={false}
+                      newestOnTop={false}
+                      closeOnClick
+                      rtl={false}
+                      pauseOnFocusLoss
+                      draggable
+                      pauseOnHover
+                      theme="colored"
+                    />
+                  </Box>
+                  {children}
                 </Box>
-                {children}
               </Box>
-            </Box>
-          </div>
+            </div>
+          </CheckSessionProvider>
         </CombinedPermissionsProvider>
       </ThemeProvider>
     </ThemeContext.Provider>

@@ -12,17 +12,27 @@ import EventViewModal from '@/components/modals/EventViewModal';
 import { deleteEvent, dragAndDropEvent, editCalendarEvent, getCalendarEvents } from '@/db/calendar-data';
 import { Box, useTheme } from '@mui/material';
 import { showErrorToast, showSuccessToast } from '@/components/ui/ButteredToast';
+import { useRouter } from 'next/navigation';
+
+import { useCombinedPermissions } from '@/components/layout/combinedpermissions';
+import { hasAccess } from '@/utils/permissions2';
 
 const CalendarComponent: React.FC = () => {
     const theme = useTheme();
+    const router = useRouter();
     const [events, setEvents] = useState<EventInput[]>([]);
     const [editModalOpen, setEditModalOpen] = useState(false);
     const [viewModalOpen, setViewModalOpen] = useState(false);
     const [selectedEvent, setSelectedEvent] = useState<any>(null);
 
+    const combinedPermissions = useCombinedPermissions();
     useEffect(() => {
-        buildCalendar();
-    }, []);
+        if (!hasAccess(combinedPermissions, 'navigation', 'calendar')) {
+            router.push('/navigation/403'); // Redirect to a 403 error page or any other appropriate route                                                                                            
+        } else {
+            buildCalendar();
+        }
+    }, [combinedPermissions, router]);
 
     const buildCalendar = async () => {
         const data = await getCalendarEvents();
@@ -147,110 +157,116 @@ const CalendarComponent: React.FC = () => {
     // console.log('selectedEvent:', selectedEvent);
 
     return (
-        <Box
-            sx={{
-                marginTop: '15px',
-                '& .fc-col-header-cell': {
-                    backgroundColor: theme.palette.primary.main,
-                    color: theme.palette.text.primary,
-                },
-                '& .fc-daygrid-day': {
-                    backgroundColor: theme.palette.text.primary,
-                    color: theme.palette.primary.main,
-                },
-                '& .fc-daygrid-day-frame': {
-                    backgroundColor: theme.palette.text.primary,
-                },
-                '& .fc-daygrid-day-top': {
-                    color: theme.palette.text.secondary,
-                },
-                '& .fc-daygrid-event': {
-                    backgroundColor: theme.palette.text.primary,
-                    color: theme.palette.primary.main,
-                },
-                '& .fc-toolbar-title': {
-                    fontWeight: 'bold',
-                    color: theme.palette.primary.main,
-                },
-            }}
-        >
-            <FullCalendar
-                plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-                initialView="dayGridMonth"
-                initialDate={new Date().toISOString().split('T')[0]}  // Set to today's date
-                eventDisplay="block"
-                nextDayThreshold="00:00:00"
-                height={850}
-                headerToolbar={{
-                    left: 'prev,next today',
-                    center: 'title',
-                    right: 'multiMonthYear,dayGridMonth,timeGridWeek,timeGridDay,listMonth'
-                }}
-                buttonText={{
-                    today: 'Today',
-                    year: 'Year',
-                    month: 'Month',
-                    week: 'Week',
-                    day: 'Day',
-                    list: 'Month\'s Events'
-                }}
-                dayMaxEventRows={true}
-                views={{
-                    dayGrid: {
-                        dayMaxEventRows: 6
+        <Box sx={{ backgroundColor: theme.palette.background.level1, padding: 1, marginTop: '15px', borderRadius: 5 }}>
+            <Box
+                sx={{
+                    borderRadius: '5px', // Adjust this value for the desired roundness
+                    overflow: 'hidden', // Ensure that the rounded corners don't get cut off
+                    '& .fc': {
+                        borderRadius: '5px', // Apply rounded corners to the calendar itself 
                     },
-                    timeGrid: {
-                        dayMaxEventRows: 6
-                    }
+                    '& .fc-col-header-cell': {
+                        backgroundColor: theme.palette.primary.main,
+                        color: theme.palette.text.primary,
+                    },
+                    '& .fc-daygrid-day': {
+                        backgroundColor: theme.palette.text.primary,
+                        color: theme.palette.primary.main,
+                    },
+                    '& .fc-daygrid-day-frame': {
+                        backgroundColor: theme.palette.text.primary,
+                    },
+                    '& .fc-daygrid-day-top': {
+                        color: theme.palette.text.secondary,
+                    },
+                    '& .fc-daygrid-event': {
+                        backgroundColor: theme.palette.text.primary,
+                        color: theme.palette.primary.main,
+                    },
+                    '& .fc-toolbar-title': {
+                        fontWeight: 'bold',
+                        color: theme.palette.primary.main,
+                    },
                 }}
-                editable={true}
-                selectable={true}
-                select={handleDateClick}
-                eventClick={handleEventClick}
-                eventDrop={handleDragDrop} // Apply handleDragDrop here
-                events={events}
-                dayCellContent={(dayCell) => (
-                    <Box
-                        sx={{
-                            backgroundColor: theme.palette.text.primary,
-                            color: theme.palette.primary.main,
-                            padding: '4px',
-                        }}
-                    >
-                        {dayCell.dayNumberText}
-                    </Box>
-                )}
-                dayHeaderContent={(dayHeader) => (
-                    <Box
-                        sx={{
-                            backgroundColor: theme.palette.primary.main,
-                            color: theme.palette.text.primary,
-                            padding: '5px',
-                        }}
-                    >
-                        {dayHeader.text}
-                    </Box>
-                )}
-            />
+            >
+                <FullCalendar
+                    plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+                    initialView="dayGridMonth"
+                    initialDate={new Date().toISOString().split('T')[0]}  // Set to today's date
+                    eventDisplay="block"
+                    nextDayThreshold="00:00:00"
+                    height={850}
+                    headerToolbar={{
+                        left: 'prev,next today',
+                        center: 'title',
+                        right: 'multiMonthYear,dayGridMonth,timeGridWeek,timeGridDay,listMonth'
+                    }}
+                    buttonText={{
+                        today: 'Today',
+                        year: 'Year',
+                        month: 'Month',
+                        week: 'Week',
+                        day: 'Day',
+                        list: 'Month\'s Events'
+                    }}
+                    dayMaxEventRows={true}
+                    views={{
+                        dayGrid: {
+                            dayMaxEventRows: 6
+                        },
+                        timeGrid: {
+                            dayMaxEventRows: 6
+                        }
+                    }}
+                    editable={true}
+                    selectable={true}
+                    select={handleDateClick}
+                    eventClick={handleEventClick}
+                    eventDrop={handleDragDrop} // Apply handleDragDrop here
+                    events={events}
+                    dayCellContent={(dayCell) => (
+                        <Box
+                            sx={{
+                                backgroundColor: theme.palette.text.primary,
+                                color: theme.palette.primary.main,
+                                padding: '4px',
+                            }}
+                        >
+                            {dayCell.dayNumberText}
+                        </Box>
+                    )}
+                    dayHeaderContent={(dayHeader) => (
+                        <Box
+                            sx={{
+                                backgroundColor: theme.palette.primary.main,
+                                color: theme.palette.text.primary,
+                                padding: '5px',
+                            }}
+                        >
+                            {dayHeader.text}
+                        </Box>
+                    )}
+                />
 
-            <EventEditModal
-                open={editModalOpen}
-                onClose={() => setEditModalOpen(false)}
-                onSave={handleEventSave}
-                event={selectedEvent}
-                initialDate={selectedEvent?.start?.toString()}
-            />
+                <EventEditModal
+                    open={editModalOpen}
+                    onClose={() => setEditModalOpen(false)}
+                    onSave={handleEventSave}
+                    event={selectedEvent}
+                    initialDate={selectedEvent?.start?.toString()}
+                />
 
-            <EventViewModal
-                open={viewModalOpen}
-                onClose={() => setViewModalOpen(false)}
-                onEdit={() => {
-                    setViewModalOpen(false);
-                    setEditModalOpen(true);
-                }}
-                onDelete={handleEventDelete}
-                event={selectedEvent}
-            />
+                <EventViewModal
+                    open={viewModalOpen}
+                    onClose={() => setViewModalOpen(false)}
+                    onEdit={() => {
+                        setViewModalOpen(false);
+                        setEditModalOpen(true);
+                    }}
+                    onDelete={handleEventDelete}
+                    event={selectedEvent}
+                />
+            </Box>
         </Box>
     );
 };

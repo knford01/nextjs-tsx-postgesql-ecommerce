@@ -114,6 +114,7 @@ const CustomerProfilePage = ({ params }: any) => {
         <Box sx={{ mt: 2, mx: 4 }}>
             <Tabs value={activeTab} onChange={handleTabChange} aria-label="customer-profile-tabs" sx={{ '.MuiTab-root': { textTransform: 'none' }, }}>
                 <Tab label="Details" />
+                <Tab label="Projects" />
                 <Tab label="Reports" />
                 <Tab label="Logs" />
             </Tabs>
@@ -122,13 +123,13 @@ const CustomerProfilePage = ({ params }: any) => {
                 <Grid container spacing={2} sx={{ mt: 2 }}>
                     {/* Customer Details Card */}
                     <Grid item xs={12} sm={12} md={4}>
-                        <Card sx={{ backgroundColor: theme.palette.secondary.main, color: theme.palette.text.primary }}>
+                        <Card sx={{ backgroundColor: theme.palette.background.level1, color: theme.palette.primary.main }}>
                             <CardContent sx={{ position: 'relative' }}>
                                 <IconButton
                                     onClick={handleEditClick}
                                     sx={{ position: 'absolute', top: 8, right: 8 }}
                                 >
-                                    <EditIcon />
+                                    <EditIcon sx={{ color: theme.palette.primary.main }} />
                                 </IconButton>
 
                                 {/* Avatar Centered */}
@@ -142,82 +143,98 @@ const CustomerProfilePage = ({ params }: any) => {
                                     </Avatar>
                                 </Box>
 
-                                <hr style={{ borderColor: theme.palette.warning.main, marginTop: 4, marginBottom: 4 }} />
-
-                                {/* Two Column Layout */}
-                                <Grid container spacing={2}>
-                                    <Grid item xs={4}>
-                                        <Typography sx={{ p: 1 }}>Name</Typography>
-                                        <Divider sx={{ bgcolor: theme.palette.divider }} />
-                                        <Typography sx={{ p: 1 }}>Address</Typography>
-                                        <Divider sx={{ bgcolor: theme.palette.divider }} />
-                                        <Typography sx={{ p: 1 }}>City</Typography>
-                                        <Divider sx={{ bgcolor: theme.palette.divider }} />
-                                        <Typography sx={{ p: 1 }}>State</Typography>
-                                        <Divider sx={{ bgcolor: theme.palette.divider }} />
-                                        <Typography sx={{ p: 1 }}>Zip</Typography>
-                                        <Divider sx={{ bgcolor: theme.palette.divider }} />
-                                        <Typography sx={{ p: 1 }}>Phone</Typography>
-                                        <Divider sx={{ bgcolor: theme.palette.divider }} />
-                                        <Typography sx={{ p: 1 }}>Email</Typography>
+                                <Box
+                                    sx={{
+                                        p: 1,
+                                        backgroundColor: theme.palette.text.primary,
+                                        color: theme.palette.primary.main,
+                                        borderRadius: '8px',
+                                    }}
+                                >
+                                    {/* Two Column Layout */}
+                                    <Grid container spacing={2}>
+                                        <Grid item xs={4}>
+                                            <Typography sx={{ p: 1, fontWeight: 'bold' }}>Name</Typography>
+                                            <Divider sx={{ bgcolor: theme.palette.background.level1 }} />
+                                            <Typography sx={{ p: 1, fontWeight: 'bold' }}>Address</Typography>
+                                            <Divider sx={{ bgcolor: theme.palette.background.level1 }} />
+                                            <Typography sx={{ p: 1, fontWeight: 'bold' }}>City</Typography>
+                                            <Divider sx={{ bgcolor: theme.palette.background.level1 }} />
+                                            <Typography sx={{ p: 1, fontWeight: 'bold' }}>State</Typography>
+                                            <Divider sx={{ bgcolor: theme.palette.background.level1 }} />
+                                            <Typography sx={{ p: 1, fontWeight: 'bold' }}>Zip</Typography>
+                                            <Divider sx={{ bgcolor: theme.palette.background.level1 }} />
+                                            <Typography sx={{ p: 1, fontWeight: 'bold' }}>Phone</Typography>
+                                            <Divider sx={{ bgcolor: theme.palette.background.level1 }} />
+                                            <Typography sx={{ p: 1, fontWeight: 'bold' }}>Email</Typography>
+                                        </Grid>
+                                        <Grid item xs={8}>
+                                            <Typography sx={{ p: 1 }}>{customer.name}</Typography>
+                                            <Divider sx={{ bgcolor: theme.palette.background.level1 }} />
+                                            <Typography sx={{ p: 1 }}>{customer.address}</Typography>
+                                            <Divider sx={{ bgcolor: theme.palette.background.level1 }} />
+                                            <Typography sx={{ p: 1 }}>{customer.city}</Typography>
+                                            <Divider sx={{ bgcolor: theme.palette.background.level1 }} />
+                                            <Typography sx={{ p: 1 }}>{customer.state}</Typography>
+                                            <Divider sx={{ bgcolor: theme.palette.background.level1 }} />
+                                            <Typography sx={{ p: 1 }}>{customer.zip}</Typography>
+                                            <Divider sx={{ bgcolor: theme.palette.background.level1 }} />
+                                            <Typography sx={{ p: 1 }}>{customer.contact_phone}</Typography>
+                                            <Divider sx={{ bgcolor: theme.palette.background.level1 }} />
+                                            <Typography sx={{ p: 1 }}>{customer.contact_email}</Typography>
+                                        </Grid>
                                     </Grid>
-                                    <Grid item xs={8}>
-                                        <Typography sx={{ p: 1 }}>{customer.name}</Typography>
-                                        <Divider sx={{ bgcolor: theme.palette.divider }} />
-                                        <Typography sx={{ p: 1 }}>{customer.address}</Typography>
-                                        <Divider sx={{ bgcolor: theme.palette.divider }} />
-                                        <Typography sx={{ p: 1 }}>{customer.city}</Typography>
-                                        <Divider sx={{ bgcolor: theme.palette.divider }} />
-                                        <Typography sx={{ p: 1 }}>{customer.state}</Typography>
-                                        <Divider sx={{ bgcolor: theme.palette.divider }} />
-                                        <Typography sx={{ p: 1 }}>{customer.zip}</Typography>
-                                        <Divider sx={{ bgcolor: theme.palette.divider }} />
-                                        <Typography sx={{ p: 1 }}>{customer.contact_phone}</Typography>
-                                        <Divider sx={{ bgcolor: theme.palette.divider }} />
-                                        <Typography sx={{ p: 1 }}>{customer.contact_email}</Typography>
-                                    </Grid>
-                                </Grid>
+                                </Box>
                             </CardContent>
                         </Card>
                     </Grid>
 
                     {/* Contacts Card */}
                     <Grid item xs={12} sm={12} md={4}>
-                        <Card sx={{ backgroundColor: theme.palette.secondary.main, color: theme.palette.text.primary }}>
+                        <Card sx={{ backgroundColor: theme.palette.background.level1, color: theme.palette.primary.main }}>
                             <CardContent sx={{ position: 'relative' }}>
                                 <IconButton onClick={handleAddContact} sx={{ position: 'absolute', top: 8, right: 8 }}>
-                                    <AddIcon />
+                                    <AddIcon sx={{ color: theme.palette.primary.main }} />
                                 </IconButton>
                                 <Box display="flex" flexDirection="column" alignItems="center" mb={2}>
-                                    <Typography variant="h6">Contacts</Typography>
+                                    <Typography variant="h6" sx={{ fontWeight: 'bold' }}>Contacts</Typography>
                                 </Box>
-                                <hr style={{ borderColor: theme.palette.warning.main, marginTop: 4, marginBottom: 4 }} />
 
                                 {contacts.map((contact: any, index: number) => (
-                                    <Grid
-                                        container
-                                        spacing={2}
+
+                                    <Box
                                         key={index}
-                                        sx={{ mb: 2, cursor: 'pointer' }}  // Add cursor: pointer here
-                                        onClick={() => handleEditContact(contact.id)}
+                                        sx={{
+                                            p: 1,
+                                            backgroundColor: theme.palette.text.primary,
+                                            color: theme.palette.primary.main,
+                                            borderRadius: '8px',
+                                        }}
                                     >
-                                        <Grid item xs={4}>
-                                            <Typography>{contact.first_name} {contact.last_name}</Typography>
-                                            <Divider sx={{ bgcolor: theme.palette.divider }} />
+                                        <Grid
+                                            container
+                                            spacing={2}
+                                            sx={{ cursor: 'pointer' }}  // Add cursor: pointer here
+                                            onClick={() => handleEditContact(contact.id)}
+                                        >
+                                            <Grid item xs={4}>
+                                                <Typography>{contact.first_name} {contact.last_name}</Typography>
+                                                <Divider sx={{ bgcolor: theme.palette.background.level1 }} />
+                                            </Grid>
+                                            <Grid item xs={4}>
+                                                <Typography>{contact.phone_number}</Typography>
+                                                <Divider sx={{ bgcolor: theme.palette.background.level1 }} />
+                                            </Grid>
+                                            <Grid item xs={4}>
+                                                {contact.main == 1 && (
+                                                    <>
+                                                        <Typography sx={{ fontWeight: 'bold', color: theme.palette.success.light }}>Primary Contact</Typography>
+                                                        <Divider sx={{ bgcolor: theme.palette.background.level1 }} />
+                                                    </>
+                                                )}
+                                            </Grid>
                                         </Grid>
-                                        <Grid item xs={4}>
-                                            <Typography>{contact.phone_number}</Typography>
-                                            <Divider sx={{ bgcolor: theme.palette.divider }} />
-                                        </Grid>
-                                        <Grid item xs={4}>
-                                            {contact.main == 1 && (
-                                                <>
-                                                    <Typography sx={{ fontWeight: 'bold', color: theme.palette.success.light }}>Primary Contact</Typography>
-                                                    <Divider sx={{ bgcolor: theme.palette.divider }} />
-                                                </>
-                                            )}
-                                        </Grid>
-                                    </Grid>
+                                    </Box>
                                 ))}
                             </CardContent>
                         </Card>
@@ -225,27 +242,36 @@ const CustomerProfilePage = ({ params }: any) => {
 
                     {/* Send Email Card */}
                     <Grid item xs={12} sm={12} md={4}>
-                        <Card sx={{ backgroundColor: theme.palette.secondary.main, color: theme.palette.text.primary }}>
+                        <Card sx={{ backgroundColor: theme.palette.background.level1, color: theme.palette.primary.main }}>
                             <CardContent sx={{ position: 'relative' }}>
                                 <IconButton onClick={handleSendEmail} sx={{ position: 'absolute', top: 8, right: 8 }}>
-                                    <EmailIcon />
+                                    <EmailIcon sx={{ color: theme.palette.primary.main }} />
                                 </IconButton>
                                 <Box display="flex" flexDirection="column" alignItems="center" mb={2}>
-                                    <Typography variant="h6">Sent Emails</Typography>
+                                    <Typography variant="h6" sx={{ fontWeight: 'bold' }}>Sent Emails</Typography>
                                 </Box>
-                                <hr style={{ borderColor: theme.palette.warning.main, marginTop: 4, marginBottom: 4 }} />
 
                                 {emails.map((email: any, index: number) => (
-                                    <Grid container spacing={2} key={index} sx={{ mb: 2 }}>
-                                        <Grid item xs={6}>
-                                            <Typography>{new Date(email.date_created).toLocaleString()}</Typography>
-                                            <Divider sx={{ bgcolor: theme.palette.divider }} />
+                                    <Box
+                                        key={index}
+                                        sx={{
+                                            p: 1,
+                                            backgroundColor: theme.palette.text.primary,
+                                            color: theme.palette.primary.main,
+                                            borderRadius: '8px',
+                                        }}
+                                    >
+                                        <Grid container spacing={2} >
+                                            <Grid item xs={6}>
+                                                <Typography>{new Date(email.date_created).toLocaleString()}</Typography>
+                                                <Divider sx={{ bgcolor: theme.palette.background.level1 }} />
+                                            </Grid>
+                                            <Grid item xs={6}>
+                                                <Typography>{email.subject}</Typography>
+                                                <Divider sx={{ bgcolor: theme.palette.background.level1 }} />
+                                            </Grid>
                                         </Grid>
-                                        <Grid item xs={6}>
-                                            <Typography>{email.subject}</Typography>
-                                            <Divider sx={{ bgcolor: theme.palette.divider }} />
-                                        </Grid>
-                                    </Grid>
+                                    </Box>
                                 ))}
                             </CardContent>
                         </Card>
@@ -254,6 +280,12 @@ const CustomerProfilePage = ({ params }: any) => {
             )}
 
             {activeTab === 1 && (
+                <Box sx={{ mt: 2 }}>
+                    <Typography>Projects section coming soon...</Typography>
+                </Box>
+            )}
+
+            {activeTab === 2 && (
                 <Box sx={{ mt: 2 }}>
                     {/* Reports Card */}
                     <Grid item xs={12} sm={12} md={4}>
@@ -286,7 +318,7 @@ const CustomerProfilePage = ({ params }: any) => {
                 </Box>
             )}
 
-            {activeTab === 2 && (
+            {activeTab === 3 && (
                 <Box sx={{ mt: 2 }}>
                     <Typography>Logs section coming soon...</Typography>
                 </Box>

@@ -7,6 +7,7 @@ import { useTheme } from '@mui/material/styles';
 import PersonIcon from '@mui/icons-material/Person';
 import CancelIcon from '@mui/icons-material/Cancel';
 import useSession from '@/hooks/useSession';
+import { useCheckSession } from '../layout/checksession';
 
 interface EmulateUserProps {
     row: {
@@ -25,10 +26,8 @@ const EmulateUser: React.FC<EmulateUserProps> = ({ row }) => {
     const theme = useTheme();
     const router = useRouter();
     const session = useSession();
+    const checkSession = useCheckSession();
     const [isEmulating, setIsEmulating] = useState(false);
-
-    console.log(session);
-
 
     useEffect(() => {
         if (session.user && session?.user.emulating_user_id && session.user.id === row.id) {
@@ -51,6 +50,7 @@ const EmulateUser: React.FC<EmulateUserProps> = ({ row }) => {
                 },
             });
             setIsEmulating(false);
+            checkSession();
         } else {
             // Start emulating
             await fetch('/api/auth/emulate', {
@@ -65,6 +65,7 @@ const EmulateUser: React.FC<EmulateUserProps> = ({ row }) => {
                 },
             });
             setIsEmulating(true);
+            checkSession();
         }
         router.refresh(); // Refresh the page to reflect session changes
     };

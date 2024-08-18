@@ -18,10 +18,10 @@ import { fetchNotifications } from '@/db/notification-data';
 interface TopNavProps {
     collapsed: boolean;
     sessionUser: any;
-    setSessionUser: any;
+    checkSession: () => Promise<void>;
 }
 
-const TopNav: React.FC<TopNavProps> = ({ collapsed, sessionUser, setSessionUser }) => {
+const TopNav: React.FC<TopNavProps> = ({ collapsed, sessionUser, checkSession }) => {
     const theme = useTheme();
     const { setTheme } = useThemeContext();
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -39,9 +39,9 @@ const TopNav: React.FC<TopNavProps> = ({ collapsed, sessionUser, setSessionUser 
         if (response.ok) {
             const sessionData = await response.json();
             setSession(sessionData);
-            setSessionUser(sessionData.user);
+            checkSession();
         }
-    }, [setSessionUser]);
+    }, [checkSession]);
 
     useEffect(() => {
         fetchSession();
@@ -247,7 +247,7 @@ const TopNav: React.FC<TopNavProps> = ({ collapsed, sessionUser, setSessionUser 
                 onClose={handleMenuClose}
                 PaperProps={{
                     sx: {
-                        backgroundColor: theme.palette.secondary.main,
+                        backgroundColor: theme.palette.primary.main,
                         color: theme.palette.text.primary,
                     },
                 }}
@@ -276,7 +276,7 @@ const TopNav: React.FC<TopNavProps> = ({ collapsed, sessionUser, setSessionUser 
                 onClose={handleClose}
                 PaperProps={{
                     sx: {
-                        backgroundColor: theme.palette.secondary.main,
+                        backgroundColor: theme.palette.primary.contrastText,
                         color: theme.palette.text.primary,
                     },
                 }}
@@ -318,23 +318,31 @@ const TopNav: React.FC<TopNavProps> = ({ collapsed, sessionUser, setSessionUser 
                             Close
                         </Button>
                     </Box>
+
                     {notifications.map((notification) => (
                         <Box
                             key={notification.id}
                             sx={{
                                 mb: 2,
-                                p: 2,
-                                backgroundColor: notification.color || theme.palette.grey[300],
+                                p: 1,
+                                backgroundColor: theme.palette.background.level1,
+                                color: theme.palette.primary.main,
                                 borderRadius: '8px',
                             }}
                         >
-                            <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
-                                {notification.subject}
-                            </Typography>
-                            <hr></hr>
-                            <Typography variant="body2">{notification.notice}</Typography>
+                            <Box sx={{ backgroundColor: theme.palette.background.level1, borderRadius: 1, p: 1, }}>
+                                <Typography variant="subtitle1" sx={{ mr: 1, fontWeight: 'bold' }}>
+                                    <NotificationsIcon sx={{ color: notification.color || '' }} />
+                                    {notification.subject}
+                                </Typography>
+                            </Box>
+
+                            <Box sx={{ backgroundColor: theme.palette.text.primary, borderRadius: 1, p: 1, }}>
+                                <Typography variant="body2">{notification.notice}</Typography>
+                            </Box>
                         </Box>
                     ))}
+
                 </Box>
             )}
         </Box>

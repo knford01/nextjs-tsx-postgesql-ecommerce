@@ -9,14 +9,19 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { useTheme } from '@mui/material';
 import { showErrorToast, showSuccessToast } from '@/components/ui/ButteredToast';
+import { useCombinedPermissions } from '@/components/layout/combinedpermissions';
+import { hasAccess } from '@/utils/permissions2';
+import { useRouter } from 'next/navigation';
 
 const SystemAccess = () => {
     const theme = useTheme();
+    const router = useRouter();
     const [permissions, setPermissions] = useState<Permission[]>([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingPermission, setEditingPermission] = useState<Permission | null>(null);
     const [area, setArea] = useState('');
     const [subAreas, setSubAreas] = useState('');
+    const combinedPermissions = useCombinedPermissions();
 
     useEffect(() => {
         const fetchPermissions = async () => {
@@ -27,9 +32,12 @@ const SystemAccess = () => {
                 console.error('Error fetching permissions:', error);
             }
         };
-
-        fetchPermissions();
-    }, []);
+        if (!hasAccess(combinedPermissions, 'navigation', 'permissions')) {
+            router.push('/navigation/403'); // Redirect to a 403 error page or any other appropriate route                                                                                            
+        } else {
+            fetchPermissions();
+        }
+    }, [combinedPermissions, router]);
 
     const handleCreatePermission = () => {
         setEditingPermission(null); // Clear any existing editing state
@@ -96,7 +104,7 @@ const SystemAccess = () => {
                 <Button
                     onClick={handleCreatePermission}
                     variant="contained"
-                    color="primary"
+                    sx={{ color: theme.palette.text.primary, backgroundColor: theme.palette.secondary.main }}
                     startIcon={<AddIcon />}
                 >
                     Create Permission

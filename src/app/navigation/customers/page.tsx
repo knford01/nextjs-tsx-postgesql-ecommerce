@@ -7,6 +7,9 @@ import { fetchCustomers } from '@/db/customer-data';
 import SearchIcon from '@mui/icons-material/Search';
 import { PlusIcon } from '@heroicons/react/24/outline';
 import CustomerModal from '@/components/modals/CustomerModals';
+import { useCombinedPermissions } from '@/components/layout/combinedpermissions';
+import { hasAccess } from '@/utils/permissions2';
+import { useRouter } from 'next/navigation';
 
 // Define the Customer type if not already defined
 type Customer = {
@@ -23,6 +26,7 @@ type Customer = {
 
 const CustomersPage = () => {
     const theme = useTheme();
+    const router = useRouter();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
     const [openModal, setOpenModal] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
@@ -34,9 +38,14 @@ const CustomersPage = () => {
     }, []);
 
     // Use useEffect to call loadCustomers on component mount
+    const combinedPermissions = useCombinedPermissions();
     useEffect(() => {
-        loadCustomers();
-    }, [loadCustomers]);
+        if (!hasAccess(combinedPermissions, 'navigation', 'customers')) {
+            router.push('/navigation/403'); // Redirect to a 403 error page or any other appropriate route                                                                                            
+        } else {
+            loadCustomers();
+        }
+    }, [combinedPermissions, router, loadCustomers]);
 
     const handleCreateCustomer = () => {
         setOpenModal(true);
@@ -79,13 +88,14 @@ const CustomersPage = () => {
                         style: {
                             color: theme.palette.text.secondary,
                             fontWeight: 'bold',
+                            height: '40px'
                         },
                     }}
                 />
                 <Button
+                    sx={{ color: theme.palette.text.primary, backgroundColor: theme.palette.secondary.main }}
                     variant="contained"
                     startIcon={<PlusIcon className="h-5" />}
-                    color="primary"
                     onClick={handleCreateCustomer}
                 >
                     {isMobile ? 'Create' : 'Create Customer'}
@@ -99,32 +109,31 @@ const CustomersPage = () => {
                             <Card
                                 className="cursor-pointer"
                                 sx={{
-                                    backgroundColor: theme.palette.secondary.main,
-                                    color: theme.palette.text.primary,
-                                    '&:hover': { backgroundColor: theme.palette.action.hover },
-                                    p: 2,
+                                    backgroundColor: theme.palette.background.level1,
+                                    color: theme.palette.primary.main,
+                                    '&:hover': {
+                                        backgroundColor: theme.palette.action.hover,
+                                        color: theme.palette.text.primary
+                                    },
+                                    p: 1,
                                     width: '100%',
                                     boxSizing: 'border-box',
                                 }}
                             >
-                                <CardContent>
-                                    <Typography variant="h5" component="div">
-                                        {customer.name}
+                                <Typography variant="h5" component="div" sx={{ fontWeight: 'bold', paddingLeft: 1 }}>
+                                    {customer.name}
+                                </Typography>
+                                <Box sx={{ backgroundColor: theme.palette.text.primary, borderRadius: 1, p: 1, }}>
+                                    <Typography variant="body2" color={theme.palette.primary.main}>
+                                        {customer.address}
                                     </Typography>
-                                    <hr
-                                        style={{
-                                            borderColor: theme.palette.warning.main,
-                                            marginTop: 4,
-                                            marginBottom: 4,
-                                        }}
-                                    />
-                                    <Typography variant="body2" color={theme.palette.text.primary}>
-                                        {customer.address}, {customer.city}, {customer.state} {customer.zip}
+                                    <Typography variant="body2" color={theme.palette.primary.main}>
+                                        {customer.city}, {customer.state} {customer.zip}
                                     </Typography>
-                                    <Typography variant="body2" color={theme.palette.text.primary}>
+                                    <Typography variant="body2" color={theme.palette.primary.main}>
                                         {customer.contact_name} {customer.contact_name && customer.contact_phone ? '-' : ''} {customer.contact_phone}
                                     </Typography>
-                                </CardContent>
+                                </Box>
                             </Card>
                         </Link>
                     </Grid>

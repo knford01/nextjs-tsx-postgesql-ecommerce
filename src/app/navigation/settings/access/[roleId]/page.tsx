@@ -7,6 +7,8 @@ import { fetchRoleById } from '@/db/user-data';
 import { getAllActivePermissions, getRolePermissions, saveRolePermission } from '@/db/permissions';
 import { useTheme } from '@mui/material';
 import { showErrorToast, showSuccessToast } from '@/components/ui/ButteredToast';
+import { useCombinedPermissions } from '@/components/layout/combinedpermissions';
+import { hasAccess } from '@/utils/permissions2';
 
 interface RolePermission {
     role_id: number;
@@ -49,6 +51,11 @@ export default function RolePermissionsPage() {
     const [permissions, setPermissions] = useState<Permission[]>([]);
     const [enabledSubAreas, setEnabledSubAreas] = useState<{ [key: string]: boolean }>({});
     const [selectedSubAreas, setSelectedSubAreas] = useState<{ [key: string]: string[] }>({});
+    const combinedPermissions = useCombinedPermissions();
+
+    useEffect(() => {
+
+    }, [combinedPermissions, router]);
 
     useEffect(() => {
         const fetchRoleAndPermissions = async () => {
@@ -87,8 +94,12 @@ export default function RolePermissionsPage() {
                 setSelectedSubAreas(initialSelectedSubAreas);
             }
         };
-        fetchRoleAndPermissions();
-    }, [roleId]);
+        if (!hasAccess(combinedPermissions, 'settings', 'access')) {
+            router.push('/navigation/403');
+        } else {
+            fetchRoleAndPermissions();
+        }
+    }, [roleId, combinedPermissions, router]);
 
     const handleAreaCheckboxChange = (area: string) => {
         setEnabledSubAreas((prev) => ({
@@ -204,7 +215,7 @@ export default function RolePermissionsPage() {
                     </Grid>
                 ))}
                 <Button
-                    sx={{ ml: 2, mt: 3, backgroundColor: `${theme.palette.success.main} !important` }}
+                    sx={{ ml: 2, mt: 3, backgroundColor: `${theme.palette.success.main} !important`, color: theme.palette.text.primary }}
                     variant="contained"
                     onClick={handleSave}
                 >

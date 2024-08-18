@@ -8,6 +8,8 @@ import { getAllActivePermissions, getUserPermissions, saveUserPermission } from 
 import { useTheme } from '@mui/material';
 import { showErrorToast, showSuccessToast } from '@/components/ui/ButteredToast';
 import { User } from '@/types/user';
+import { useCombinedPermissions } from '@/components/layout/combinedpermissions';
+import { hasAccess } from '@/utils/permissions2';
 
 interface RolePermission {
     role_id: number;
@@ -50,6 +52,7 @@ export default function RolePermissionsPage() {
     const [permissions, setPermissions] = useState<Permission[]>([]);
     const [enabledSubAreas, setEnabledSubAreas] = useState<{ [key: string]: boolean }>({});
     const [selectedSubAreas, setSelectedSubAreas] = useState<{ [key: string]: string[] }>({});
+    const combinedPermissions = useCombinedPermissions();
 
     useEffect(() => {
         const fetchRoleAndPermissions = async () => {
@@ -93,8 +96,12 @@ export default function RolePermissionsPage() {
                 console.log("NO ID");
             }
         };
-        fetchRoleAndPermissions();
-    }, [userId]);
+        if (!hasAccess(combinedPermissions, 'navigation', 'users')) {
+            router.push('/navigation/403'); // Redirect to a 403 error page or any other appropriate route                                                                                            
+        } else {
+            fetchRoleAndPermissions();
+        }
+    }, [userId, combinedPermissions, router]);
 
     const handleAreaCheckboxChange = (area: string) => {
         setEnabledSubAreas((prev) => ({

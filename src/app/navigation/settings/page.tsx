@@ -9,14 +9,14 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import PeopleIcon from '@mui/icons-material/People';
 import SecurityIcon from '@mui/icons-material/Security';
 import SettingsIcon from '@mui/icons-material/Settings';
-import InventoryIcon from '@mui/icons-material/Inventory';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { hasAccess } from '@/utils/permissions2';
 import { useCombinedPermissions } from '@/components/layout/combinedpermissions';
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 const links = [
     { id: 'addresses', name: 'Addresses', description: 'Create and update system addresses', icon: <LocationOnIcon /> },
-    { id: 'items', name: 'Items', description: 'Create and update items', icon: <InventoryIcon /> },
     { id: 'access', name: 'Role Access', description: 'Assign roles their access levels', icon: <LockOutlinedIcon /> },
     { id: 'permissions', name: 'System Permissions', description: 'Define system-wide permissions', icon: <SettingsIcon /> },
     { id: 'users', name: 'Users', description: 'Manage users and their individual permissions', icon: <PeopleIcon /> },
@@ -25,16 +25,25 @@ const links = [
 
 export default function SettingsDashboard() {
     const theme = useTheme();
+    const router = useRouter();
     const combinedPermissions = useCombinedPermissions();
+    const [accessibleLinks, setAccessibleLinks] = useState<any>([]);
 
-    const accessibleLinks = links.filter((link) => {
-        return link.id === '' || hasAccess(combinedPermissions, 'settings', link.id);
-    });
+    useEffect(() => {
+        if (!hasAccess(combinedPermissions, 'navigation', 'settings')) {
+            router.push('/navigation/403'); // Redirect to a 403 error page or any other appropriate route                                                                                            
+        } else {
+            const accessibleLinks = links.filter((link) => {
+                return link.id === '' || hasAccess(combinedPermissions, 'settings', link.id);
+            });
+            setAccessibleLinks(accessibleLinks);
+        }
+    }, [combinedPermissions, router]);
 
     return (
         <Box sx={{ mt: 2 }}>
             <Grid container spacing={4}>
-                {accessibleLinks.map(item => (
+                {accessibleLinks.map((item: any) => (
                     <Grid item xs={12} sm={6} md={4} lg={3} key={item.id}>
                         <Link href={`/navigation/settings/${item.id}`} passHref>
                             <Card

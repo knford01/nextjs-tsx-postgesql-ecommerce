@@ -42,7 +42,7 @@ const UserDataGrid: React.FC<UserDataGridProps> = ({ filterId }) => {
                         height={35}
                         style={{ borderRadius: '50%', marginTop: '8px', maxWidth: 35, maxHeight: 35 }}
                     />
-                ) : null // If no avatar, render nothing
+                ) : null
             ),
         },
 
@@ -73,7 +73,7 @@ const UserDataGrid: React.FC<UserDataGridProps> = ({ filterId }) => {
             columns={columns}
             fileName="users_export"
             buttons={<AddUser loadUsers={loadUsers} />}
-            columnsToIgnore={['avatar', 'emulate', 'actions']}
+            columnsToIgnore={['avatar', 'actions']}
         />
     );
 };
