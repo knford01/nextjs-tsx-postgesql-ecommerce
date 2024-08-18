@@ -1,16 +1,18 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { Box, IconButton, Menu, MenuItem, Avatar, Typography, useTheme, Button } from '@mui/material';
+import { Box, IconButton, Menu, MenuItem, Avatar, Typography, useTheme, Button, TextField, InputAdornment, useMediaQuery } from '@mui/material';
 import PaletteIcon from '@mui/icons-material/Palette';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import EditIcon from '@mui/icons-material/Edit';
 import StopIcon from '@mui/icons-material/Stop';
+import CloseIcon from '@mui/icons-material/Close';
 import { useThemeContext } from '@/app/navigation/layout';
 import { themes } from './themes';
 import { setUserTheme } from '@/db/user-data';
 import { UserModal } from '../modals/UserModals';
 import NotificationsIcon from '@mui/icons-material/Notifications';
+import SearchIcon from '@mui/icons-material/Search';
 import { fetchNotifications } from '@/db/notification-data';
 
 interface TopNavProps {
@@ -29,6 +31,8 @@ const TopNav: React.FC<TopNavProps> = ({ collapsed, sessionUser, setSessionUser 
     const [notifications, setNotifications] = useState<Notice[]>([]);
     const [unreadCount, setUnreadCount] = useState(0);
     const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+    const [searchExpanded, setSearchExpanded] = useState(false);
 
     const fetchSession = useCallback(async () => {
         const response = await fetch('/api/auth/session');
@@ -122,6 +126,10 @@ const TopNav: React.FC<TopNavProps> = ({ collapsed, sessionUser, setSessionUser 
         handleUserModalClose();
     };
 
+    const toggleSearch = () => {
+        setSearchExpanded(prev => !prev);
+    };
+
     return (
         <Box
             sx={{
@@ -133,17 +141,46 @@ const TopNav: React.FC<TopNavProps> = ({ collapsed, sessionUser, setSessionUser 
                 right: 0,
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'space-between', // This will space items evenly with the bell and avatar on the right
+                justifyContent: 'space-between',
                 height: '56px',
                 transition: 'all 0.3s',
                 zIndex: 10,
                 marginLeft: collapsed ? '64px' : '240px',
-                paddingRight: '16px', // Add some padding on the right side
+                paddingRight: '16px',
             }}
         >
-            <Box sx={{ flexGrow: 1 }}></Box> {/* This empty box will push the content to the right */}
+            <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center' }}>
+                <IconButton onClick={toggleSearch} color="inherit">
+                    {searchExpanded ? <CloseIcon /> : <SearchIcon />}
+                </IconButton>
+                {searchExpanded && (
+                    <TextField
+                        placeholder="Search..."
+                        variant="outlined"
+                        sx={{
+                            width: isMobile ? '100px' : '550px',
+                            ml: 1,
+                            height: '36px', // Adjust this value as needed for your design
+                            '& .MuiOutlinedInput-root': {
+                                height: '100%', // Ensures the input field respects the specified height
+                                borderRadius: '5px', // Rounded corners for aesthetic
+                            },
+                            '& .MuiInputBase-input': {
+                                padding: '8px', // Adjust padding to fine-tune text positioning
+                                fontSize: '0.875rem', // Adjust font size as needed
+                            },
+                        }}
+                        InputProps={{
+                            style: {
+                                color: theme.palette.text.secondary,
+                                backgroundColor: theme.palette.background.paper,
+                                fontWeight: 'bold',
+                            },
+                        }}
+                    />
+                )}
+            </Box>
 
-            {/* Notification Bell, Avatar, and Dropdown */}
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <IconButton onClick={handleNotificationsClick} color="inherit">
                     <NotificationsIcon />
@@ -173,7 +210,6 @@ const TopNav: React.FC<TopNavProps> = ({ collapsed, sessionUser, setSessionUser 
                     sx={{
                         display: 'flex',
                         alignItems: 'center',
-                        mr: 2,
                         padding: '8px 12px',
                         borderRadius: '9999px',
                         cursor: 'pointer',
@@ -188,7 +224,7 @@ const TopNav: React.FC<TopNavProps> = ({ collapsed, sessionUser, setSessionUser 
                     </Typography>
                     <IconButton
                         sx={{
-                            padding: 0, // remove extra padding from icon button
+                            padding: 0,
                         }}
                         color="inherit"
                     >
@@ -205,7 +241,6 @@ const TopNav: React.FC<TopNavProps> = ({ collapsed, sessionUser, setSessionUser 
                 </Box>
             </Box>
 
-            {/* User Menu Dropdown */}
             <Menu
                 anchorEl={menuAnchorEl}
                 open={Boolean(menuAnchorEl)}
@@ -235,7 +270,6 @@ const TopNav: React.FC<TopNavProps> = ({ collapsed, sessionUser, setSessionUser 
                 </MenuItem>
             </Menu>
 
-            {/* Theme Palette Menu */}
             <Menu
                 anchorEl={anchorEl}
                 open={Boolean(anchorEl)}
@@ -252,7 +286,6 @@ const TopNav: React.FC<TopNavProps> = ({ collapsed, sessionUser, setSessionUser 
                 <MenuItem onClick={() => { setTheme(themes.defaultTheme); updateThemeInDatabase('defaultTheme'); handleClose(); }}>Default Theme</MenuItem>
             </Menu>
 
-            {/* UserModal Component */}
             {userId && (
                 <UserModal
                     open={isUserModalOpen}
@@ -263,7 +296,6 @@ const TopNav: React.FC<TopNavProps> = ({ collapsed, sessionUser, setSessionUser 
                 />
             )}
 
-            {/* Notifications Modal */}
             {isNotificationsOpen && (
                 <Box
                     sx={{

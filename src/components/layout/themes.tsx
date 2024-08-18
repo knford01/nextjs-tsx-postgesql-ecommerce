@@ -43,7 +43,7 @@ const createAppTheme = (themeColors: typeof colors.lightTheme) =>
                 selected: themeColors.actionSelected,
             },
             background: {
-                default: themeColors.actionHover,
+                default: themeColors.borderBottom,
                 paper: themeColors.backgroundPaper,
             },
             primary: {

@@ -1,92 +1,258 @@
-// src/app/navigation/calendar/page.tsx
+//src/app/navigation/calendar/page.tsx
+"use client"
 
-'use client';
+import React, { useState, useEffect } from 'react';
+import FullCalendar from '@fullcalendar/react';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import timeGridPlugin from '@fullcalendar/timegrid';
+import interactionPlugin from '@fullcalendar/interaction';
+import { EventInput, EventClickArg, DateSelectArg } from '@fullcalendar/core';
+import EventEditModal from '@/components/modals/EventEditModal';
+import EventViewModal from '@/components/modals/EventViewModal';
+import { deleteEvent, dragAndDropEvent, editCalendarEvent, getCalendarEvents } from '@/db/calendar-data';
+import { Box, useTheme } from '@mui/material';
+import { showErrorToast, showSuccessToast } from '@/components/ui/ButteredToast';
 
-import React, { useState } from 'react';
-import Calendar from 'react-calendar';
-import 'react-calendar/dist/Calendar.css';
-import { Box, Typography, useTheme } from '@mui/material';
-import styles from './CalendarPage.module.css';
-
-const CalendarPage: React.FC = () => {
+const CalendarComponent: React.FC = () => {
     const theme = useTheme();
-    const [value, setValue] = useState(new Date());
-    const [view, setView] = useState('month'); // default view is month
+    const [events, setEvents] = useState<EventInput[]>([]);
+    const [editModalOpen, setEditModalOpen] = useState(false);
+    const [viewModalOpen, setViewModalOpen] = useState(false);
+    const [selectedEvent, setSelectedEvent] = useState<any>(null);
 
-    const currentYear = new Date().getFullYear();
-    const currentMonth = new Date().getMonth();
+    useEffect(() => {
+        buildCalendar();
+    }, []);
 
-    // Dynamic demo events for the current year and month
-    const events = [
-        { date: new Date(currentYear, currentMonth, 16), title: 'Meeting with Team' },
-        { date: new Date(currentYear, currentMonth, 18), title: 'Project Deadline' },
-        { date: new Date(currentYear, currentMonth, 20), title: 'Lunch with Client' },
-    ];
+    const buildCalendar = async () => {
+        const data = await getCalendarEvents();
 
-    const renderTileContent = ({ date }: { date: Date }) => {
-        const event = events.find(
-            (event) =>
-                event.date.getFullYear() === date.getFullYear() &&
-                event.date.getMonth() === date.getMonth() &&
-                event.date.getDate() === date.getDate()
-        );
+        const calendarEvents: EventInput[] = data.map((event: any) => {
+            // console.log('calendarEvent: ', event);
 
-        return event ? (
-            <Box sx={{ backgroundColor: theme.palette.secondary.light, padding: '2px', borderRadius: '4px', textAlign: 'center' }}>
-                <Typography variant="body2" sx={{ color: theme.palette.secondary.contrastText }}>{event.title}</Typography>
-            </Box>
-        ) : null;
+            const startDate = new Date(event.start_date).toISOString().split('T')[0];
+            const endDate = new Date(event.end_date).toISOString().split('T')[0];
+
+            const startTime = event.start_time || '00:00:00';
+            const endTime = event.end_time || '23:59:59';
+
+            const start = `${startDate}T${startTime}`;
+            const end = `${endDate}T${endTime}`;
+
+            return {
+                id: event.id,
+                title: event.title,
+                start,
+                end,
+                allDay: event.allday,
+                color: event.color,
+                extendedProps: {
+                    description: event.description,
+                    event_type: event.event_type,
+                    dow: event.dow,
+                    color: event.color,
+                },
+                ...(event.event_type === 'recurring' && {
+                    daysOfWeek: event.dow ? event.dow.split(',').map(Number) : undefined,
+                    startRecur: startDate,
+                    endRecur: endDate,
+                    startTime,
+                    endTime,
+                }),
+            };
+        });
+
+        setEvents(calendarEvents);
     };
 
+    const handleDragDrop = async (eventDropInfo: any) => {
+        const event = eventDropInfo.event;
+
+        const dragEvent = {
+            id: event.id,
+            event_type: event.extendedProps.event_type,
+            start_date: event.startStr,
+        };
+
+        try {
+            const result = await dragAndDropEvent(dragEvent);
+
+            if (result === 'saved') {
+                showSuccessToast('Event updated successfully');
+                buildCalendar();
+            } else {
+                showErrorToast(result);
+                buildCalendar();
+            }
+        } catch (error) {
+            showErrorToast('Failed to update event');
+            console.error('Drag and drop error:', error);
+        }
+    };
+
+    const handleDateClick = (selectInfo: DateSelectArg) => {
+        setSelectedEvent({
+            start: selectInfo.startStr,
+        });
+        setEditModalOpen(true);
+    };
+
+    const handleEventClick = (clickInfo: EventClickArg) => {
+        const event = clickInfo.event;
+        const extendedProps = event.extendedProps || {};
+
+        // console.log('event:', event);
+
+        setSelectedEvent({
+            id: event.id,
+            title: event.title || '',
+            description: extendedProps.description || '',
+            start_date: event.startStr,
+            end_date: event.endStr,
+            event_type: extendedProps.event_type || '',
+            color: extendedProps.color || '',
+            dow: extendedProps.dow || '',
+            allDay: event.allDay
+        });
+
+        setViewModalOpen(true);
+    };
+
+    const handleEventSave = async (eventData: any) => {
+        // console.log(eventData);
+        try {
+            showSuccessToast('Event Saved');
+            editCalendarEvent(eventData);
+            setEditModalOpen(false);
+            buildCalendar();
+        } catch (error) {
+            showErrorToast('Failed to Save Event');
+        }
+    };
+
+    const handleEventDelete = async () => {
+        if (!selectedEvent || !selectedEvent.id) return;
+
+        try {
+            await deleteEvent(selectedEvent.id);
+            showSuccessToast('Event Deleted');
+            buildCalendar();
+            setViewModalOpen(false);
+        } catch (error) {
+            showErrorToast('Failed to Delete Event');
+        }
+    };
+
+    // console.log('event:', events);
+    // console.log('selectedEvent:', selectedEvent);
+
     return (
-        <Box sx={{
-            width: '100%',
-            height: '85vh', // Full height of the viewport minus some space
-            borderRadius: '12px',
-            boxShadow: theme.shadows[3],
-            backgroundColor: theme.palette.primary.main,
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            padding: '16px',
-            marginTop: '5px',
-            flexDirection: 'column',
-            '& .react-calendar__tile': {
-                backgroundColor: theme.palette.primary.main,
-                color: theme.palette.text.primary,
-                border: `1px solid ${theme.palette.divider}`,
-                '&:hover': {
-                    borderColor: theme.palette.primary.main,
+        <Box
+            sx={{
+                marginTop: '15px',
+                '& .fc-col-header-cell': {
+                    backgroundColor: theme.palette.primary.main,
+                    color: theme.palette.text.primary,
+                },
+                '& .fc-daygrid-day': {
+                    backgroundColor: theme.palette.text.primary,
+                    color: theme.palette.primary.main,
+                },
+                '& .fc-daygrid-day-frame': {
+                    backgroundColor: theme.palette.text.primary,
+                },
+                '& .fc-daygrid-day-top': {
                     color: theme.palette.text.secondary,
                 },
-            },
-            '& .react-calendar__tile--active': {
-                backgroundColor: theme.palette.action.selected,
-                color: theme.palette.text.primary,
-            },
-            '& .react-calendar__tile--now': {
-                backgroundColor: theme.palette.secondary.main,
-                color: theme.palette.text.primary,
-            },
-            '& .react-calendar__navigation button': {
-                color: theme.palette.text.secondary,
-            },
-            '& .react-calendar__month-view__weekdays__weekday': {
-                color: theme.palette.text.secondary,
-            },
-            '& .react-calendar__month-view__days__day--weekend': {
-                color: theme.palette.error.main,
-            },
-        }}>
-            <Calendar
-                onChange={(value: any) => setValue(value)}
-                value={value}
-                tileContent={renderTileContent}
-                view={view as any}
-                className={styles['react-calendar']}
+                '& .fc-daygrid-event': {
+                    backgroundColor: theme.palette.text.primary,
+                    color: theme.palette.primary.main,
+                },
+                '& .fc-toolbar-title': {
+                    fontWeight: 'bold',
+                    color: theme.palette.primary.main,
+                },
+            }}
+        >
+            <FullCalendar
+                plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+                initialView="dayGridMonth"
+                initialDate={new Date().toISOString().split('T')[0]}  // Set to today's date
+                eventDisplay="block"
+                nextDayThreshold="00:00:00"
+                height={850}
+                headerToolbar={{
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'multiMonthYear,dayGridMonth,timeGridWeek,timeGridDay,listMonth'
+                }}
+                buttonText={{
+                    today: 'Today',
+                    year: 'Year',
+                    month: 'Month',
+                    week: 'Week',
+                    day: 'Day',
+                    list: 'Month\'s Events'
+                }}
+                dayMaxEventRows={true}
+                views={{
+                    dayGrid: {
+                        dayMaxEventRows: 6
+                    },
+                    timeGrid: {
+                        dayMaxEventRows: 6
+                    }
+                }}
+                editable={true}
+                selectable={true}
+                select={handleDateClick}
+                eventClick={handleEventClick}
+                eventDrop={handleDragDrop} // Apply handleDragDrop here
+                events={events}
+                dayCellContent={(dayCell) => (
+                    <Box
+                        sx={{
+                            backgroundColor: theme.palette.text.primary,
+                            color: theme.palette.primary.main,
+                            padding: '4px',
+                        }}
+                    >
+                        {dayCell.dayNumberText}
+                    </Box>
+                )}
+                dayHeaderContent={(dayHeader) => (
+                    <Box
+                        sx={{
+                            backgroundColor: theme.palette.primary.main,
+                            color: theme.palette.text.primary,
+                            padding: '5px',
+                        }}
+                    >
+                        {dayHeader.text}
+                    </Box>
+                )}
+            />
+
+            <EventEditModal
+                open={editModalOpen}
+                onClose={() => setEditModalOpen(false)}
+                onSave={handleEventSave}
+                event={selectedEvent}
+                initialDate={selectedEvent?.start?.toString()}
+            />
+
+            <EventViewModal
+                open={viewModalOpen}
+                onClose={() => setViewModalOpen(false)}
+                onEdit={() => {
+                    setViewModalOpen(false);
+                    setEditModalOpen(true);
+                }}
+                onDelete={handleEventDelete}
+                event={selectedEvent}
             />
         </Box>
     );
 };
 
-export default CalendarPage;
+export default CalendarComponent;
