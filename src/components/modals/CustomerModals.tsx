@@ -110,7 +110,18 @@ const CustomerModal: React.FC<CustomerModalProps> = ({ open, handleClose, custom
 
     return (
         <Modal open={open} onClose={handleClose}>
-            <Paper style={{ margin: 'auto', marginTop: '5%', padding: 20, maxWidth: 400 }}>
+            <Paper
+                sx={{
+                    margin: 'auto',
+                    marginTop: '5%',
+                    padding: 2,
+                    maxWidth: 400,
+                    width: '90%', // Make width responsive
+                    maxHeight: '90vh', // Set max height
+                    overflowY: 'auto',  // Enable vertical scrolling
+                    borderRadius: 2,
+                }}
+            >
                 <Typography
                     sx={{ mb: 1, textAlign: 'center', fontWeight: 'bold', color: `${theme.palette.primary.main} !important` }}
                     variant="h6"
@@ -158,6 +169,8 @@ const CustomerModal: React.FC<CustomerModalProps> = ({ open, handleClose, custom
                     required
                     error={errors.name}
                     helperText={errors.name ? 'Name is required' : ''}
+                    fullWidth
+                    margin="normal"
                 />
                 <StyledTextField
                     label="Address"

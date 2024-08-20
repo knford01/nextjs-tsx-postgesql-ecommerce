@@ -7,6 +7,7 @@ import { saveAs } from 'file-saver';
 import * as XLSX from 'xlsx';
 import Button from '@mui/material/Button';
 import { useTheme } from '@mui/material/styles';
+import { useMediaQuery } from '@mui/material';
 
 interface DataGridExporterProps {
     data: any[];
@@ -15,6 +16,7 @@ interface DataGridExporterProps {
 
 const DataGridExporter: React.FC<DataGridExporterProps> = ({ data, fileName = 'export.xlsx' }) => {
     const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
     const exportToExcel = () => {
         const ws = XLSX.utils.json_to_sheet(data);
@@ -45,7 +47,7 @@ const DataGridExporter: React.FC<DataGridExporterProps> = ({ data, fileName = 'e
                 },
             }}
         >
-            Export to Excel
+            {isMobile ? 'Excel' : 'Export to Excel'}
         </Button>
     );
 };

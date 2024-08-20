@@ -86,9 +86,10 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                 sx={{
                   display: 'flex',
                   flexDirection: 'column',
+                  overflowX: 'auto',
                   flexGrow: 1,
                   transition: 'margin-left 0.3s',
-                  marginLeft: collapsed ? '64px' : '240px', // Adjust based on collapsed state
+                  marginLeft: collapsed ? '64px' : '240px',  // Adjust based on collapsed state
                 }}
               >
                 <TopNav
@@ -100,10 +101,12 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                   sx={{
                     flexGrow: 1,
                     overflowY: 'auto',
+                    overflowX: 'auto',  // Allows horizontal scrolling
                     backgroundColor: theme?.palette?.background?.paper || themes.defaultTheme.palette.background.paper,
                     padding: { xs: 4 },
                     transition: 'all 0.3s',
                     paddingTop: '1rem',
+                    className: "child-element"
                   }}
                 >
                   <Box sx={{ p: 0, pt: 5, display: 'flex', justifyContent: 'space-between' }}>

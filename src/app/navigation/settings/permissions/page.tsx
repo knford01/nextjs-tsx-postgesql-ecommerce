@@ -32,7 +32,12 @@ const SystemAccess = () => {
                 console.error('Error fetching permissions:', error);
             }
         };
-        if (!hasAccess(combinedPermissions, 'navigation', 'permissions')) {
+
+        fetchPermissions();
+
+
+
+        if (!hasAccess(combinedPermissions, 'settings', 'permissions')) {
             router.push('/navigation/403'); // Redirect to a 403 error page or any other appropriate route                                                                                            
         } else {
             fetchPermissions();

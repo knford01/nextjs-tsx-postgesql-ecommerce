@@ -139,6 +139,7 @@ const TopNav: React.FC<TopNavProps> = ({ collapsed, sessionUser, checkSession })
                 top: 0,
                 left: 0,
                 right: 0,
+                width: `calc(100% - ${collapsed ? '64px' : '240px'})`,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',

@@ -150,8 +150,30 @@ export const UserModal: React.FC<UserModalProps> = ({ open, onClose, onSubmit, i
 
     return (
         <Modal open={open} onClose={onClose}>
-            <Box sx={{ padding: 4, backgroundColor: `${theme.palette.background.paper} !important`, margin: 'auto', mt: '6vh', width: 400, borderRadius: 2 }}>
-                <Typography sx={{ mb: 1, textAlign: 'center', fontWeight: 'bold', color: `${theme.palette.primary.main} !important` }} variant="h6">{id ? 'Edit User' : 'Add User'}</Typography>
+            <Box
+                sx={{
+                    padding: 4,
+                    backgroundColor: `${theme.palette.background.paper} !important`,
+                    margin: 'auto',
+                    mt: '6vh',
+                    width: '90%', // Make width responsive
+                    maxWidth: 400,
+                    borderRadius: 2,
+                    maxHeight: '90vh', // Set max height
+                    overflowY: 'auto',  // Enable vertical scrolling
+                }}
+            >
+                <Typography
+                    sx={{
+                        mb: 1,
+                        textAlign: 'center',
+                        fontWeight: 'bold',
+                        color: `${theme.palette.primary.main} !important`
+                    }}
+                    variant="h6"
+                >
+                    {id ? 'Edit User' : 'Add User'}
+                </Typography>
 
                 <TextField
                     label="First Name"
@@ -243,17 +265,42 @@ export const UserModal: React.FC<UserModalProps> = ({ open, onClose, onSubmit, i
                 )}
 
                 <Box sx={{ m: 2 }}>
-                    <Button variant="contained" component="label" fullWidth sx={{ backgroundColor: `${theme.palette.info.main} !important`, color: `${theme.palette.text.primary} !important`, '&:hover': { backgroundColor: `${theme.palette.info.dark} !important` } }}>
+                    <Button
+                        variant="contained"
+                        component="label"
+                        fullWidth
+                        sx={{
+                            backgroundColor: `${theme.palette.info.main} !important`,
+                            color: `${theme.palette.text.primary} !important`,
+                            '&:hover': { backgroundColor: `${theme.palette.info.dark} !important` }
+                        }}
+                    >
                         Upload New Image
                         <input type="file" hidden onChange={handleFileChange} />
                     </Button>
                 </Box>
 
                 <Box sx={{ pt: 3, display: 'flex', justifyContent: 'center', gap: 2 }}>
-                    <Button variant="contained" sx={{ backgroundColor: `${theme.palette.success.main} !important`, color: `${theme.palette.text.primary} !important`, '&:hover': { backgroundColor: `${theme.palette.success.dark} !important` } }} onClick={handleSubmit}>
+                    <Button
+                        variant="contained"
+                        sx={{
+                            backgroundColor: `${theme.palette.success.main} !important`,
+                            color: `${theme.palette.text.primary} !important`,
+                            '&:hover': { backgroundColor: `${theme.palette.success.dark} !important` }
+                        }}
+                        onClick={handleSubmit}
+                    >
                         Submit
                     </Button>
-                    <Button variant="contained" sx={{ backgroundColor: `${theme.palette.warning.main} !important`, color: `${theme.palette.text.primary} !important`, '&:hover': { backgroundColor: `${theme.palette.warning.dark} !important` } }} onClick={onClose}>
+                    <Button
+                        variant="contained"
+                        sx={{
+                            backgroundColor: `${theme.palette.warning.main} !important`,
+                            color: `${theme.palette.text.primary} !important`,
+                            '&:hover': { backgroundColor: `${theme.palette.warning.dark} !important` }
+                        }}
+                        onClick={onClose}
+                    >
                         Cancel
                     </Button>
                 </Box>

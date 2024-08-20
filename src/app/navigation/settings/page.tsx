@@ -38,6 +38,10 @@ export default function SettingsDashboard() {
             });
             setAccessibleLinks(accessibleLinks);
         }
+        const accessibleLinks = links.filter((link) => {
+            return link.id === '' || hasAccess(combinedPermissions, 'settings', link.id);
+        });
+        setAccessibleLinks(accessibleLinks);
     }, [combinedPermissions, router]);
 
     return (

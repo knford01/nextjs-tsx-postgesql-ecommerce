@@ -31,6 +31,7 @@ const UserDataGrid: React.FC<UserDataGridProps> = ({ filterId }) => {
         {
             field: 'avatar',
             headerName: '',
+            minWidth: 70, // Set minimum width to prevent squishing
             flex: 0.2,
             sortable: false,
             renderCell: (params) => (
@@ -45,17 +46,17 @@ const UserDataGrid: React.FC<UserDataGridProps> = ({ filterId }) => {
                 ) : null
             ),
         },
-
-        { field: 'first_name', flex: 1, headerName: 'First Name', type: 'string' },
-        { field: 'last_name', flex: 1, headerName: 'Last Name', type: 'string' },
-        { field: 'email', flex: 1, headerName: 'Email', type: 'string' },
-        { field: 'role_display', flex: 1, headerName: 'Role', type: 'string' },
-        { field: 'active', flex: .5, headerName: 'Active', type: 'string' },
+        { field: 'first_name', flex: 1, headerName: 'First Name', type: 'string', minWidth: 150 },
+        { field: 'last_name', flex: 1, headerName: 'Last Name', type: 'string', minWidth: 150 },
+        { field: 'email', flex: 1, headerName: 'Email', type: 'string', minWidth: 200 },
+        { field: 'role_display', flex: 1, headerName: 'Role', type: 'string', minWidth: 100 },
+        { field: 'active', flex: 0.5, headerName: 'Active', type: 'string', minWidth: 80 },
         {
             field: 'actions',
             headerName: 'Actions',
             sortable: false,
             flex: 1.5,
+            minWidth: 250,
             renderCell: (params) => (
                 <>
                     <EmulateUser row={params.row} />

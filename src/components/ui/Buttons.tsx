@@ -1,7 +1,7 @@
 import { useRouter } from 'next/navigation';
 import clsx from 'clsx';
 import React, { useState } from 'react';
-import { Button } from '@mui/material';
+import { Button, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { PencilIcon, PlusIcon, TrashIcon, StarIcon } from '@heroicons/react/24/outline';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
@@ -32,6 +32,7 @@ interface AddUserProps {
 export const AddUser: React.FC<AddUserProps> = ({ loadUsers }) => {
   const theme = useTheme();
   const [open, setOpen] = useState(false);
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -55,7 +56,7 @@ export const AddUser: React.FC<AddUserProps> = ({ loadUsers }) => {
           },
         }}
       >
-        Create User
+        {isMobile ? 'User' : 'Create User'}
       </Button>
       <UserModal open={open} onClose={handleClose} onSubmit={handleSubmit} />
     </>

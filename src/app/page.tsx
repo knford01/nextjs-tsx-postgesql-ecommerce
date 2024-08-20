@@ -1,15 +1,15 @@
 "use client";
 
 import { useState } from 'react';
+import Head from 'next/head';
 import Link from 'next/link';
 import Image from 'next/image';
-import { EnvelopeIcon, CloudIcon, RocketLaunchIcon, ArrowRightCircleIcon, XMarkIcon, ShoppingCartIcon, ComputerDesktopIcon, GlobeAltIcon, BookOpenIcon, TruckIcon, MapIcon, UserGroupIcon, CheckBadgeIcon, BriefcaseIcon } from '@heroicons/react/24/outline';
+import { EnvelopeIcon, RocketLaunchIcon, ArrowRightCircleIcon, XMarkIcon, ShoppingCartIcon, ComputerDesktopIcon, GlobeAltIcon, BookOpenIcon, TruckIcon, MapIcon, UserGroupIcon, CheckBadgeIcon, BriefcaseIcon } from '@heroicons/react/24/outline';
 import { Bars3BottomRightIcon } from '@heroicons/react/24/solid';
 import ContactForm from '@/components/forms/ContactForm';
 import InfoModal from '@/components/modals/InfoModal';
-import '@/styles/background.css';
 
-export default function Page() {
+const HomePage = () => {
   const [isContactFormVisible, setContactFormVisible] = useState(false);
   const openContactForm = () => setContactFormVisible(true);
   const closeContactForm = () => setContactFormVisible(false);
@@ -35,8 +35,16 @@ export default function Page() {
         {repeatedListItems}
       </ul>
 
-      <main className="min-h-screen flex flex-col items-center justify-center z-0 overflow-auto ml-10 mr-10">
+      <Head>
+        <title>Supply Chain Management - Warehousing & Order Fulfillment</title>
+        <meta name="description" content="Expert warehousing and order fulfillment services through EDI and API. Custom software solutions for your business." />
+        <meta name="keywords" content="supply chain, warehousing, order fulfillment, EDI, API, custom software" />
+        <meta property="og:title" content="Supply Chain Management - Warehousing & Order Fulfillment" />
+        <meta property="og:description" content="Expert warehousing and order fulfillment services through EDI and API." />
+        <meta property="og:image" content="/images/hero-image.jpg" />
+      </Head>
 
+      <main className="min-h-screen flex flex-col items-center justify-center z-0 overflow-auto">
         <header className="fixed top-0 left-0 right-0 z-50 bg-[#26394e] text-white shadow">
           <div className="relative flex items-center justify-between p-2">
             {/* Hamburger Icon */}
@@ -84,7 +92,10 @@ export default function Page() {
 
           {/* Mobile Menu */}
           {isMobileMenuOpen && (
-            <div className="fixed top-0 left-0 right-0 bg-[#26394e] text-white p-4 md:hidden">
+            <div
+              className={`fixed top-0 left-0 right-0 bg-[#26394e] text-white p-4 md:hidden mobile-menu ${isMobileMenuOpen ? 'mobile-menu-open' : 'mobile-menu-close'
+                }`}
+            >
               <div className="flex flex-col items-center space-y-4">
                 <button
                   onClick={() => {
@@ -115,14 +126,14 @@ export default function Page() {
         </header>
 
         <section className="relative w-full h-screen flex items-center justify-center overflow-hidden mt-20">
-          {/* Image with rounded corners */}
-          <div className="absolute top-0 left-0 w-full h-full overflow-hidden rounded-lg z-0">
+          {/* Image with rounded corners and convex cut-off */}
+          <div className="absolute top-0 left-0 w-full h-full overflow-hidden image-container z-0">
             <Image
               src="/images/website/support1.jpg"
               alt="AR-Source Support"
-              layout="fill"
-              objectFit="cover"
+              fill
               className="opacity-90"
+              priority
             />
           </div>
           {/* Text positioned at the top right of the image with a semi-transparent background on mobile */}
@@ -133,15 +144,15 @@ export default function Page() {
           </div>
         </section>
 
-        <section className="relative w-full min-h-screen flex flex-col justify-between overflow-hidden mt-10">
+        <section className="relative w-full min-h-screen flex flex-col justify-between overflow-hidden image-container mt-10">
           {/* Image with rounded corners */}
-          <div className="absolute top-0 left-0 w-full h-full overflow-hidden rounded-lg z-0">
+          <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0">
             <Image
               src="/images/website/process2-2.jpg"
               alt="AR-Source Process"
-              layout="fill"
-              objectFit="cover"
+              fill
               className="opacity-90"
+              loading="lazy"
             />
           </div>
 
@@ -167,13 +178,6 @@ export default function Page() {
               <ul className="md:text-xl space-y-2 text-left">
                 <li className="text-white font-semibold group cursor-pointer wpli transition-transform duration-300 hover:scale-105"
                   onClick={() => toggleInfoModal(
-                    "Cloud Migration & Optimization Services",
-                    "Our cloud migration and optimization services simplify the process of transferring applications and data from on-site servers to the servers of a public cloud provider. This transition empowers your company with the capability to swiftly deploy and decommission new instances as required, greatly enhancing operational efficiency. By leveraging cloud hosting, you're poised to capitalize on the flexibility, scalability, time savings, and cost-efficiency that the cloud offers."
-                  )}>
-                  <CloudIcon className="h-5 w-5 mr-2" />Cloud Migration and Optimization
-                </li>
-                <li className="text-white font-semibold group cursor-pointer wpli transition-transform duration-300 hover:scale-105"
-                  onClick={() => toggleInfoModal(
                     "Custom Software Development",
                     "Using a combination of expertise, engineering talent, and rigorous Agile development processes, we ensure the protection of sensitive data throughout the development lifecycle. Our clients value our step-by-step approach as they gather feedback from target users, enabling them to progress confidently towards their software solution."
                   )}>
@@ -195,17 +199,17 @@ export default function Page() {
                 </li>
                 <li className="text-white font-semibold group cursor-pointer wpli transition-transform duration-300 hover:scale-105"
                   onClick={() => toggleInfoModal(
+                    "Inventory and Order Tracking",
+                    "Our warehousing software streamlines supply chain operations by providing real-time visibility into inventory levels and order statuses. It helps businesses manage stock more efficiently, reducing excess inventory and preventing stockouts. By automating tracking, the software minimizes errors and ensures accurate, timely order fulfillment. Additionally, it offers forecasting tools to optimize inventory levels and improve customer satisfaction with precise delivery estimates. This software enables businesses to operate more efficiently, reduce costs, and enhance service quality."
+                  )}>
+                  <RocketLaunchIcon className="wpicon h-5 w-5 mr-2" />Inventory and Order Tracking
+                </li>
+                <li className="text-white font-semibold group cursor-pointer wpli transition-transform duration-300 hover:scale-105"
+                  onClick={() => toggleInfoModal(
                     "Generate Shipping Labels and Track Packages",
                     "Shipping APIs serve as the link between your business application and FedEx or UPS logistics solutions, ensuring efficient management of shipping operations and enhanced tracking capabilities."
                   )}>
                   < GlobeAltIcon className="wpicon h-5 w-5 mr-2" /> Label Generation and Tracking
-                </li>
-                <li className="text-white font-semibold group cursor-pointer wpli transition-transform duration-300 hover:scale-105"
-                  onClick={() => toggleInfoModal(
-                    "Web Design & Development",
-                    "Our web design and development team create customized websites to meet clients' unique needs. We prioritize both visual design and technical functionality for seamless user experience across devices. Through collaboration, we understand client goals and use the latest tools and frameworks to bring designs to life. We also focus on SEO and usability to maximize website effectiveness and help businesses achieve online success."
-                  )}>
-                  <RocketLaunchIcon className="wpicon h-5 w-5 mr-2" />Web Design & Development
                 </li>
               </ul>
             </div>
@@ -219,14 +223,13 @@ export default function Page() {
           </div>
         </section>
 
-        <section className="relative w-full min-h-screen flex flex-col justify-between overflow-hidden mt-10">
+        <section className="relative w-full min-h-screen flex flex-col justify-between overflow-hidden image-container mt-10">
           {/* Image with rounded corners */}
-          <div className="absolute top-0 left-0 w-full h-full overflow-hidden rounded-lg z-0">
+          <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0">
             <Image
               src="/images/website/edi.jpg"
               alt="AR-Source Software"
-              layout="fill"
-              objectFit="cover"
+              fill
               className="opacity-90"
             />
           </div>
@@ -281,7 +284,7 @@ export default function Page() {
                     "Project Mangement Software",
                     "Project management software is a tool designed to help teams plan, organize, and manage their projects and tasks effectively. It facilitates collaboration among team members, streamlines task assignments, tracks progress, and schedules deadlines."
                   )}>
-                  <BriefcaseIcon className="wpicon h-5 w-5 mr-2" />Project Management
+                  <BriefcaseIcon className="wpicon h-5 w-5 mr-2" />Project and Task Management
                 </li>
                 <li className="text-white font-semibold group cursor-pointer wpli transition-transform duration-300 hover:scale-105"
                   onClick={() => toggleInfoModal(
@@ -302,6 +305,29 @@ export default function Page() {
           </div>
         </section>
 
+        {/* Why Choose Us Section */}
+        <section className="relative w-full flex flex-col justify-between overflow-hidden mt-10">
+
+          <div className="flex flex-col justify-center items-center w-full p-10 z-10 text-center">
+            <h2 className="text-4xl font-bold text-white">Why Choose Us</h2>
+            <hr className="my-4 border-t border-[#eb3c00] w-24" />
+            <p className="text-xl text-white max-w-3xl mb-10">
+              At AR-Source Software, we build code the right way, starting with our tried and tested framework. We deliver a Minimum Viable Product (MVP) that meets your needs and further customize it from there to ensure it aligns perfectly with your business goals.
+            </p>
+            <h2 className="text-2xl font-bold text-white mt-10">About Us</h2>
+            <p className="text-lg text-white max-w-3xl mb-10">
+              AR-Source Software has been serving NWA and Fort Smith since 2023, offering professional-grade software at an affordable price.
+            </p>
+            <button onClick={openContactForm} className="w-full max-w-xs p-4 mt-10 mb-10 bg-[#eb3c00] text-white rounded-md flex justify-center items-center font-bold text-xl transition-transform duration-300 hover:scale-105">
+              <EnvelopeIcon className="h-6 w-6 mr-2" />
+              Contact Us
+            </button>
+
+            <h2 className="text-2xl font-bold text-white">Contact: Kori Ford</h2>
+            <h2 className="text-2xl font-bold text-white">Phone: 479-586-1906</h2>
+          </div>
+        </section>
+
         {/* Moving Background Images where things like services will appear over it */}
         <ul className="background">
           {repeatedListItems}
@@ -318,7 +344,9 @@ export default function Page() {
           content={infoModalContent}
           h2_color='#26394e'
         />
-      </main >
+      </main>
     </>
   );
-}
+};
+
+export default HomePage;
