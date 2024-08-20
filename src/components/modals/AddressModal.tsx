@@ -220,7 +220,18 @@ const AddressModal: React.FC<AddressModalProps> = ({ open, handleClose, addressI
 
     return (
         <Modal open={open} onClose={handleClose}>
-            <Paper style={{ margin: 'auto', marginTop: '5%', padding: 20, maxWidth: 400 }}>
+            <Paper
+                sx={{
+                    margin: 'auto',
+                    marginTop: '5%',
+                    padding: 2,
+                    maxWidth: 400,
+                    width: '90%', // Make width responsive
+                    maxHeight: '95vh', // Set max height
+                    overflowY: 'auto',  // Enable vertical scrolling
+                    borderRadius: 2,
+                }}
+            >
                 <Typography sx={{ mb: 1, textAlign: 'center', fontWeight: 'bold', color: `${theme.palette.primary.main} !important` }} variant="h6">
                     {addressId ? 'Update Address' : 'Create Address'}
                 </Typography>

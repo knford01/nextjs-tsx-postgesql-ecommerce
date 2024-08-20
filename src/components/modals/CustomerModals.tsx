@@ -117,7 +117,7 @@ const CustomerModal: React.FC<CustomerModalProps> = ({ open, handleClose, custom
                     padding: 2,
                     maxWidth: 400,
                     width: '90%', // Make width responsive
-                    maxHeight: '90vh', // Set max height
+                    maxHeight: '95vh', // Set max height
                     overflowY: 'auto',  // Enable vertical scrolling
                     borderRadius: 2,
                 }}
