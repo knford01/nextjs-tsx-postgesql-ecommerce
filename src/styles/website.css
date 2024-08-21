@@ -1,6 +1,6 @@
 /* styles.css or equivalent */
 
-.mobile-menu {
+/* .mobile-menu {
     transition: transform 0.3s ease-in-out;
 }
 
@@ -23,9 +23,8 @@
             50% 100%,
             25% 95%,
             0 85%);
-    /* overflow: hidden; */
 }
 
 .image-style {
     object-fit: cover;
-}
+} */
