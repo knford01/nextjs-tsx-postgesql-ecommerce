@@ -87,3 +87,27 @@ interface Notice {
     date_viewed: string;
 }
 
+type Project = {
+    id: number;
+    name: string;
+    customer_id: number;
+    manager_id: number;
+    details: string;
+    start_date: string;
+    end_date: string;
+    status: string;
+    status_name: string;
+    status_theme: string;
+    pallet_prefix: string;
+    color: string;
+    logo: string;
+    scope: string;
+    description: string;
+    original_estimate: string;
+    contact_name: string;
+    contact_phone: string;
+    contact_email: string;
+    active: boolean;
+    date_created: string;
+};
+

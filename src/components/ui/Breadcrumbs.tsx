@@ -45,7 +45,7 @@ const Breadcrumbs: React.FC = () => {
                             Dashboard
                         </Typography>
                     );
-                } else if (value === 'navigation' && !isLast) {
+                } else if ((value === 'navigation' || value === 'projects') && !isLast) {
                     return null; // Skip adding "Dashboard" if not the last item
                 } else if (isLast) {
                     return (

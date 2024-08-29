@@ -121,7 +121,6 @@ const CustomerEmailModal: React.FC<CustomerEmailModalProps> = ({ open, handleClo
                             ))}
                         </StyledTextField>
 
-
                         <StyledTextField
                             label="Body"
                             value={body}

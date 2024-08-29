@@ -1,54 +1,39 @@
-'use client';
-
-import React, { useState, useCallback, useEffect } from 'react';
-import { Button, Box, TextField, useTheme, Grid, Card, CardContent, Typography, InputAdornment, useMediaQuery } from '@mui/material';
+import React, { useCallback, useEffect, useState } from 'react';
+import { Button, Box, TextField, Grid, Card, Typography, InputAdornment, useMediaQuery } from '@mui/material';
 import Link from 'next/link';
-import { fetchCustomers } from '@/db/customer-data';
-import SearchIcon from '@mui/icons-material/Search';
-import { PlusIcon } from '@heroicons/react/24/outline';
-import CustomerModal from '@/components/modals/CustomerModals';
 import { useCombinedPermissions } from '@/components/layout/combinedpermissions';
 import { hasAccess } from '@/utils/permissions2';
+import { fetchProjectsByCustomerId } from '@/db/project-data';
+import SearchIcon from '@mui/icons-material/Search';
+import { PlusIcon } from '@heroicons/react/24/outline';
+import ProjectModal from '@/components/modals/ProjectModal';
 import { useRouter } from 'next/navigation';
 
-// Define the Customer type if not already defined
-type Customer = {
-    id: number;
-    name: string;
-    address: string;
-    city: string;
-    state: string;
-    zip: string;
-    contact_name?: string;
-    contact_phone?: string;
-    contact_email?: string;
-};
-
-const CustomersPage = () => {
-    const theme = useTheme();
+const ProjectsTab = ({ theme, customerId }: any) => {
     const router = useRouter();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
     const [openModal, setOpenModal] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
-    const [customers, setCustomers] = useState<Customer[]>([]);
+    const [projects, setProjects] = useState<Project[]>([]);
 
-    const loadCustomers = useCallback(async () => {
-        const customersData: Customer[] = await fetchCustomers();
-        setCustomers(customersData);
-    }, []);
+    const loadProjects = useCallback(async () => {
+        const projectData = await fetchProjectsByCustomerId(customerId);
+        setProjects(projectData);
+        // console.log(projectData); 
+    }, [customerId]);
 
-    // Use useEffect to call loadCustomers on component mount
     const combinedPermissions = useCombinedPermissions();
     useEffect(() => {
-        if (!hasAccess(combinedPermissions, 'navigation', 'customers')) {
-            router.push('/navigation/403'); // Redirect to a 403 error page or any other appropriate route                                                                                            
+        if (!hasAccess(combinedPermissions, 'customers', 'projects')) {
+            router.push('/navigation/403');
         } else {
-            loadCustomers();
+            loadProjects();
         }
-    }, [combinedPermissions, router, loadCustomers]);
+    }, [combinedPermissions, router, loadProjects]);
 
-    const handleCreateCustomer = () => {
+    const handleCreateProject = () => {
         setOpenModal(true);
+        loadProjects();
     };
 
     const handleCloseModal = () => {
@@ -59,9 +44,9 @@ const CustomersPage = () => {
         setSearchQuery(event.target.value.toLowerCase());
     };
 
-    const filteredCustomers = customers?.filter((customer) =>
-        customer.name.toLowerCase().includes(searchQuery)
-    );
+    // const filteredProjects = projects?.filter((project) =>
+    //     project.name.toLowerCase().includes(searchQuery)
+    // );
 
     return (
         <Box sx={{ mt: 2 }}>
@@ -74,7 +59,7 @@ const CustomersPage = () => {
                 }}
             >
                 <TextField
-                    placeholder={isMobile ? 'Search' : 'Search Customers'}
+                    placeholder={isMobile ? 'Search' : 'Search Projects'}
                     variant="outlined"
                     value={searchQuery}
                     onChange={handleSearchChange}
@@ -96,20 +81,20 @@ const CustomersPage = () => {
                     sx={{ color: theme.palette.text.primary, backgroundColor: theme.palette.secondary.main }}
                     variant="contained"
                     startIcon={<PlusIcon className="h-5" />}
-                    onClick={handleCreateCustomer}
+                    onClick={handleCreateProject}
                 >
-                    {isMobile ? 'Create' : 'Create Customer'}
+                    {isMobile ? 'Create' : 'Create Project'}
                 </Button>
             </Box>
 
             <Grid container spacing={2}>
-                {filteredCustomers?.map((customer) => (
-                    <Grid item xs={12} sm={6} md={4} lg={3} key={customer.id}>
-                        <Link href={`/navigation/customers/${customer.id}`} passHref>
+                {projects?.map((project) => (
+                    <Grid item xs={12} sm={6} md={4} lg={3} key={project.id}>
+                        <Link href={`/navigation/customers/projects/${project.id}`} passHref>
                             <Card
                                 className="cursor-pointer"
                                 sx={{
-                                    backgroundColor: theme.palette.primary.main,
+                                    backgroundColor: project.color,
                                     color: theme.palette.text.primary,
                                     '&:hover': {
                                         backgroundColor: theme.palette.background.level1,
@@ -122,17 +107,26 @@ const CustomersPage = () => {
                                 }}
                             >
                                 <Typography variant="h5" component="div" sx={{ fontWeight: 'bold', paddingLeft: 1 }}>
-                                    {customer.name}
+                                    {project.name}
                                 </Typography>
                                 <Box sx={{ backgroundColor: theme.palette.text.primary, borderRadius: 1, p: 1, }}>
-                                    <Typography variant="body2" color={theme.palette.primary.main}>
-                                        {customer.address}
+                                    <Typography
+                                        variant="body2"
+                                        color={
+                                            theme.palette[
+                                            project.status_theme.split('.')[0] as keyof typeof theme.palette
+                                            ][
+                                            project.status_theme.split('.')[1] as keyof typeof theme.palette.error
+                                            ]
+                                        }
+                                    >
+                                        Status: {project.status_name}
                                     </Typography>
                                     <Typography variant="body2" color={theme.palette.primary.main}>
-                                        {customer.city}, {customer.state} {customer.zip}
+                                        Scope: {project.scope}
                                     </Typography>
                                     <Typography variant="body2" color={theme.palette.primary.main}>
-                                        {customer.contact_name} {customer.contact_name && customer.contact_phone ? '-' : ''} {customer.contact_phone}
+                                        Primary Contact: {project.contact_name} {project.contact_name && project.contact_phone ? '-' : ''} {project.contact_phone}
                                     </Typography>
                                 </Box>
                             </Card>
@@ -141,9 +135,9 @@ const CustomersPage = () => {
                 ))}
             </Grid>
 
-            <CustomerModal open={openModal} handleClose={handleCloseModal} onSave={handleCloseModal} />
+            <ProjectModal open={openModal} handleClose={handleCloseModal} onSave={handleCloseModal} customerId={customerId} />
         </Box>
     );
 };
 
-export default CustomersPage; 
+export default ProjectsTab;

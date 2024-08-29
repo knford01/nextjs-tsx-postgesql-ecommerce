@@ -26,6 +26,19 @@ export function formatTime(time: string): string {
     }
 }
 
+export function formatDate(date: any): string {
+    if (!date) {
+        return 'N/A';
+    }
+
+    const parsedDate = new Date(date);
+    if (isNaN(parsedDate.getTime())) {
+        return 'Invalid Date';
+    }
+
+    return parsedDate.toISOString().split('T')[0];
+}
+
 export function getDayNames(dow: string): string {
     const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     return dow.split(',').map(day => dayNames[parseInt(day, 10)]).join(', ');

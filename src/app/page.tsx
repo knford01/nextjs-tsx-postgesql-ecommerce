@@ -31,10 +31,6 @@ const HomePage = () => {
 
   return (
     <>
-      <ul className="background">
-        {repeatedListItems}
-      </ul>
-
       <Head>
         <title>Supply Chain Management - Warehousing & Order Fulfillment</title>
         <meta name="description" content="Expert warehousing and order fulfillment services through EDI and API. Custom software solutions for your business." />
