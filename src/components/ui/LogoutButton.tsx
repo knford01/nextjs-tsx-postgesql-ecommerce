@@ -5,17 +5,27 @@
 import { PowerIcon } from '@heroicons/react/24/outline';
 import { useRouter } from 'next/navigation';
 import { Box } from '@mui/material';
+import { userSession } from '@/db/user-data';
 
 export default function LogoutButton({ theme, collapsed }: { theme: any, collapsed: boolean }) {
     const router = useRouter();
 
     const handleLogout = async () => {
+        const sessionCheck = await fetch('/api/auth/session');
+
+        if (sessionCheck.ok) {
+            console.log("resonse OK");
+
+            const session = await sessionCheck.json();
+            await userSession(session.user.id, 'user_initiated');
+        }
+
         const response = await fetch('/api/auth/logout', {
             method: 'GET',
         });
 
         if (response.ok) {
-            router.push('/login'); // Redirect to login page after successful logout
+            router.push('/login'); // Redirect to login page after successful logout 
         }
     };
 

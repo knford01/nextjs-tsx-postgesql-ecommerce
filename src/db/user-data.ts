@@ -7,6 +7,50 @@ import { revalidatePath } from 'next/cache'; //clear this cache that stores the 
 import { unstable_noStore as noStore } from 'next/cache';
 import { User, UserRole } from '@/types/user';
 
+export async function getUser(email: string): Promise<User | undefined> {
+    try {
+        const user = await sql<User>`
+        SELECT 
+            u.id, u.first_name, u.last_name, u.email, u.role, ur.display as role_display, u.avatar, u.active, u.password 
+        FROM users u 
+        LEFT JOIN user_roles ur ON ur.id = u.role 
+        WHERE u.email=${email} and u.active=1`;
+        return user.rows[0];
+    } catch (error) {
+        console.error('Failed to fetch user:', error);
+        throw new Error('Failed to fetch user.');
+    }
+}
+
+export async function userSession(user_id: string, logout_reason?: string, ip_address?: string): Promise<void> {
+    try {
+        if (logout_reason) {
+            // Update the most recent session with logout time and reason
+            await sql`
+            WITH most_recent_session AS (
+                SELECT id
+                FROM user_sessions
+                WHERE user_id = ${user_id} 
+                AND logout_time IS NULL
+                ORDER BY login_time DESC
+                LIMIT 1
+            )
+            UPDATE user_sessions
+            SET logout_time = CURRENT_TIMESTAMP,
+                logout_reason = ${logout_reason}
+            WHERE id = (SELECT id FROM most_recent_session);`;
+        } else {
+            // Create a new login record
+            await sql`
+            INSERT INTO user_sessions (user_id, ip_address)
+            VALUES (${user_id}, ${ip_address});`;
+        }
+    } catch (error) {
+        console.error('Failed to log user session:', error);
+        throw new Error('Failed to log user session.');
+    }
+}
+
 export async function fetchUsers() {
     noStore();
     try {

@@ -1,21 +1,6 @@
+import { getUser, userSession } from '@/db/user-data';
 import { User } from '@/types/user';
-import { sql } from '@vercel/postgres';
 import bcrypt from 'bcrypt';
-
-async function getUser(email: string): Promise<User | undefined> {
-    try {
-        const user = await sql<User>`
-        SELECT 
-            u.id, u.first_name, u.last_name, u.email, u.role, ur.display as role_display, u.avatar, u.active, u.password 
-        FROM users u 
-        LEFT JOIN user_roles ur ON ur.id = u.role 
-        WHERE u.email=${email} and u.active=1`;
-        return user.rows[0];
-    } catch (error) {
-        console.error('Failed to fetch user:', error);
-        throw new Error('Failed to fetch user.');
-    }
-}
 
 export default async function verifyUserCredentials(email: string, password: string): Promise<User | null> {
 
@@ -33,6 +18,9 @@ export default async function verifyUserCredentials(email: string, password: str
         user.password = '';
         // If the password is valid, return the user object, otherwise return null
         if (isPasswordValid) {
+            // Add record of user logging in\\
+            await userSession(user.id, undefined, undefined);
+
             return user;
         } else {
             return null;

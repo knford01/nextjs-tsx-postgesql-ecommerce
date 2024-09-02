@@ -42,7 +42,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     const response = await fetch('/api/auth/session');
 
     if (!response.ok) {
-      console.log('Bad Response');
+      // console.log('Bad Session Response');
       router.push('/logout'); // Redirect to the logout page if the session is not valid
     } else {
       const session = await response.json();

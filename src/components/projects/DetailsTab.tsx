@@ -72,7 +72,7 @@ const DetailsTab = ({ theme, project, handleEditClick }: any) => (
                         <EditIcon sx={{ color: theme.palette.primary.main }} />
                     </IconButton>
                     <Box display="flex" flexDirection="column" alignItems="center" mb={2}>
-                        <Typography variant="h6" sx={{ fontWeight: 'bold', fontSize: 16 }}>Contacts</Typography>
+                        <Typography variant="h6" sx={{ fontWeight: 'bold', fontSize: 16 }}>Contact</Typography>
                     </Box>
 
                     <Box
@@ -87,7 +87,7 @@ const DetailsTab = ({ theme, project, handleEditClick }: any) => (
                         <Box component="table" sx={{ width: '100%', borderCollapse: 'collapse' }}>
                             <Box component="tbody">
                                 {[
-                                    { label: 'Contact', value: project.contact_name || 'N/A' },
+                                    { label: 'Name', value: project.contact_name || 'N/A' },
                                     { label: 'Phone', value: formatDate(project.contact_phone) },
                                     { label: 'Email', value: formatDate(project.contact_email) },
                                 ].map((item, index) => (

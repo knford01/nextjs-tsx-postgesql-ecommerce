@@ -76,23 +76,33 @@ const DetailsTab = ({ theme, customer, handleEditClick, contacts, handleAddConta
                         <Typography variant="h6" sx={{ fontWeight: 'bold', fontSize: 16 }}>Contacts</Typography>
                     </Box>
 
-                    <Box component="table" sx={{ width: '100%', borderCollapse: 'collapse' }}>
-                        <Box component="tbody">
-                            {contacts.map((contact: any, index: number) => (
-                                <Box component="tr" key={index} onClick={() => handleEditContact(contact.id)} sx={{ cursor: 'pointer' }}>
-                                    <Box component="td" sx={{ padding: 1, borderBottom: `1px solid ${theme.palette.background.paper}` }}>
-                                        <Typography sx={{ fontSize: 14 }}>{contact.first_name} {contact.last_name}</Typography>
-                                    </Box>
-                                    <Box component="td" sx={{ padding: 1, borderBottom: `1px solid ${theme.palette.background.paper}` }}>
-                                        <Typography sx={{ fontSize: 14 }}>{contact.phone_number}</Typography>
-                                    </Box>
-                                    {contact.main === 1 && (
+                    <Box
+                        sx={{
+                            p: 1,
+                            backgroundColor: theme.palette.text.primary,
+                            color: theme.palette.primary.main,
+                            borderRadius: '8px',
+                        }}
+                    >
+
+                        <Box component="table" sx={{ width: '100%', borderCollapse: 'collapse' }}>
+                            <Box component="tbody">
+                                {contacts.map((contact: any, index: number) => (
+                                    <Box component="tr" key={index} onClick={() => handleEditContact(contact.id)} sx={{ cursor: 'pointer' }}>
                                         <Box component="td" sx={{ padding: 1, borderBottom: `1px solid ${theme.palette.background.paper}` }}>
-                                            <Typography sx={{ fontWeight: 'bold', fontSize: 12, color: theme.palette.success.light }}>Primary Contact</Typography>
+                                            <Typography sx={{ fontSize: 14 }}>{contact.first_name} {contact.last_name}</Typography>
                                         </Box>
-                                    )}
-                                </Box>
-                            ))}
+                                        <Box component="td" sx={{ padding: 1, borderBottom: `1px solid ${theme.palette.background.paper}` }}>
+                                            <Typography sx={{ fontSize: 14 }}>{contact.phone_number}</Typography>
+                                        </Box>
+                                        {contact.main === 1 && (
+                                            <Box component="td" sx={{ padding: 1, borderBottom: `1px solid ${theme.palette.background.paper}` }}>
+                                                <Typography sx={{ fontWeight: 'bold', fontSize: 12, color: theme.palette.success.light }}>Primary Contact</Typography>
+                                            </Box>
+                                        )}
+                                    </Box>
+                                ))}
+                            </Box>
                         </Box>
                     </Box>
                 </CardContent>
@@ -110,18 +120,28 @@ const DetailsTab = ({ theme, customer, handleEditClick, contacts, handleAddConta
                         <Typography variant="h6" sx={{ fontWeight: 'bold', fontSize: 16 }}>Sent Emails</Typography>
                     </Box>
 
-                    <Box component="table" sx={{ width: '100%', borderCollapse: 'collapse' }}>
-                        <Box component="tbody">
-                            {emails.map((email: any, index: number) => (
-                                <Box component="tr" key={index}>
-                                    <Box component="td" sx={{ padding: 1, borderBottom: `1px solid ${theme.palette.background.paper}` }}>
-                                        <Typography sx={{ fontSize: 14 }}>{new Date(email.date_created).toLocaleString()}</Typography>
+                    <Box
+                        sx={{
+                            p: 1,
+                            backgroundColor: theme.palette.text.primary,
+                            color: theme.palette.primary.main,
+                            borderRadius: '8px',
+                        }}
+                    >
+
+                        <Box component="table" sx={{ width: '100%', borderCollapse: 'collapse' }}>
+                            <Box component="tbody">
+                                {emails.map((email: any, index: number) => (
+                                    <Box component="tr" key={index}>
+                                        <Box component="td" sx={{ padding: 1, borderBottom: `1px solid ${theme.palette.background.paper}` }}>
+                                            <Typography sx={{ fontSize: 14 }}>{new Date(email.date_created).toLocaleString()}</Typography>
+                                        </Box>
+                                        <Box component="td" sx={{ padding: 1, borderBottom: `1px solid ${theme.palette.background.paper}` }}>
+                                            <Typography sx={{ fontSize: 14 }}>{email.subject}</Typography>
+                                        </Box>
                                     </Box>
-                                    <Box component="td" sx={{ padding: 1, borderBottom: `1px solid ${theme.palette.background.paper}` }}>
-                                        <Typography sx={{ fontSize: 14 }}>{email.subject}</Typography>
-                                    </Box>
-                                </Box>
-                            ))}
+                                ))}
+                            </Box>
                         </Box>
                     </Box>
                 </CardContent>
