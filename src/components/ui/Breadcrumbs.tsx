@@ -1,3 +1,5 @@
+// src/components/ui/Breadcrumbs.tsx
+
 import React from 'react';
 import { Breadcrumbs as MUIBreadcrumbs, Link, Typography } from '@mui/material';
 import { usePathname, useRouter } from 'next/navigation';
@@ -6,8 +8,11 @@ import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { useTheme, useMediaQuery } from '@mui/material';
 import clsx from 'clsx';
 
+interface BreadcrumbsProps {
+    value?: { id: number; name: string };
+}
 
-const Breadcrumbs: React.FC = () => {
+const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ value }) => {
     const theme = useTheme();
     const router = useRouter();
     const pathname = usePathname();
@@ -48,13 +53,15 @@ const Breadcrumbs: React.FC = () => {
                 } else if ((value === 'navigation') && !isLast) {
                     return null; // Skip adding "Dashboard" if not the last item
                 } else if (isLast) {
+                    // Check if the last part is a value ID and replace it with the value name if available
+                    const name = value ? value : value.charAt(0).toUpperCase() + value.slice(1);
                     return (
                         <Typography
                             color="textPrimary"
                             key={to}
                             sx={{ color: theme.palette.primary.main, fontSize: '18px', fontWeight: 'bold' }}
                         >
-                            {value.charAt(0).toUpperCase() + value.slice(1)}
+                            {name}
                         </Typography>
                     );
                 } else {

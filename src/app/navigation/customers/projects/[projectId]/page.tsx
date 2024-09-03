@@ -45,6 +45,14 @@ const ProjectProfilePage = ({ params }: any) => {
         setIsProjectModalOpen(false);
     };
 
+    const tabsConfig = [
+        { label: 'Details', permission: 'project_details' },
+        { label: 'Reports', permission: 'project_reports' },
+        { label: 'Logs', permission: 'project_logs' },
+    ];
+
+    const accessibleTabs = tabsConfig.filter(tab => hasAccess(combinedPermissions, 'customers', tab.permission));
+
     if (!project) {
         return <Typography>Loading...</Typography>;
     }
@@ -62,9 +70,9 @@ const ProjectProfilePage = ({ params }: any) => {
                     overflowX: 'auto',
                 }}
             >
-                <Tab label="Details" />
-                <Tab label="Reports" />
-                <Tab label="Logs" />
+                {accessibleTabs.map((tab) => (
+                    <Tab key={tab.label} label={tab.label} />
+                ))}
             </Tabs>
 
             {activeTab === 0 && (

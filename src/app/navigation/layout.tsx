@@ -110,7 +110,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                   }}
                 >
                   <Box sx={{ p: 0, pt: 5, display: 'flex', justifyContent: 'space-between' }}>
-                    <Breadcrumbs />
+                    {/* <Breadcrumbs /> */}
                     <ToastContainer
                       position="top-right"
                       autoClose={5000}

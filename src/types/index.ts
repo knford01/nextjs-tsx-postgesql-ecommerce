@@ -111,3 +111,33 @@ type Project = {
     date_created: string;
 };
 
+type Warehouse = {
+    id: number;
+    name: string;
+    address: string;
+    city: string;
+    state: string;
+    zip: string;
+    country: string;
+    contact_name: string;
+    contact_phone: string;
+    active: boolean;
+    date_created: string;
+}
+
+type WarehouseLocation = {
+    id: number;
+    warehouse_id: number;
+    name: string;
+    aisle: string;
+    rack: string;
+    row: string;
+    bin: string;
+    multi_pallet: boolean;
+    multi_item: boolean;
+    active: boolean;
+    active_display: string;
+    created_user: number;
+    date_created: string;
+};
+

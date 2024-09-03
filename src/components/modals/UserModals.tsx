@@ -22,8 +22,11 @@ export const UserModal: React.FC<UserModalProps> = ({ open, onClose, onSubmit, i
     const [errors, setErrors] = useState({ first_name: false, last_name: false, email: false, password: false, role: false });
 
     useEffect(() => {
+        if (id) {
+            row.password = 'Enter New Password to Change';
+        }
         setFormData(row || {});
-    }, [row]);
+    }, [row, id]);
 
     useEffect(() => {
         const fetchRoles = async () => {
@@ -220,7 +223,8 @@ export const UserModal: React.FC<UserModalProps> = ({ open, onClose, onSubmit, i
                 <TextField
                     label="Password"
                     name="password"
-                    value={id ? 'Enter New Password to Change' : ''}
+                    // type="password"
+                    value={formData.password || ''}
                     onChange={handleChange}
                     required
                     error={errors.password}

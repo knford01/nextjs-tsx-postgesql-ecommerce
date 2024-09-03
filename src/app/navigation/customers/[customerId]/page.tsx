@@ -15,6 +15,7 @@ import ProjectsTab from '@/components/customers/ProjectsTab';
 import { useCombinedPermissions } from '@/components/layout/combinedpermissions';
 import { hasAccess } from '@/utils/permissions2';
 import { useRouter } from 'next/navigation';
+import Breadcrumbs from '@/components/ui/Breadcrumbs';
 
 const CustomerProfilePage = ({ params }: any) => {
     const theme = useTheme();
@@ -37,6 +38,8 @@ const CustomerProfilePage = ({ params }: any) => {
             const loadCustomer = async () => {
                 const customerData = await fetchCustomerById(customerId);
                 setCustomer(customerData);
+                console.log("customer: ", customer);
+
             };
 
             loadCustomer();
@@ -55,7 +58,7 @@ const CustomerProfilePage = ({ params }: any) => {
 
             loadEmails();
         }
-    }, [customerId, combinedPermissions, router,]);
+    }, [customer, customerId, combinedPermissions, router,]);
 
     const handleTabChange = (event: any, newValue: any) => {
         setActiveTab(newValue);
@@ -80,93 +83,104 @@ const CustomerProfilePage = ({ params }: any) => {
         setIsEmailModalOpen(false);
     };
 
+    const tabsConfig = [
+        { label: 'Details', permission: 'details' },
+        { label: 'Projects', permission: 'projects' },
+        { label: 'Reports', permission: 'reports' },
+        { label: 'Logs', permission: 'logs' },
+    ];
+
+    const accessibleTabs = tabsConfig.filter(tab => hasAccess(combinedPermissions, 'customers', tab.permission));
+
     if (!customer) {
         return <Typography>Loading...</Typography>;
     }
 
     return (
-        <Box sx={{ mt: 2 }}>
-            <Tabs
-                value={activeTab}
-                onChange={handleTabChange}
-                aria-label="customer-profile-tabs"
-                variant="scrollable"
-                scrollButtons="auto"
-                sx={{
-                    '.MuiTab-root': { textTransform: 'none', minWidth: 'auto' },
-                    overflowX: 'auto',
-                }}
-            >
-                <Tab label="Details" />
-                <Tab label="Projects" />
-                <Tab label="Reports" />
-                <Tab label="Logs" />
-            </Tabs>
-
-            {activeTab === 0 && (
-                <DetailsTab
-                    theme={theme}
-                    customer={customer}
-                    handleEditClick={() => setIsCustomerModalOpen(true)}
-                    contacts={contacts}
-                    handleAddContact={() => {
-                        setSelectedContactId(null);
-                        setIsContactModalOpen(true);
+        <>
+            <Breadcrumbs value={customer.name} />
+            <Box sx={{ mt: 2 }}>
+                <Tabs
+                    value={activeTab}
+                    onChange={handleTabChange}
+                    aria-label="customer-profile-tabs"
+                    variant="scrollable"
+                    scrollButtons="auto"
+                    sx={{
+                        '.MuiTab-root': { textTransform: 'none', minWidth: 'auto' },
+                        overflowX: 'auto',
                     }}
-                    handleEditContact={(contactId: string) => {
-                        setSelectedContactId(contactId);
-                        setIsContactModalOpen(true);
-                    }}
-                    emails={emails}
-                    handleSendEmail={() => setIsEmailModalOpen(true)}
-                />
-            )}
+                >
+                    {accessibleTabs.map((tab) => (
+                        <Tab key={tab.label} label={tab.label} />
+                    ))}
+                </Tabs>
 
-            {activeTab === 1 && (
-                <ProjectsTab
-                    theme={theme}
+                {activeTab === 0 && (
+                    <DetailsTab
+                        theme={theme}
+                        customer={customer}
+                        handleEditClick={() => setIsCustomerModalOpen(true)}
+                        contacts={contacts}
+                        handleAddContact={() => {
+                            setSelectedContactId(null);
+                            setIsContactModalOpen(true);
+                        }}
+                        handleEditContact={(contactId: string) => {
+                            setSelectedContactId(contactId);
+                            setIsContactModalOpen(true);
+                        }}
+                        emails={emails}
+                        handleSendEmail={() => setIsEmailModalOpen(true)}
+                    />
+                )}
+
+                {activeTab === 1 && (
+                    <ProjectsTab
+                        theme={theme}
+                        customerId={customerId}
+                    />
+                )}
+
+                {activeTab === 2 && (
+                    <ReportsTab
+                        theme={theme}
+                    />
+                )}
+
+                {activeTab === 3 && (
+                    <Box sx={{ mt: 2 }}>
+                        <Typography>Logs section coming soon...</Typography>
+                    </Box>
+                )}
+
+                <CustomerModal
+                    open={isCustomerModalOpen}
+                    handleClose={() => setIsCustomerModalOpen(false)}
                     customerId={customerId}
+                    onSave={handleCustomerModalSave}
                 />
-            )}
 
-            {activeTab === 2 && (
-                <ReportsTab
-                    theme={theme}
+                <ContactModal
+                    open={isContactModalOpen}
+                    handleClose={() => {
+                        setIsContactModalOpen(false);
+                        setSelectedContactId(null);
+                    }}
+                    contactId={selectedContactId || undefined}
+                    customer_id={customerId || undefined}
+                    onSave={handleContactModalSave}
                 />
-            )}
 
-            {activeTab === 3 && (
-                <Box sx={{ mt: 2 }}>
-                    <Typography>Logs section coming soon...</Typography>
-                </Box>
-            )}
+                <CustomerEmailModal
+                    open={isEmailModalOpen}
+                    handleClose={() => setIsEmailModalOpen(false)}
+                    customer_id={customerId}
+                    onSave={handleEmailModalSave}
+                />
 
-            <CustomerModal
-                open={isCustomerModalOpen}
-                handleClose={() => setIsCustomerModalOpen(false)}
-                customerId={customerId}
-                onSave={handleCustomerModalSave}
-            />
-
-            <ContactModal
-                open={isContactModalOpen}
-                handleClose={() => {
-                    setIsContactModalOpen(false);
-                    setSelectedContactId(null);
-                }}
-                contactId={selectedContactId || undefined}
-                customer_id={customerId || undefined}
-                onSave={handleContactModalSave}
-            />
-
-            <CustomerEmailModal
-                open={isEmailModalOpen}
-                handleClose={() => setIsEmailModalOpen(false)}
-                customer_id={customerId}
-                onSave={handleEmailModalSave}
-            />
-
-        </Box>
+            </Box>
+        </>
     );
 };
 

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Box, Typography, Grid, Paper, Checkbox, FormControlLabel, Button } from '@mui/material';
 import { useRouter, useParams } from 'next/navigation';
 import { fetchRoleById } from '@/db/user-data';
@@ -52,14 +52,11 @@ export default function RolePermissionsPage() {
     const [enabledSubAreas, setEnabledSubAreas] = useState<{ [key: string]: boolean }>({});
     const [selectedSubAreas, setSelectedSubAreas] = useState<{ [key: string]: string[] }>({});
     const combinedPermissions = useCombinedPermissions();
-
-    useEffect(() => {
-
-    }, [combinedPermissions, router]);
+    const prevent = useRef(0);
 
     useEffect(() => {
         const fetchRoleAndPermissions = async () => {
-            if (roleId) {
+            if (roleId && prevent.current === 0) {
                 const role = await fetchRoleById(String(roleId));
                 setSelectedRole(role);
 
@@ -92,14 +89,16 @@ export default function RolePermissionsPage() {
 
                 setPermissions(formattedPermissions);
                 setSelectedSubAreas(initialSelectedSubAreas);
+                prevent.current = 1;  // Set the prevent flag to 1 after the operation
             }
         };
+
         if (!hasAccess(combinedPermissions, 'settings', 'access')) {
             router.push('/navigation/403');
         } else {
             fetchRoleAndPermissions();
         }
-    }, [roleId, combinedPermissions, router]);
+    }, [roleId, combinedPermissions, router]); // Note: prevent is not a dependency anymore
 
     const handleAreaCheckboxChange = (area: string) => {
         setEnabledSubAreas((prev) => ({

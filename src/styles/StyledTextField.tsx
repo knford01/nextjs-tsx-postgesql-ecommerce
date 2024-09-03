@@ -1,5 +1,5 @@
 import React from 'react';
-import { TextField, MenuItem, TextFieldProps } from '@mui/material';
+import { TextField, MenuItem, TextFieldProps, FormControlLabel, Checkbox, styled } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import Select, { Props as SelectProps } from 'react-select';
 
@@ -50,7 +50,7 @@ export const StyledTextField = (props: any) => {
 };
 
 interface Option {
-    value: number | string;
+    value: any;
     display: string;
 }
 
@@ -95,8 +95,8 @@ export const StyledSelectField: React.FC<StyledSelectFieldProps> = ({
     };
 
     const menuItemStyles = {
-        backgroundColor: `${theme.palette.background.paper} !important`,
-        color: `${theme.palette.text.secondary} !important`,
+        backgroundColor: `${theme.palette.secondary.main} !important`,
+        color: `${theme.palette.text.primary} !important`,
         height: '2.5em',
         boxSizing: 'border-box',
         display: 'flex',
@@ -138,7 +138,7 @@ interface StyledSearchableSelectProps extends SelectProps<OptionType> {
     helperText?: string;
 }
 
-const StyledSearchableSelect: React.FC<StyledSearchableSelectProps> = ({ error, helperText, ...props }) => {
+export const StyledSearchableSelect: React.FC<StyledSearchableSelectProps> = ({ error, helperText, ...props }) => {
     const theme = useTheme();
 
     const customStyles = {
@@ -199,4 +199,53 @@ const StyledSearchableSelect: React.FC<StyledSearchableSelectProps> = ({ error, 
     );
 };
 
-export default StyledSearchableSelect;
+interface StyledCheckboxProps {
+    checked: boolean;
+    onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+    name: string;
+    label: string;
+    checkedColor?: string; // Color of the checkmark when checked
+    uncheckedColor?: string; // Color of the checkbox border and checkmark when unchecked
+    labelColor?: string; // Color of the label text
+}
+
+export const StyledCheckbox: React.FC<StyledCheckboxProps> = ({
+    checked,
+    onChange,
+    name,
+    label,
+    checkedColor,
+    uncheckedColor,
+    labelColor
+}) => {
+    const theme = useTheme();
+
+    // Ensure that the border and checkmark color are controlled directly.
+    const CustomCheckbox = styled(Checkbox)(({ theme }) => ({
+        '& .MuiSvgIcon-root': {
+            color: uncheckedColor || `${theme.palette.text.primary} !important`, // Color of the checkbox when unchecked
+            '&.Mui-checked': {
+                color: checkedColor || `${theme.palette.primary.main} !important`, // Color of the checkbox when checked
+            },
+        },
+    }));
+
+    const CustomFormControlLabel = styled(FormControlLabel)(({ theme }) => ({
+        '& .MuiFormControlLabel-label': {
+            color: labelColor || `${theme.palette.text.secondary} !important`, // Label text color
+        },
+    }));
+
+    return (
+        <CustomFormControlLabel
+            control={
+                <CustomCheckbox
+                    checked={checked}
+                    onChange={onChange}
+                    name={name}
+                />
+            }
+            label={label}
+        />
+    );
+};
