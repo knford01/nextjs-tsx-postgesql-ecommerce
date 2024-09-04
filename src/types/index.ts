@@ -107,6 +107,7 @@ type Project = {
     contact_name: string;
     contact_phone: string;
     contact_email: string;
+    warehouses: string;
     active: boolean;
     date_created: string;
 };

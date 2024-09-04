@@ -6,10 +6,12 @@ import React, { useState, useEffect } from 'react';
 import { Box, Typography, Tabs, Tab, useTheme } from '@mui/material';
 import { fetchProjectByID } from '@/db/project-data';
 import ProjectModal from '@/components/modals/ProjectModal';
+import ProjectContactModal from '@/components/modals/ProjectContactModal';
 import DetailsTab from '@/components/projects/DetailsTab';
 import { useCombinedPermissions } from '@/components/layout/combinedpermissions';
 import { hasAccess } from '@/utils/permissions2';
 import { useRouter } from 'next/navigation';
+import ProjectSettingsModal from '@/components/modals/ProjectSettingsModal';
 
 const ProjectProfilePage = ({ params }: any) => {
     const theme = useTheme();
@@ -17,6 +19,8 @@ const ProjectProfilePage = ({ params }: any) => {
     const [project, setProject] = useState<any>(null);
     const [activeTab, setActiveTab] = useState<any>(0);
     const [isProjectModalOpen, setIsProjectModalOpen] = useState(false);
+    const [isProjectContactModalOpen, setIsProjectContactModalOpen] = useState(false);
+    const [isProjectSettingsModalOpen, setIsProjectSettingsModalOpen] = useState(false);
     const { projectId } = params;
 
     const combinedPermissions = useCombinedPermissions();
@@ -24,7 +28,7 @@ const ProjectProfilePage = ({ params }: any) => {
         const loadProject = async () => {
             const projectData = await fetchProjectByID(projectId);
             setProject(projectData);
-            console.log(projectData);
+            console.log("projectData: ", projectData);
         };
 
         if (!hasAccess(combinedPermissions, 'customers', 'projects')) {
@@ -43,6 +47,8 @@ const ProjectProfilePage = ({ params }: any) => {
         const updatedProject = await fetchProjectByID(projectId);
         setProject(updatedProject);
         setIsProjectModalOpen(false);
+        setIsProjectContactModalOpen(false);
+        setIsProjectSettingsModalOpen(false);
     };
 
     const tabsConfig = [
@@ -79,7 +85,9 @@ const ProjectProfilePage = ({ params }: any) => {
                 <DetailsTab
                     theme={theme}
                     project={project}
-                    handleEditClick={() => setIsProjectModalOpen(true)}
+                    editClick={() => setIsProjectModalOpen(true)}
+                    contactClick={() => setIsProjectContactModalOpen(true)}
+                    settingsClick={() => setIsProjectSettingsModalOpen(true)}
                 />
             )}
 
@@ -100,6 +108,20 @@ const ProjectProfilePage = ({ params }: any) => {
                 handleClose={() => setIsProjectModalOpen(false)}
                 projectId={project.id}
                 customerId={project.customer_id}
+                onSave={handleProjectModalSave}
+            />
+
+            <ProjectContactModal
+                open={isProjectContactModalOpen}
+                handleClose={() => setIsProjectContactModalOpen(false)}
+                project={project}
+                onSave={handleProjectModalSave}
+            />
+
+            <ProjectSettingsModal
+                open={isProjectSettingsModalOpen}
+                handleClose={() => setIsProjectSettingsModalOpen(false)}
+                project={project}
                 onSave={handleProjectModalSave}
             />
         </Box>

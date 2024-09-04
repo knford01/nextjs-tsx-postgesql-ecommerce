@@ -15,7 +15,6 @@ import ProjectsTab from '@/components/customers/ProjectsTab';
 import { useCombinedPermissions } from '@/components/layout/combinedpermissions';
 import { hasAccess } from '@/utils/permissions2';
 import { useRouter } from 'next/navigation';
-import Breadcrumbs from '@/components/ui/Breadcrumbs';
 
 const CustomerProfilePage = ({ params }: any) => {
     const theme = useTheme();
@@ -98,7 +97,6 @@ const CustomerProfilePage = ({ params }: any) => {
 
     return (
         <>
-            <Breadcrumbs value={customer.name} />
             <Box sx={{ mt: 2 }}>
                 <Tabs
                     value={activeTab}
