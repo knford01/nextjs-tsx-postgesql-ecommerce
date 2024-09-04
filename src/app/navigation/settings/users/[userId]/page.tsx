@@ -96,8 +96,9 @@ export default function RolePermissionsPage() {
                 console.log("NO ID");
             }
         };
-        if (!hasAccess(combinedPermissions, 'navigation', 'users')) {
-            router.push('/navigation/403'); // Redirect to a 403 error page or any other appropriate route                                                                                            
+
+        if (!hasAccess(combinedPermissions, 'settings', 'users')) {
+            router.push('/navigation/403');
         } else {
             fetchRoleAndPermissions();
         }
@@ -217,7 +218,7 @@ export default function RolePermissionsPage() {
                     </Grid>
                 ))}
                 <Button
-                    sx={{ ml: 2, mt: 3, backgroundColor: `${theme.palette.success.main} !important` }}
+                    sx={{ ml: 2, mt: 3, backgroundColor: `${theme.palette.success.main} !important`, color: `${theme.palette.text.primary} !important` }}
                     variant="contained"
                     onClick={handleSave}
                 >

@@ -9,7 +9,7 @@ import StopIcon from '@mui/icons-material/Stop';
 import CloseIcon from '@mui/icons-material/Close';
 import { useThemeContext } from '@/app/navigation/layout';
 import { themes } from './themes';
-import { setUserTheme } from '@/db/user-data';
+import { fetchUserAvatar, setUserTheme } from '@/db/user-data';
 import { UserModal } from '../modals/UserModals';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import SearchIcon from '@mui/icons-material/Search';
@@ -30,6 +30,7 @@ const TopNav: React.FC<TopNavProps> = ({ collapsed, sessionUser, checkSession })
     const [session, setSession] = useState<any>(sessionUser);
     const [notifications, setNotifications] = useState<Notice[]>([]);
     const [unreadCount, setUnreadCount] = useState(0);
+    const [avatar, setAvatar] = useState('');
     const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
     const [searchExpanded, setSearchExpanded] = useState(false);
@@ -38,10 +39,13 @@ const TopNav: React.FC<TopNavProps> = ({ collapsed, sessionUser, checkSession })
         const response = await fetch('/api/auth/session');
         if (response.ok) {
             const sessionData = await response.json();
-            setSession(sessionData);
-            checkSession();
+
+            if (session !== sessionData.user) {
+                setSession(sessionData);
+                checkSession();
+            }
         }
-    }, [checkSession]);
+    }, [checkSession, session]);
 
     useEffect(() => {
         fetchSession();
@@ -56,9 +60,14 @@ const TopNav: React.FC<TopNavProps> = ({ collapsed, sessionUser, checkSession })
             const unread = data.filter(n => !n.date_viewed).length;
             setUnreadCount(unread);
         };
-
         fetchUserNotifications();
-    }, []);
+
+        const fetchAvatar = async () => {
+            const data = await fetchUserAvatar(session?.user?.id);
+            setAvatar(data?.avatar);
+        };
+        fetchAvatar();
+    }, [session]);
 
     const handleNotificationsClick = () => {
         setIsNotificationsOpen(true);
@@ -229,9 +238,9 @@ const TopNav: React.FC<TopNavProps> = ({ collapsed, sessionUser, checkSession })
                         }}
                         color="inherit"
                     >
-                        {session?.user?.avatar ? (
+                        {avatar ? (
                             <Avatar
-                                src={session.user.avatar}
+                                src={avatar}
                                 alt={`${userName}'s avatar`}
                                 sx={{ width: 35, height: 35 }}
                             />

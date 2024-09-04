@@ -59,7 +59,7 @@ const UserDataGrid: React.FC<UserDataGridProps> = ({ filterId }) => {
             minWidth: 250,
             renderCell: (params) => (
                 <>
-                    <EmulateUser row={params.row} />
+                    <EmulateUser row={params.row} loadUsers={loadUsers} />
                     <UpdateUser id={params.row.id} row={params.row} loadUsers={loadUsers} />
                     <UserAccess id={params.row.id} />
                     <UserStatus id={params.row.id} curStatus={params.row.active === 'Yes' ? 1 : 0} loadUsers={loadUsers} />

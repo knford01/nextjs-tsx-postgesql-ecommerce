@@ -105,6 +105,18 @@ export async function fetchUserById(id: string) {
     }
 }
 
+export async function fetchUserAvatar(id: string) {
+    noStore();
+    try {
+        const data = await sql<User>`SELECT avatar FROM users WHERE id = ${id};`;
+
+        return data.rows[0] || null;
+    } catch (error) {
+        console.error('Database Error:', error);
+        throw new Error('Failed to fetch user.');
+    }
+}
+
 const saltRounds = 10;
 
 export async function createUser(data: any) {

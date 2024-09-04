@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Button } from '@mui/material';
+import { Button, Tooltip } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import { useTheme } from '@mui/material/styles';
 import PersonIcon from '@mui/icons-material/Person';
@@ -20,9 +20,10 @@ interface EmulateUserProps {
         avatar: string;
         active: string;
     };
+    loadUsers: () => void;
 }
 
-const EmulateUser: React.FC<EmulateUserProps> = ({ row }) => {
+const EmulateUser: React.FC<EmulateUserProps> = ({ row, loadUsers }) => {
     const theme = useTheme();
     const router = useRouter();
     const session = useSession();
@@ -49,6 +50,7 @@ const EmulateUser: React.FC<EmulateUserProps> = ({ row }) => {
                     'Content-Type': 'application/json',
                 },
             });
+            loadUsers();
             setIsEmulating(false);
             checkSession();
         } else {
@@ -64,6 +66,7 @@ const EmulateUser: React.FC<EmulateUserProps> = ({ row }) => {
                     'Content-Type': 'application/json',
                 },
             });
+            loadUsers();
             setIsEmulating(true);
             checkSession();
         }
@@ -71,23 +74,25 @@ const EmulateUser: React.FC<EmulateUserProps> = ({ row }) => {
     };
 
     return (
-        <Button
-            variant="outlined"
-            color="primary"
-            onClick={handleEmulateClick}
-            startIcon={isEmulating ? <CancelIcon /> : <PersonIcon />}
-            sx={{
-                p: 1, pr: 0, mr: 1,
-                backgroundColor: `${theme.palette.info.dark} !important`,
-                color: `${theme.palette.text.secondary} !important`,
-                borderColor: `${theme.palette.text.primary} !important`,
-                '&:hover': {
-                    backgroundColor: `${theme.palette.info.main} !important`,
-                    color: `${theme.palette.text.primary} !important`,
-                },
-            }}
-        >
-        </Button>
+        <Tooltip title={'Emulate User'} placement="top">
+            <Button
+                variant="outlined"
+                color="primary"
+                onClick={handleEmulateClick}
+                startIcon={isEmulating ? <CancelIcon /> : <PersonIcon />}
+                sx={{
+                    p: 1, pr: 0, mr: 1,
+                    backgroundColor: `${theme.palette.info.dark} !important`,
+                    color: `${theme.palette.text.secondary} !important`,
+                    borderColor: `${theme.palette.text.primary} !important`,
+                    '&:hover': {
+                        backgroundColor: `${theme.palette.info.main} !important`,
+                        color: `${theme.palette.text.primary} !important`,
+                    },
+                }}
+            >
+            </Button>
+        </Tooltip>
     );
 };
 

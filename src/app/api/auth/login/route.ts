@@ -10,9 +10,9 @@ export async function POST(req: NextRequest) {
 
     if (user) {
         // Store user information in the session
-        const session = { user: { id: user.id, first_name: user.first_name, last_name: user.last_name, email: user.email, role: user.role, role_display: user.role_display, avatar: user.avatar, active: user.active } };
+        const session = { user: { id: user.id, first_name: user.first_name, last_name: user.last_name, email: user.email, role: user.role, role_display: user.role_display, active: user.active } };
         return await commitSession(session, req);
     } else {
         return NextResponse.json({ success: false, message: 'Invalid credentials' }, { status: 401 });
     }
-}
+} 

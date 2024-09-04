@@ -23,6 +23,8 @@ export function getSession(req: Request) {
 }
 
 export async function commitSession(session: any, req: NextRequest) {
+    // console.log("commitSession: ", session);
+
     const serializedCookie = serialize(sessionCookieName, JSON.stringify(session), {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
@@ -40,4 +42,4 @@ export async function commitSession(session: any, req: NextRequest) {
     response.headers.set('Set-Cookie', serializedCookie);
 
     return response;
-}
+} 

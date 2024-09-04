@@ -1,7 +1,7 @@
 import { useRouter } from 'next/navigation';
 import clsx from 'clsx';
 import React, { useState } from 'react';
-import { Button, useMediaQuery } from '@mui/material';
+import { Button, Tooltip, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { PencilIcon, PlusIcon, TrashIcon, StarIcon } from '@heroicons/react/24/outline';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
@@ -83,23 +83,25 @@ export const UpdateUser: React.FC<UpdateUserProps> = ({ id, row, loadUsers }) =>
 
   return (
     <>
-      <Button
-        variant="outlined"
-        color="primary"
-        onClick={handleOpen}
-        startIcon={<PencilIcon className="w-5" />}
-        sx={{
-          p: 1, pr: 0, mr: 1,
-          backgroundColor: `${theme.palette.info.main} !important`,
-          color: `${theme.palette.text.primary} !important`,
-          borderColor: `${theme.palette.text.primary} !important`,
-          '&:hover': {
-            backgroundColor: `${theme.palette.info.dark} !important`,
-            color: `${theme.palette.text.secondary} !important`,
-          },
-        }}
-      >
-      </Button>
+      <Tooltip title={'Edit User'} placement="top">
+        <Button
+          variant="outlined"
+          color="primary"
+          onClick={handleOpen}
+          startIcon={<PencilIcon className="w-5" />}
+          sx={{
+            p: 1, pr: 0, mr: 1,
+            backgroundColor: `${theme.palette.info.main} !important`,
+            color: `${theme.palette.text.primary} !important`,
+            borderColor: `${theme.palette.text.primary} !important`,
+            '&:hover': {
+              backgroundColor: `${theme.palette.info.dark} !important`,
+              color: `${theme.palette.text.secondary} !important`,
+            },
+          }}
+        >
+        </Button>
+      </Tooltip>
       <UserModal open={open} onClose={handleClose} onSubmit={handleSubmit} id={id} row={row} />
     </>
   );
@@ -119,23 +121,25 @@ export const UserAccess: React.FC<UserAccessProps> = ({ id }) => {
 
   return (
     <>
-      <Button
-        variant="outlined"
-        color="primary"
-        onClick={handleRedirect} // Use the handleRedirect function
-        startIcon={<LockOutlinedIcon className="w-5" />}
-        sx={{
-          p: 1, pr: 0, mr: 1,
-          backgroundColor: `${theme.palette.error.main} !important`,
-          color: `${theme.palette.text.primary} !important`,
-          borderColor: `${theme.palette.text.primary} !important`,
-          '&:hover': {
-            backgroundColor: `${theme.palette.error.dark} !important`,
-            color: `${theme.palette.text.secondary} !important`,
-          },
-        }}
-      >
-      </Button>
+      <Tooltip title={'User Access'} placement="top">
+        <Button
+          variant="outlined"
+          color="primary"
+          onClick={handleRedirect} // Use the handleRedirect function
+          startIcon={<LockOutlinedIcon className="w-5" />}
+          sx={{
+            p: 1, pr: 0, mr: 1,
+            backgroundColor: `${theme.palette.error.main} !important`,
+            color: `${theme.palette.text.primary} !important`,
+            borderColor: `${theme.palette.text.primary} !important`,
+            '&:hover': {
+              backgroundColor: `${theme.palette.error.dark} !important`,
+              color: `${theme.palette.text.secondary} !important`,
+            },
+          }}
+        >
+        </Button>
+      </Tooltip>
     </>
   );
 }
@@ -160,24 +164,26 @@ export const UserStatus: React.FC<UserStatusProps> = ({ id, curStatus, loadUsers
 
   return (
     <>
-      <Button
-        variant="outlined"
-        color="secondary"
-        onClick={handleOpen}
-        startIcon={curStatus === 1 ? <TrashIcon className="w-5" /> : <StarIcon className="w-5" />}
-        sx={{
-          p: 1,
-          pr: 0,
-          backgroundColor: `${theme.palette.warning.main} !important`,
-          color: `${theme.palette.text.primary} !important`,
-          borderColor: `${theme.palette.text.primary} !important`,
-          '&:hover': {
-            backgroundColor: `${theme.palette.warning.dark} !important`,
-            color: `${theme.palette.text.secondary} !important`,
-          },
-        }}
-      >
-      </Button>
+      <Tooltip title={'User Status'} placement="top">
+        <Button
+          variant="outlined"
+          color="secondary"
+          onClick={handleOpen}
+          startIcon={curStatus === 1 ? <TrashIcon className="w-5" /> : <StarIcon className="w-5" />}
+          sx={{
+            p: 1,
+            pr: 0,
+            backgroundColor: `${theme.palette.warning.main} !important`,
+            color: `${theme.palette.text.primary} !important`,
+            borderColor: `${theme.palette.text.primary} !important`,
+            '&:hover': {
+              backgroundColor: `${theme.palette.warning.dark} !important`,
+              color: `${theme.palette.text.secondary} !important`,
+            },
+          }}
+        >
+        </Button>
+      </Tooltip>
       <UserStatusModal open={open} onClose={handleClose} onConfirm={handleConfirm} userId={id} curStatus={curStatus} />
     </>
   );
