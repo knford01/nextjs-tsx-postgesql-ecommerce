@@ -54,7 +54,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ value }) => {
                     return null; // Skip adding "Dashboard" if not the last item
                 } else if (isLast) {
                     // Check if the last part is a value ID and replace it with the value name if available
-                    const name = value ? value : value.charAt(0).toUpperCase() + value.slice(1);
+                    const name = value.charAt(0).toUpperCase() + value.slice(1);
                     return (
                         <Typography
                             color="textPrimary"

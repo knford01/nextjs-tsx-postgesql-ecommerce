@@ -31,33 +31,27 @@ const CustomerProfilePage = ({ params }: any) => {
 
     const combinedPermissions = useCombinedPermissions();
     useEffect(() => {
+        const loadCustomerData = async () => {
+            try {
+                const customerData = await fetchCustomerById(customerId);
+                setCustomer(customerData);
+
+                const contactData = await fetchContactsByCustomerId(customerId);
+                setContacts(contactData);
+
+                const emailData = await fetchCustomerEmails(customerId);
+                setEmails(emailData);
+            } catch (error) {
+                console.error('Failed to load customer data:', error);
+            }
+        };
+
         if (!hasAccess(combinedPermissions, 'navigation', 'customers')) {
             router.push('/navigation/403');
         } else {
-            const loadCustomer = async () => {
-                const customerData = await fetchCustomerById(customerId);
-                setCustomer(customerData);
-                console.log("customer: ", customer);
-
-            };
-
-            loadCustomer();
-
-            const loadContacts = async () => {
-                const contactData = await fetchContactsByCustomerId(customerId);
-                setContacts(contactData);
-            };
-
-            loadContacts();
-
-            const loadEmails = async () => {
-                const emailData = await fetchCustomerEmails(customerId);
-                setEmails(emailData);
-            };
-
-            loadEmails();
+            loadCustomerData();
         }
-    }, [customer, customerId, combinedPermissions, router,]);
+    }, [customerId, combinedPermissions, router]);
 
     const handleTabChange = (event: any, newValue: any) => {
         setActiveTab(newValue);

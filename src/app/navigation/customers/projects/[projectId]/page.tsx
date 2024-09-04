@@ -28,7 +28,7 @@ const ProjectProfilePage = ({ params }: any) => {
         const loadProject = async () => {
             const projectData = await fetchProjectByID(projectId);
             setProject(projectData);
-            console.log("projectData: ", projectData);
+            // console.log("projectData: ", projectData);
         };
 
         if (!hasAccess(combinedPermissions, 'customers', 'projects')) {
