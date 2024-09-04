@@ -39,13 +39,10 @@ const TopNav: React.FC<TopNavProps> = ({ collapsed, sessionUser, checkSession })
         const response = await fetch('/api/auth/session');
         if (response.ok) {
             const sessionData = await response.json();
-
-            if (session !== sessionData.user) {
-                setSession(sessionData);
-                checkSession();
-            }
+            setSession(sessionData);
+            checkSession();
         }
-    }, [checkSession, session]);
+    }, [checkSession]);
 
     useEffect(() => {
         fetchSession();
