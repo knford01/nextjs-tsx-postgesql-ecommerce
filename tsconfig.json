@@ -10,7 +10,8 @@
     "strict": true,
     "noEmit": true,
     "esModuleInterop": true,
-    "module": "esnext",
+    // "module": "commonjs",
+    "module": "preserve",
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
@@ -33,7 +34,8 @@
     "types": [ //Added
       "@types/node",
       "@types/react",
-      "@mui/x-data-grid/themeAugmentation"
+      "@mui/x-data-grid/themeAugmentation",
+      "jest" // Added
     ]
   },
   "include": [
@@ -45,5 +47,5 @@
   ],
   "exclude": [
     "node_modules"
-  ],
+  ]
 }

@@ -176,7 +176,7 @@ const ContactForm = ({ onClose }: { onClose: () => void }) => {
                         </div>
 
                         <div className="col-span-1">
-                            <button type="submit" className="w-full p-2 bg-green-500 font-bold rounded-md transition-transform duration-300 hover:scale-105 text-[#e8e8e8]">
+                            <button type="submit" className="w-full p-2 bg-green-500 font-bold rounded-md transition-transform duration-300 hover:scale-105 text-[#ffffff]">
                                 Send Message
                             </button>
                         </div>
