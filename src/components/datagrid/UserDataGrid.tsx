@@ -21,7 +21,7 @@ const UserDataGrid: React.FC<UserDataGridProps> = ({ filterId }) => {
     const loadUsers = useCallback(async () => {
         const usersData = await fetchUsers();
         setUsers(usersData);
-    }, []);
+    }, [setUsers]);
 
     useEffect(() => {
         loadUsers();

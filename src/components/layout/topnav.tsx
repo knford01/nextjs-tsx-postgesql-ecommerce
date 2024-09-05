@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Box, IconButton, Menu, MenuItem, Avatar, Typography, useTheme, Button, TextField, InputAdornment, useMediaQuery } from '@mui/material';
 import PaletteIcon from '@mui/icons-material/Palette';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
@@ -22,12 +22,15 @@ interface TopNavProps {
 }
 
 const TopNav: React.FC<TopNavProps> = ({ collapsed, sessionUser, checkSession }) => {
+
+
+
     const theme = useTheme();
     const { setTheme } = useThemeContext();
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const [menuAnchorEl, setMenuAnchorEl] = useState<null | HTMLElement>(null);
     const [isUserModalOpen, setIsUserModalOpen] = useState(false);
-    const [session, setSession] = useState<any>(sessionUser);
+    const [session, setSession] = useState<any>([]);
     const [notifications, setNotifications] = useState<Notice[]>([]);
     const [unreadCount, setUnreadCount] = useState(0);
     const [avatar, setAvatar] = useState('');
@@ -35,20 +38,9 @@ const TopNav: React.FC<TopNavProps> = ({ collapsed, sessionUser, checkSession })
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
     const [searchExpanded, setSearchExpanded] = useState(false);
 
-    const fetchSession = useCallback(async () => {
-        const response = await fetch('/api/auth/session');
-        if (response.ok) {
-            const sessionData = await response.json();
-            setSession(sessionData);
-            checkSession();
-        }
-    }, [checkSession]);
-
     useEffect(() => {
-        fetchSession();
-        const interval = setInterval(fetchSession, 15000);
-        return () => clearInterval(interval);
-    }, [fetchSession]);
+        setSession(sessionUser);
+    }, [sessionUser]);
 
     useEffect(() => {
         const fetchUserNotifications = async () => {
@@ -60,7 +52,7 @@ const TopNav: React.FC<TopNavProps> = ({ collapsed, sessionUser, checkSession })
         fetchUserNotifications();
 
         const fetchAvatar = async () => {
-            const data = await fetchUserAvatar(session?.user?.id);
+            const data = await fetchUserAvatar(session?.id);
             setAvatar(data?.avatar);
         };
         fetchAvatar();
@@ -74,9 +66,9 @@ const TopNav: React.FC<TopNavProps> = ({ collapsed, sessionUser, checkSession })
         setIsNotificationsOpen(false);
     };
 
-    const userId = session?.user?.id;
-    const userName = session?.user?.first_name || 'User';
-    const greeting = session?.user?.emulating_user_id ? 'Emulating' : 'Hello';
+    const userId = session?.id;
+    const userName = session?.first_name || 'User';
+    const greeting = session?.emulating_user_id ? 'Emulating' : 'Hello';
 
     const handleThemeClick = (event: React.MouseEvent<HTMLLIElement>) => {
         setAnchorEl(event.currentTarget);
@@ -115,15 +107,15 @@ const TopNav: React.FC<TopNavProps> = ({ collapsed, sessionUser, checkSession })
     };
 
     const handleStopEmulation = async () => {
-        if (session?.user?.emulating_user_id) {
+        if (session?.emulating_user_id) {
             await fetch('/api/auth/emulate', {
                 method: 'POST',
-                body: JSON.stringify({ emulate: false, emulating_user: session.user }),
+                body: JSON.stringify({ emulate: false, emulating_user: session }),
                 headers: {
                     'Content-Type': 'application/json',
                 },
             });
-            fetchSession();
+            checkSession();
         }
         handleMenuClose();
     };
@@ -259,7 +251,7 @@ const TopNav: React.FC<TopNavProps> = ({ collapsed, sessionUser, checkSession })
                     },
                 }}
             >
-                {session?.user?.emulating_user_id && (
+                {session?.emulating_user_id && (
                     <MenuItem onClick={handleStopEmulation}>
                         <StopIcon sx={{ mr: 1 }} />
                         Stop Emulating
@@ -299,7 +291,7 @@ const TopNav: React.FC<TopNavProps> = ({ collapsed, sessionUser, checkSession })
                     onClose={handleUserModalClose}
                     onSubmit={handleSubmit}
                     id={userId}
-                    row={session.user}
+                    row={session}
                 />
             )}
 

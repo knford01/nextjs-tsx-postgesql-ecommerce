@@ -54,7 +54,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       setCombinedPermissions(permissions);
 
       const themeName = userTheme[0]?.theme || 'defaultTheme';
-
       switch (themeName) {
         case 'lightTheme':
           setTheme(themes.lightTheme);
