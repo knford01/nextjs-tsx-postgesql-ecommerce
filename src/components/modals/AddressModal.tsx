@@ -49,8 +49,10 @@ const AddressModal: React.FC<AddressModalProps> = ({ open, handleClose, addressI
         if (addressId) {
             const fetchAddress = async () => {
                 const data = await getAddressById(addressId);
-                if (data.rows.length > 0) {
-                    const addressData = data.rows[0] as Address;
+                // console.log("addressbyID", data);
+
+                if (data.length == 1) {
+                    const addressData = data[0] as Address;
                     setAddress(addressData);
 
                     // Set initial state for dropdowns with default empty string values if undefined
@@ -89,8 +91,12 @@ const AddressModal: React.FC<AddressModalProps> = ({ open, handleClose, addressI
             const fetchedStates = await fetchStates(value);
             if (Array.isArray(fetchedStates)) {
                 setStates(fetchedStates);
+                setCities([]);
+                setPostalCodes([]);
             } else {
-                setStates([]); // or handle the error appropriately
+                setStates([]);
+                setCities([]);
+                setPostalCodes([]);
             }
         }
     };
@@ -103,6 +109,10 @@ const AddressModal: React.FC<AddressModalProps> = ({ open, handleClose, addressI
 
         if (name === 'state_province' && value) {
             fetchCities(address.country, value).then(setCities);
+            setPostalCodes([]);
+        } else {
+            setCities([]);
+            setPostalCodes([]);
         }
     };
 
@@ -114,6 +124,8 @@ const AddressModal: React.FC<AddressModalProps> = ({ open, handleClose, addressI
 
         if (name === 'city' && value && address.state_province) {
             fetchPostal(address.country, address.state_province, value).then(setPostalCodes);
+        } else {
+            setPostalCodes([]);
         }
     };
 

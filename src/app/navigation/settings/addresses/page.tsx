@@ -26,9 +26,9 @@ export default function Page({ searchParams, }: { searchParams?: { query?: strin
             sx={{
                 m: 0,
                 mt: 5,
-                width: 'auto', // Ensure it takes full width of the parent container
+                width: 'auto',
                 height: 'auto',
-                transition: 'all 0.3s', // Transition for smooth resizing
+                transition: 'all 0.3s',
             }}
         >
             <AddressDataGrid />

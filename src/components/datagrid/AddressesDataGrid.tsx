@@ -17,7 +17,8 @@ const AddressDataGrid: React.FC = () => {
 
     const loadAddresses = useCallback(async () => {
         const addressData = await getAddresses();
-        setAddresses(addressData.rows as Address[]);
+        // console.log("addressData", addressData);
+        setAddresses(addressData as Address[]);
     }, []);
 
     useEffect(() => {

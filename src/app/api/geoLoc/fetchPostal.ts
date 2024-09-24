@@ -2,7 +2,7 @@ import { GEONAMES_USERNAME } from '@/constants/appConstants';
 
 export const fetchPostal = async (countryCode: string, stateCode: string, cityCode: string) => {
     const username = GEONAMES_USERNAME;
-    const url = `http://api.geonames.org/postalCodeSearchJSON?placename=${cityCode}&country=${countryCode}&adminCode1=${stateCode}&maxRows=10&username=${username}`;
+    const url = `http://api.geonames.org/postalCodeSearchJSON?placename=${cityCode}&country=${countryCode}&adminCodes1=${stateCode}&maxRows=10&username=${username}`;
 
     // console.log(`http://api.geonames.org/postalCodeSearchJSON?placename=${cityCode}&country=${countryCode}&adminCode1=${stateCode}&maxRows=10&username=${username}`);
     try {
@@ -23,6 +23,6 @@ export const fetchPostal = async (countryCode: string, stateCode: string, cityCo
 
     } catch (error) {
         console.error('Error postal codes:', error);
-        return []; // Return an empty array if there was an error
+        return []; // Return an empty array if there was an error 
     }
 };
