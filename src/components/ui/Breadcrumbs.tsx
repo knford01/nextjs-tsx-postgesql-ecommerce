@@ -21,6 +21,16 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ value }) => {
     // Split the pathname into parts
     const pathnames = pathname ? pathname.split('/').filter((x) => x) : [];
 
+    type NameMapping = {
+        [key: string]: string; // Maps string keys to string values
+    };
+
+    // Define the mapping object using the type
+    const nameMapping: NameMapping = {
+        edi: 'EDI',
+        Edi: 'EDI',
+    };
+
     return (
         <MUIBreadcrumbs
             aria-label="breadcrumb"
@@ -54,17 +64,18 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ value }) => {
                     return null; // Skip adding "Dashboard" if not the last item
                 } else if (isLast) {
                     // Check if the last part is a value ID and replace it with the value name if available
-                    const name = value.charAt(0).toUpperCase() + value.slice(1);
+                    const displayName = nameMapping[value.toLowerCase()] || (value.charAt(0).toUpperCase() + value.slice(1));
                     return (
                         <Typography
                             color="textPrimary"
                             key={to}
                             sx={{ color: theme.palette.primary.main, fontSize: '18px', fontWeight: 'bold' }}
                         >
-                            {name}
+                            {displayName}
                         </Typography>
                     );
                 } else {
+                    const displayName = nameMapping[value.toLowerCase()] || (value.charAt(0).toUpperCase() + value.slice(1));
                     return (
                         <Link
                             color="inherit"
@@ -73,7 +84,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ value }) => {
                             key={to}
                             sx={{ color: theme.palette.primary.main, cursor: 'pointer' }}
                         >
-                            {value.charAt(0).toUpperCase() + value.slice(1)}
+                            {displayName}
                         </Link>
                     );
                 }

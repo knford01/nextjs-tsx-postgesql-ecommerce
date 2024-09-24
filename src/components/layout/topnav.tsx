@@ -121,6 +121,7 @@ const TopNav: React.FC<TopNavProps> = ({ collapsed, sessionUser, checkSession })
     };
 
     const handleSubmit = (data: any) => {
+        checkSession();
         handleUserModalClose();
     };
 
