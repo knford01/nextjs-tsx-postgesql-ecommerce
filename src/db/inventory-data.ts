@@ -5,9 +5,9 @@ import { sql, QueryResult } from '@vercel/postgres';
 import { unstable_noStore as noStore } from 'next/cache';
 
 export async function fetchInventory() {
-    noStore();
-    try {
-        const data = await sql<Contact>`
+  noStore();
+  try {
+    const data = await sql<Contact>`
         SELECT
           *,
           case
@@ -17,9 +17,9 @@ export async function fetchInventory() {
         FROM Inventory
         order by name desc;`;
 
-        return data.rows || null;
-    } catch (err) {
-        console.error('Database Error:', err);
-        throw new Error('Failed to fetch all projects.');
-    }
+    return data.rows || null;
+  } catch (err) {
+    console.error('Database Error:', err);
+    throw new Error('Failed to fetch inventory.');
+  }
 }

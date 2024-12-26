@@ -3,54 +3,47 @@ import { GridColDef } from '@mui/x-data-grid';
 import CustomDataGrid from './CustomDataGrid';
 import { Button, useMediaQuery, useTheme } from '@mui/material';
 import { PencilIcon, PlusIcon } from '@heroicons/react/24/outline';
-import { fetchWarehouseLocationsByWarehouseId } from '@/db/warehouse-data';
-import LocationModal from '../modals/LocationModal';
+import { fetchManufacturers } from '@/db/item-data';
+import ManufacturerModal from '@/components/modals/ManufacturerModal';
 
-interface WarehouseLocationDataGridProps {
-    warehouseId: number;
-}
-
-const WarehouseLocationDataGrid: React.FC<WarehouseLocationDataGridProps> = ({ warehouseId }) => {
+const ManufacturersDataGrid: React.FC = () => {
     const theme = useTheme();
-    const [locations, setLocations] = useState<WarehouseLocation[]>([]);
+    const [manufacturers, setManufacturers] = useState<Manufacturer[]>([]);
     const [modalOpen, setModalOpen] = useState(false);
-    const [currentLocationId, setCurrentLocationId] = useState<number | undefined>(undefined);
+    const [currentManufacturerId, setCurrentManufacturerId] = useState<number | undefined>(undefined);
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
-    const loadLocations = useCallback(async () => {
-        if (warehouseId) {
-            const locationData = await fetchWarehouseLocationsByWarehouseId(warehouseId);
-            setLocations(locationData as WarehouseLocation[]);
-        }
-    }, [warehouseId]);
+    const loadManufacturers = useCallback(async () => {
+        const manufacturerData = await fetchManufacturers();
+        setManufacturers(manufacturerData || []);
+    }, []);
 
+    // Load manufacturers on component mount
     useEffect(() => {
-        loadLocations();
-    }, [loadLocations]);
+        loadManufacturers();
+    }, [loadManufacturers]);
 
-    const handleOpenModal = (locationId?: number) => {
-        setCurrentLocationId(locationId); // undefined if locationId is not provided
+    const handleOpenModal = (manufacturerId?: number) => {
+        setCurrentManufacturerId(manufacturerId);
         setModalOpen(true);
     };
 
     const handleCloseModal = () => {
         setModalOpen(false);
-        setCurrentLocationId(undefined);
+        setCurrentManufacturerId(undefined);
     };
 
     const columns: GridColDef[] = [
         { field: 'name', headerName: 'Name', flex: 1, minWidth: 150 },
-        { field: 'aisle', headerName: 'Aisle', flex: 1, minWidth: 200 },
-        { field: 'rack', headerName: 'Rack', flex: 1, minWidth: 150 },
-        { field: 'row', headerName: 'Row', flex: 1, minWidth: 200 },
-        { field: 'bin', headerName: 'Bin', flex: 1, minWidth: 150 },
-        { field: 'active_display', headerName: 'Active', flex: 0.5, minWidth: 100 },
+        { field: 'contact_name', headerName: 'Contact Name', flex: 1, minWidth: 150 },
+        { field: 'contact_phone', headerName: 'Contact Phone', flex: 1, minWidth: 150 },
+        { field: 'active', headerName: 'Active', flex: 0.5, minWidth: 100 },
         {
             field: 'actions',
             headerName: 'Actions',
             flex: 1,
             sortable: false,
-            minWidth: 250,
+            minWidth: 250, // Ensure actions column has enough space
             renderCell: (params) => (
                 <Button
                     variant="outlined"
@@ -58,9 +51,7 @@ const WarehouseLocationDataGrid: React.FC<WarehouseLocationDataGridProps> = ({ w
                     onClick={() => handleOpenModal(params.row.id)}
                     startIcon={<PencilIcon className="w-5" />}
                     sx={{
-                        p: 1,
-                        pr: 0,
-                        mr: 1,
+                        p: 1, pr: 0, mr: 1,
                         backgroundColor: `${theme.palette.info.main} !important`,
                         color: `${theme.palette.text.primary} !important`,
                         borderColor: `${theme.palette.text.primary} !important`,
@@ -82,27 +73,37 @@ const WarehouseLocationDataGrid: React.FC<WarehouseLocationDataGridProps> = ({ w
     return (
         <>
             <CustomDataGrid
-                rows={locations}
+                rows={manufacturers}
                 columns={columns}
-                fileName="locations_export"
+                fileName="manufacturers_export"
                 buttons={
                     <Button
                         startIcon={<PlusIcon className="h-5" />}
                         onClick={() => handleOpenModal()}
                         variant="contained"
                         sx={{
-                            r: 0, backgroundColor: `${theme.palette.secondary.main} !important`, color: `${theme.palette.text.primary} !important`,
+                            r: 0,
+                            backgroundColor: `${theme.palette.secondary.main} !important`,
+                            color: `${theme.palette.text.primary} !important`,
                             '&:hover': {
                                 backgroundColor: `${theme.palette.action.hover} !important`,
                             },
-                        }}>
-                        {isMobile ? 'Location' : 'Create Location'}
-                    </Button>}
-                columnsToIgnore={['avatar', 'actions']}
+                        }}
+                    >
+                        {isMobile ? 'Create' : 'Create Manufacturer'}
+                    </Button>
+                }
+                columnsToIgnore={['actions']}
             />
-            <LocationModal warehouse_id={warehouseId} open={modalOpen} handleClose={handleCloseModal} locationId={currentLocationId} loadLocations={loadLocations} />
+
+            <ManufacturerModal
+                open={modalOpen}
+                handleClose={handleCloseModal}
+                manufacturerId={currentManufacturerId}
+                loadManufacturers={loadManufacturers}
+            />
         </>
     );
 };
 
-export default WarehouseLocationDataGrid;
+export default ManufacturersDataGrid;

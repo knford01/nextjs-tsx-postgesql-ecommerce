@@ -134,17 +134,31 @@ export const getUserPermissions = async (id: any): Promise<Permission[]> => {
 // Update an existing permission
 export const saveUserPermission = async (rolePermissions: any) => {
   try {
-    for (const { user_id, permission_id, access } of rolePermissions) {
-      if (access == '') {
-        continue;
-      }
-      await sql`DELETE FROM user_permissions WHERE user_id = ${user_id} AND permission_id = ${permission_id};`;
-      await sql`INSERT INTO user_permissions (user_id, permission_id, access) VALUES (${user_id}, ${permission_id}, ${access});`;
+    // Get the user_id from the first permission in the array
+    const user_id = rolePermissions[0]?.user_id;
+
+    // Delete all permissions for the user before inserting new ones
+    if (user_id) {
+      await sql`DELETE FROM user_permissions WHERE user_id = ${user_id};`;
     }
+
+    // Insert new permissions
+    for (const { permission_id, access } of rolePermissions) {
+      if (access === '') {
+        continue; // Skip if access is empty
+      }
+
+      await sql`
+        INSERT INTO user_permissions (user_id, permission_id, access)
+        VALUES (${user_id}, ${permission_id}, ${access});
+      `;
+    }
+
     console.log('Permissions updated successfully');
   } catch (error) {
     console.error('Error updating permission:', error);
     throw new Error('Failed to update permission');
   }
 };
+
 

@@ -75,6 +75,51 @@ type Contact = {
     active: number;
 };
 
+type Item = {
+    id: number; // Primary key
+    customer_id: number;
+    name: string;
+    description: string;
+    item_number: string;
+    customer_number: string;
+    article_number: string;
+    upc: string;
+    sku: string;
+    uom_id: number;
+    length: string;
+    width: string;
+    height: string;
+    weight: string;
+    manufacturer_id: number;
+    model_id: number;
+    case_pack_qty: number;
+    low_inv: number;
+    req_sn: boolean;
+    bulk: boolean;
+    image: string;
+    active: boolean;
+    date_created: Date;
+}
+
+interface Manufacturer {
+    id: number;
+    name: string;
+    contact_name: string;
+    contact_phone: string;
+    active: boolean;
+    date_created: Date;
+}
+
+interface Model {
+    id: number;
+    manufacturer_id: number;
+    name: string;
+    contact_name: string;
+    contact_phone: string;
+    active: boolean;
+    date_created: Date;
+}
+
 interface Notice {
     id: number;
     importance_id: number;

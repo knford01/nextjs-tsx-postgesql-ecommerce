@@ -4,7 +4,7 @@ import EditIcon from '@mui/icons-material/Edit';
 
 const DetailsTab = ({ theme, warehouse, handleEditClick }: any) => (
     <Grid container spacing={2} sx={{ mt: 2 }}>
-        {/* Customer Details Card */}
+        {/* Warehouse Details Card */}
         <Grid item xs={12} sm={6} md={4}>
             <Card sx={{ backgroundColor: theme.palette.background.level1, color: theme.palette.primary.main }}>
                 <CardContent sx={{ position: 'relative' }}>
@@ -23,7 +23,7 @@ const DetailsTab = ({ theme, warehouse, handleEditClick }: any) => (
                             borderRadius: '8px',
                         }}
                     >
-                        {/* Table Layout for Customer Details */}
+                        {/* Table Layout for Warehouse Details */}
                         <Box component="table" sx={{ width: '100%', borderCollapse: 'collapse' }}>
                             <Box component="tbody">
                                 {[
