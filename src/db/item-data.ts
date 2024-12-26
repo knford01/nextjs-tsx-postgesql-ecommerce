@@ -288,13 +288,18 @@ export async function fetchModels() {
   try {
     const data = await sql<Model>`
       SELECT
-        models.*,
+        *,
         CASE
-          WHEN models.active = TRUE THEN 'Yes'
+          WHEN active = TRUE THEN 'Yes'
           ELSE 'No'
-        END AS active
+        END AS active,
+        (
+          SELECT manufacturers.name
+          FROM manufacturers
+          WHERE manufacturers.id = models.manufacturer_id
+        ) AS manufacturer_name
       FROM models
-      ORDER BY models.name DESC;`;
+      ORDER BY name ASC;`;
 
     return data.rows || null;
   } catch (err) {
@@ -308,18 +313,15 @@ export async function fetchModelById(id: number) {
   try {
     const data = await sql<Model & { manufacturer_name?: string }>`
       SELECT
-        models.*,
-        CASE
-          WHEN models.active = TRUE THEN 'Yes'
-          ELSE 'No'
-        END AS active,
+        *,
         (
           SELECT manufacturers.name
           FROM manufacturers
           WHERE manufacturers.id = models.manufacturer_id
         ) AS manufacturer_name
       FROM models
-      WHERE models.id = ${id};`;
+      WHERE id = ${id}
+      ORDER BY name ASC;`;
 
     return data.rows[0] || null;
   } catch (err) {
@@ -328,25 +330,21 @@ export async function fetchModelById(id: number) {
   }
 }
 
-export async function createModel(model: Omit<Model, 'id' | 'date_created'>) {
+export async function createModel(model: Omit<Model, 'id' | 'manufacturer_name' | 'date_created'>) {
   noStore();
   try {
     const {
       manufacturer_id,
       name,
-      contact_name,
-      contact_phone,
       active
     } = model;
 
     const data = await sql`
       INSERT INTO models (
-        manufacturer_id, name, contact_name, contact_phone, active
+        manufacturer_id, name, active
       ) VALUES (
         ${manufacturer_id},
         ${name},
-        ${contact_name},
-        ${contact_phone},
         ${active}
       )
       RETURNING *;`;
@@ -363,8 +361,6 @@ export async function updateModel(
   model: {
     manufacturer_id?: number;
     name?: string;
-    contact_name?: string;
-    contact_phone?: string;
     active?: boolean;
   }
 ) {
@@ -375,8 +371,6 @@ export async function updateModel(
       SET
         manufacturer_id = COALESCE(${model.manufacturer_id}, manufacturer_id),
         name = COALESCE(${model.name}, name),
-        contact_name = COALESCE(${model.contact_name}, contact_name),
-        contact_phone = COALESCE(${model.contact_phone}, contact_phone),
         active = COALESCE(${model.active}, active)
       WHERE id = ${id}
       RETURNING *;`;

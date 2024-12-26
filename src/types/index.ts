@@ -112,10 +112,9 @@ interface Manufacturer {
 
 interface Model {
     id: number;
-    manufacturer_id: number;
     name: string;
-    contact_name: string;
-    contact_phone: string;
+    manufacturer_id: number;
+    manufacturer_name: string | '';
     active: boolean;
     date_created: Date;
 }
