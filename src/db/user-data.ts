@@ -80,7 +80,7 @@ export async function fetchUsers() {
     }
 }
 
-export async function fetchUserById(id: string) {
+export async function fetchUserById(id: any) {
     noStore();
     try {
         const data = await sql<User>`

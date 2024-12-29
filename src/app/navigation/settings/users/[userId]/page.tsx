@@ -3,8 +3,6 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Typography, Grid, Paper, Checkbox, FormControlLabel, Button } from '@mui/material';
 import { useRouter, useParams } from 'next/navigation';
-import { fetchUserById } from '@/db/user-data';
-import { getAllActivePermissions, getUserPermissions, saveUserPermission } from '@/db/permissions';
 import { useTheme } from '@mui/material';
 import { showErrorToast, showSuccessToast } from '@/components/ui/ButteredToast';
 import { User } from '@/types/user';
@@ -24,11 +22,6 @@ interface Permission {
     role_id: number;
     permission_id: number;
     access: string;
-}
-
-interface Role {
-    id: number;
-    display: string;
 }
 
 const toPascalCase = (str: string) => {
@@ -57,43 +50,48 @@ export default function RolePermissionsPage() {
     useEffect(() => {
         const fetchRoleAndPermissions = async () => {
             if (userId) {
-                const userResult = await fetchUserById(String(userId));
-                const user = userResult.rows[0]; // Extract user data from the QueryResult<User>
-                setSelectedUser(user);
+                try {
+                    const response = await fetch(`/api/serverSide/userPermissions?userId=${userId}`);
 
-                const rolePermissions: RolePermission[] = await getUserPermissions(Number(userId));
-
-                const permissionsData = await getAllActivePermissions();
-                console.log(getAllActivePermissions);
-
-                const formattedPermissions = permissionsData.map((permission: any) => {
-                    const subAreas = permission.sub_areas.split(',').map((subArea: string) => toPascalCase(subArea.trim()));
-                    return {
-                        ...permission,
-                        area: toPascalCase(permission.area),
-                        sub_areas: subAreas,
-                    };
-                });
-
-                // Initialize selectedSubAreas based on rolePermissions
-                const initialSelectedSubAreas: { [key: string]: string[] } = {};
-                rolePermissions.forEach(({ permission_id, access }) => {
-                    const permission = formattedPermissions.find((perm) => perm.id === permission_id);
-                    if (permission) {
-                        initialSelectedSubAreas[permission.area] = access.split(',').map((subArea: string) =>
-                            toPascalCase(subArea.trim())
-                        );
-                        setEnabledSubAreas((prev) => ({
-                            ...prev,
-                            [permission.area]: true,
-                        }));
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch data');
                     }
-                });
 
-                setPermissions(formattedPermissions);
-                setSelectedSubAreas(initialSelectedSubAreas);
+                    const { user, permissions, rolePermissions } = await response.json();
+
+                    setSelectedUser(user);
+
+                    const formattedPermissions = permissions.map((permission: any) => {
+                        const subAreas = permission.sub_areas.split(',').map((subArea: string) => toPascalCase(subArea.trim()));
+                        return {
+                            ...permission,
+                            area: toPascalCase(permission.area),
+                            sub_areas: subAreas,
+                        };
+                    });
+
+                    const initialSelectedSubAreas: { [key: string]: string[] } = {};
+                    rolePermissions.forEach(({ permission_id, access }: RolePermission) => {
+                        const permission = formattedPermissions.find((perm: any) => perm.id === permission_id);
+                        if (permission) {
+                            initialSelectedSubAreas[permission.area] = access.split(',').map((subArea: string) =>
+                                toPascalCase(subArea.trim())
+                            );
+                            setEnabledSubAreas((prev) => ({
+                                ...prev,
+                                [permission.area]: true,
+                            }));
+                        }
+                    });
+
+                    setPermissions(formattedPermissions);
+                    setSelectedSubAreas(initialSelectedSubAreas);
+                } catch (error) {
+                    console.error('Error fetching permissions:', error);
+                    showErrorToast('Failed to load user permissions.');
+                }
             } else {
-                console.log("NO ID");
+                console.log('No user ID provided.');
             }
         };
 
@@ -143,8 +141,19 @@ export default function RolePermissionsPage() {
         }));
 
         try {
-            await saveUserPermission(selectedPermissions);
-            // Redirect after 3 seconds
+            const response = await fetch(`/api/serverSide/saveUserPermissions`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(selectedPermissions),
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Failed to save permissions');
+            }
+
             showSuccessToast('Access Updated');
             router.push('/navigation/settings/users');
         } catch (error) {
@@ -169,7 +178,14 @@ export default function RolePermissionsPage() {
             <Grid container spacing={2} mt={2}>
                 {permissions.map((permission) => (
                     <Grid item xs={12} key={permission.area}>
-                        <Paper elevation={3} sx={{ padding: 2, backgroundColor: `${theme.palette.secondary.main} !important`, borderBottom: `1px solid ${theme.palette.text.primary}` }}>
+                        <Paper
+                            elevation={3}
+                            sx={{
+                                padding: 2,
+                                backgroundColor: `${theme.palette.secondary.main} !important`,
+                                borderBottom: `1px solid ${theme.palette.text.primary}`,
+                            }}
+                        >
                             <FormControlLabel
                                 control={
                                     <Checkbox
@@ -178,7 +194,10 @@ export default function RolePermissionsPage() {
                                     />
                                 }
                                 label={
-                                    <Typography variant="h6" sx={{ fontWeight: 'bold', color: `${theme.palette.text.primary} !important` }}>
+                                    <Typography
+                                        variant="h6"
+                                        sx={{ fontWeight: 'bold', color: `${theme.palette.text.primary} !important` }}
+                                    >
                                         {permission.area}
                                     </Typography>
                                 }
@@ -218,7 +237,12 @@ export default function RolePermissionsPage() {
                     </Grid>
                 ))}
                 <Button
-                    sx={{ ml: 2, mt: 3, backgroundColor: `${theme.palette.success.main} !important`, color: `${theme.palette.text.primary} !important` }}
+                    sx={{
+                        ml: 2,
+                        mt: 3,
+                        backgroundColor: `${theme.palette.success.main} !important`,
+                        color: `${theme.palette.text.primary} !important`,
+                    }}
                     variant="contained"
                     onClick={handleSave}
                 >
