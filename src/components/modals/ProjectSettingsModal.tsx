@@ -6,31 +6,33 @@ import { showErrorToast, showSuccessToast } from '@/components/ui/ButteredToast'
 import { setProjectWarehouses, updateProject } from '@/db/project-data';
 import { fetchWarehouses } from '@/db/warehouse-data';
 
+interface Warehouse {
+    id: number;
+    name: string;
+}
+
 interface ProjectSettingsModalProps {
     open: boolean;
     handleClose: () => void;
     project: {
         id: number;
         pallet_prefix: string | null;
-        warehouses: number[];
+        warehouses: string; // Stored as CSV of names
     };
     onSave: () => void;
 }
 
 const ProjectSettingsModal: React.FC<ProjectSettingsModalProps> = ({ open, handleClose, project, onSave }) => {
     const theme = useTheme();
-    const [warehouses, setWarehouses] = useState<number[]>(project.warehouses || []);
-    const [allWarehouses, setAllWarehouses] = useState<any[]>([]);
+    const [warehouses, setWarehouses] = useState<number[]>([]);
+    const [allWarehouses, setAllWarehouses] = useState<Warehouse[]>([]);
 
+    // Load warehouses from the database
     useEffect(() => {
         const loadWarehouses = async () => {
             try {
                 const warehouseData = await fetchWarehouses();
-                if (warehouseData.length === 0) {
-                    showErrorToast('No warehouses were found.');
-                } else {
-                    setAllWarehouses(warehouseData);
-                }
+                setAllWarehouses(Array.isArray(warehouseData) ? warehouseData : []);
             } catch (error) {
                 showErrorToast('Failed to load warehouses.');
             }
@@ -39,15 +41,32 @@ const ProjectSettingsModal: React.FC<ProjectSettingsModalProps> = ({ open, handl
         loadWarehouses();
     }, []);
 
-    const emptySettingsData = useMemo(() => ({
-        pallet_prefix: project.pallet_prefix || '',
-    }), [project]);
+    // Sync saved warehouses from project (CSV of names to Array of IDs)
+    useEffect(() => {
+        if (open) {
+            // Parse the CSV string of warehouse names and trim whitespace
+            const parsedWarehouseNames = project.warehouses
+                ? project.warehouses.split(',').map((name) => name.trim())
+                : [];
 
-    const [settingsData, setSettingsData] = useState(emptySettingsData);
+            // Convert warehouse names to their corresponding IDs
+            const matchedWarehouseIds = parsedWarehouseNames
+                .map((name) => {
+                    const warehouse = allWarehouses.find((w) => w.name === name);
+                    return warehouse ? warehouse.id : null; // Return ID if found, otherwise null
+                })
+                .filter((id) => id !== null); // Filter out unmatched names
+
+            setWarehouses(matchedWarehouseIds as number[]); // Update state with valid IDs
+        }
+    }, [open, project.warehouses, allWarehouses]);
+
+    const [settingsData, setSettingsData] = useState({
+        pallet_prefix: project.pallet_prefix || '',
+    });
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
-
         setSettingsData((prevData) => ({
             ...prevData,
             [name]: value,
@@ -93,10 +112,13 @@ const ProjectSettingsModal: React.FC<ProjectSettingsModalProps> = ({ open, handl
                         multiple: true,
                         value: warehouses,
                         onChange: handleWarehousesChange,
-                        renderValue: (selected: any) => (selected as number[]).map(id => {
-                            const warehouse = allWarehouses.find(w => w.id === id);
-                            return warehouse ? warehouse.name : id;
-                        }).join(', '),
+                        renderValue: (selected: number[]) =>
+                            selected
+                                .map((id) => {
+                                    const warehouse = allWarehouses.find((w) => w.id === id);
+                                    return warehouse ? warehouse.name : id;
+                                })
+                                .join(', '),
                     }}
                     fullWidth
                     margin="normal"

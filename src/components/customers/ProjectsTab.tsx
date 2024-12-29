@@ -19,7 +19,6 @@ const ProjectsTab = ({ theme, customerId }: any) => {
     const loadProjects = useCallback(async () => {
         const projectData = await fetchProjectsByCustomerId(customerId);
         setProjects(projectData);
-        // console.log(projectData); 
     }, [customerId]);
 
     const combinedPermissions = useCombinedPermissions();
@@ -112,13 +111,7 @@ const ProjectsTab = ({ theme, customerId }: any) => {
                                 <Box sx={{ backgroundColor: theme.palette.text.primary, borderRadius: 1, p: 1, }}>
                                     <Typography
                                         variant="body2"
-                                        color={
-                                            theme.palette[
-                                            project.status_theme.split('.')[0] as keyof typeof theme.palette
-                                            ][
-                                            project.status_theme.split('.')[1] as keyof typeof theme.palette.error
-                                            ]
-                                        }
+                                        color={theme.palette[project.status_theme.split('.')[0] as keyof typeof theme.palette][project.status_theme.split('.')[1] as keyof typeof theme.palette.error]}
                                     >
                                         Status: {project.status_name}
                                     </Typography>
