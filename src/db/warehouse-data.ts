@@ -1,7 +1,8 @@
 // app/lib/data/warehouse-data.tsx
 
 'use server';
-import { sql, QueryResult } from '@vercel/postgres';
+import { idID } from '@mui/material/locale';
+import { db, sql, QueryResult } from '@vercel/postgres';
 import { unstable_noStore as noStore } from 'next/cache';
 
 export async function fetchWarehouses() {
@@ -33,6 +34,35 @@ export async function fetchWarehouseById(id: number) {
     } catch (error) {
         console.error('Database Error:', error);
         throw new Error('Failed to fetch warehouse.');
+    }
+}
+
+export async function fetchWarehouseByProjectId(ids: number[]) {
+    if (!Array.isArray(ids) || ids.length === 0) {
+        throw new Error('Invalid project IDs provided');
+    }
+    const idsString = ids.map((id) => Number(id)).join(', ');
+
+    try {
+        // Connect to the database and run the query
+        const client = await db.connect();
+        const data = await client.query(`
+            SELECT w.*
+            FROM warehouses w
+            WHERE w.id IN (
+                SELECT warehouse_id
+                FROM project_warehouses
+                WHERE project_id IN (${idsString})
+            )
+        `);
+
+        // Release the client back to the pool
+        client.release();
+
+        return data.rows || null;
+    } catch (error) {
+        console.error('Database Error:', error);
+        throw new Error('Failed to fetch warehouses.');
     }
 }
 

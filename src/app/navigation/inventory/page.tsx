@@ -8,6 +8,7 @@ import { hasAccess } from '@/utils/permissions2';
 import { useRouter } from 'next/navigation';
 import ManufacturersTab from '@/components/inventory/ManufacturerTab';
 import ModelsTab from '@/components/inventory/ModelsTab';
+import ItemTab from '@/components/inventory/ItemTab';
 
 const InventoryPage = ({ params }: any) => {
     const theme = useTheme();
@@ -76,9 +77,7 @@ const InventoryPage = ({ params }: any) => {
             )}
 
             {activeTab === 1 && (
-                <Box sx={{ mt: 2 }}>
-                    <Typography>Item section coming soon...</Typography>
-                </Box>
+                <ItemTab />
             )}
 
             {activeTab === 2 && (

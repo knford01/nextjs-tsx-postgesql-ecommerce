@@ -1,53 +1,49 @@
 import React from 'react';
-import { TextField, MenuItem, TextFieldProps, FormControlLabel, Checkbox, styled } from '@mui/material';
+import { TextField, MenuItem, TextFieldProps, FormControlLabel, Checkbox, styled, FormControl, InputLabel, FormHelperText } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import Select, { Props as SelectProps } from 'react-select';
+import Select, { Props as SelectProps, MultiValue, StylesConfig, GroupBase } from 'react-select';
 
 export const StyledTextField = (props: any) => {
     const theme = useTheme();
 
     const commonTextFieldStyles = {
-        InputProps: {
-            sx: {
-                '& .MuiInputBase-input': {
-                    bgcolor: `${theme.palette.text.primary} !important`,
-                    color: `${theme.palette.text.secondary} !important`,
-                    height: '2.5em',
-                    padding: '10px 14px',
-                    boxSizing: 'border-box',
-                    display: 'flex',
-                    alignItems: 'center',
-                },
-            },
+        '& .MuiInputBase-root': {
+            backgroundColor: `${theme.palette.text.primary} !important`,
+            color: `${theme.palette.text.secondary} !important`,
+            height: '2.5em', // Match the height of select fields
+            display: 'flex',
+            alignItems: 'center', // Center text vertically
+            padding: '0 4px', // Consistent padding
         },
-        InputLabelProps: {
-            sx: {
-                '&.MuiInputLabel-shrink': {
-                    color: `${theme.palette.text.secondary} !important`,
-                    transform: 'translate(.5, -2.5px) scale(0.75)',
-                },
-                '&:not(.MuiInputLabel-shrink)': {
-                    transform: 'translate(14px, 10px) scale(1)',
-                },
-            },
+        '& .MuiInputBase-input': {
+            height: '100%', // Ensure the input fills the parent height
+            boxSizing: 'border-box',
         },
-        sx: {
-            mt: 2,
-            '& .MuiInputLabel-root': {
-                color: `${theme.palette.text.secondary} !important`,
-            },
+        '& .MuiInputLabel-root': {
+            color: `${theme.palette.text.secondary} !important`,
+            top: '50%',
+            transform: 'translate(14px, -50%) scale(1)', // Center the label
+            transition: 'all 0.2s ease',
         },
+        '& .MuiInputLabel-shrink': {
+            color: `${theme.palette.text.secondary} !important`,
+            top: '-6px',
+            transform: 'translate(14px, 0) scale(0.75)', // Move label to top-left when focused or filled
+        },
+        mt: 1, // Maintain proper spacing between fields
     };
 
     return (
         <TextField
             {...props}
-            {...commonTextFieldStyles}
             fullWidth
             variant="outlined"
+            sx={commonTextFieldStyles} // Apply the styles
         />
     );
 };
+
+
 
 interface Option {
     value: any;
@@ -75,21 +71,32 @@ export const StyledSelectField: React.FC<StyledSelectFieldProps> = ({
     const theme = useTheme();
 
     const selectTextFieldStyles = {
-        '& .MuiInputBase-input': {
+        '& .MuiInputBase-root': {
             backgroundColor: `${theme.palette.text.primary} !important`,
             color: `${theme.palette.text.secondary} !important`,
             height: '2.5em',
-            padding: '10px 14px',
-            boxSizing: 'border-box',
             display: 'flex',
             alignItems: 'center',
         },
+        '& .MuiInputBase-input': {
+            padding: '0 14px',
+            display: 'flex',
+            alignItems: 'center',
+            boxSizing: 'border-box',
+        },
         '& .MuiInputLabel-root': {
             color: `${theme.palette.text.secondary} !important`,
+            top: '50%',
+            left: '12px', // Add spacing to the left of the label
+            transform: 'translate(0, -50%)', // Vertically center the label
+            fontSize: '1rem',
+            transition: 'all 0.2s ease',
         },
         '& .MuiInputLabel-shrink': {
             color: `${theme.palette.text.secondary} !important`,
-            transform: 'translate(.5, -2.5px) scale(0.75)',
+            top: '-6px',
+            left: '12px', // Maintain left spacing when label moves to top
+            transform: 'translate(0, 0) scale(0.75)', // Move label to top-left when focused or filled
         },
         mt: 1,
     };
@@ -98,7 +105,6 @@ export const StyledSelectField: React.FC<StyledSelectFieldProps> = ({
         backgroundColor: `${theme.palette.secondary.main} !important`,
         color: `${theme.palette.text.primary} !important`,
         height: '2.5em',
-        boxSizing: 'border-box',
         display: 'flex',
         alignItems: 'center',
         '&:hover': {
@@ -125,6 +131,132 @@ export const StyledSelectField: React.FC<StyledSelectFieldProps> = ({
                 </MenuItem>
             ))}
         </TextField>
+    );
+};
+
+interface StyledMultiSelectFieldProps {
+    label: string;
+    name: string;
+    value: MultiValue<Option>;
+    onChange: (value: MultiValue<Option>) => void;
+    options: readonly Option[];
+    error?: boolean;
+    helperText?: React.ReactNode;
+    placeholder?: string;
+    required?: boolean;
+    disabled?: boolean;
+}
+
+export const StyledMultiSelectField: React.FC<StyledMultiSelectFieldProps> = ({
+    label,
+    name,
+    value,
+    onChange,
+    options,
+    error,
+    helperText,
+    placeholder = 'Select...',
+    required = false,
+    disabled = false,
+}) => {
+    const theme = useTheme();
+
+    const customStyles: StylesConfig<Option, true, GroupBase<Option>> = {
+        control: (provided, state) => ({
+            ...provided,
+            backgroundColor: theme.palette.text.primary,
+            color: theme.palette.text.secondary,
+            borderColor: state.isFocused
+                ? theme.palette.primary.main
+                : error
+                    ? theme.palette.error.main
+                    : theme.palette.divider,
+            boxShadow: state.isFocused ? `0 0 0 2px ${theme.palette.primary.light}` : 'none',
+            '&:hover': {
+                borderColor: theme.palette.primary.main,
+            },
+            height: '2.5em',
+            minHeight: 'unset',
+            padding: 0,
+        }),
+        valueContainer: (provided) => ({
+            ...provided,
+            padding: '0 8px',
+        }),
+        placeholder: (provided) => ({
+            ...provided,
+            color: theme.palette.text.secondary,
+        }),
+        multiValue: (provided) => ({
+            ...provided,
+            backgroundColor: theme.palette.secondary.main,
+        }),
+        multiValueLabel: (provided) => ({
+            ...provided,
+            color: theme.palette.text.primary,
+        }),
+        multiValueRemove: (provided) => ({
+            ...provided,
+            color: theme.palette.error.main,
+            ':hover': {
+                backgroundColor: theme.palette.error.light,
+                color: theme.palette.error.contrastText,
+            },
+        }),
+        menu: (provided) => ({
+            ...provided,
+            backgroundColor: theme.palette.secondary.main,
+        }),
+        option: (provided, state) => ({
+            ...provided,
+            backgroundColor: state.isFocused
+                ? theme.palette.primary.main
+                : theme.palette.secondary.main,
+            color: theme.palette.text.primary,
+            fontWeight: 500,
+            ':active': {
+                backgroundColor: theme.palette.primary.main,
+            },
+        }),
+    };
+
+    const shouldShrink = value.length > 0;
+
+    return (
+        <FormControl
+            fullWidth
+            error={error}
+            sx={{ mt: 1, position: 'relative' }}
+        >
+            <InputLabel
+                shrink={shouldShrink}
+                required={required}
+                sx={{
+                    position: 'absolute',
+                    top: shouldShrink ? '-10px' : '50%',
+                    left: '10px',
+                    transform: shouldShrink ? 'none' : 'translateY(-50%)',
+                    fontSize: shouldShrink ? '0.875rem' : '1rem',
+                    transition: 'all 0.2s ease',
+                }}
+            >
+                {label}
+            </InputLabel>
+            <Select
+                isMulti
+                name={name}
+                value={value}
+                onChange={onChange}
+                options={options}
+                styles={customStyles}
+                placeholder=""
+                components={{
+                    IndicatorSeparator: () => null,
+                }}
+                isDisabled={disabled}
+            />
+            {helperText && <FormHelperText>{helperText}</FormHelperText>}
+        </FormControl>
     );
 };
 

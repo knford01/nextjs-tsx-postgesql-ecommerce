@@ -86,10 +86,10 @@ type Item = {
     upc: string;
     sku: string;
     uom_id: number;
-    length: string;
-    width: string;
-    height: string;
-    weight: string;
+    length: number;
+    width: number;
+    height: number;
+    weight: number;
     manufacturer_id: number;
     model_id: number;
     case_pack_qty: number;
@@ -97,8 +97,13 @@ type Item = {
     req_sn: boolean;
     bulk: boolean;
     image: string;
-    active: boolean;
+    active: any;
     date_created: Date;
+    customer_name: string;
+    manufacturer_name: string;
+    model_name: string;
+    projects_csv: string;
+    warehouses_csv: string;
 }
 
 interface Manufacturer {

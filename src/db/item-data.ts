@@ -11,19 +11,26 @@ export async function fetchItems() {
       SELECT
         items.*,
         CASE
-            WHEN items.active = TRUE THEN 'Yes'
-            ELSE 'No'
+          WHEN items.active = TRUE THEN 'Yes'
+          ELSE 'No'
         END AS active,
         customers.name AS customer_name,
+        manufacturers.name AS manufacturer_name,
+        models.name AS model_name,
+
         (SELECT string_agg(project_id::TEXT, ',') 
         FROM item_projects 
-        WHERE item_id = items.id) AS projects,
+        WHERE item_id = items.id) AS projects_csv,
+
         (SELECT string_agg(warehouse_id::TEXT, ',') 
         FROM item_warehouses 
-        WHERE item_id = items.id) AS warehouses
-    FROM items
-    LEFT JOIN customers ON customers.id = items.customer_id
-    ORDER BY items.name DESC;`;
+        WHERE item_id = items.id) AS warehouses_csv
+
+      FROM items
+      LEFT JOIN customers ON customers.id = items.customer_id
+      LEFT JOIN manufacturers ON manufacturers.id = items.manufacturer_id
+      LEFT JOIN models ON models.id = items.model_id
+      ORDER BY items.name ASC;`;
 
     return data.rows || null;
   } catch (err) {
@@ -32,22 +39,32 @@ export async function fetchItems() {
   }
 }
 
-export async function fetchItemsById(id: number) {
+export async function fetchItemById(id: number) {
   noStore();
   try {
     const data = await sql<Item>`
-        SELECT
-          *,
-          case
-            when active = TRUE then 'Yes'
-            else 'No'
-          end as active,
-          customers.name AS customer_name,
-        (SELECT string_agg(project_id::TEXT, ',') FROM item_projects WHERE item_id = items.id) AS projects,
-        (SELECT string_agg(warehouse_id::TEXT, ',') FROM item_warehouses WHERE item_id = items.id) AS warehouses
-        FROM items
-        LEFT JOIN customers ON customers.id = items.customer_id
-        WHERE id = ${id};`;
+      SELECT
+        items.*,
+        CASE
+          WHEN items.active = TRUE THEN 'Yes'
+          ELSE 'No'
+        END AS active,
+        customers.name AS customer_name,
+        manufacturers.name AS manufacturer_name,
+        models.name AS model_name,
+
+        (SELECT string_agg(project_id::TEXT, ',') 
+        FROM item_projects 
+        WHERE item_id = items.id) AS projects_csv,
+
+        (SELECT string_agg(warehouse_id::TEXT, ',') 
+        FROM item_warehouses 
+        WHERE item_id = items.id) AS warehouses_csv
+      FROM items
+      LEFT JOIN customers ON customers.id = items.customer_id
+      LEFT JOIN manufacturers ON manufacturers.id = items.manufacturer_id
+      LEFT JOIN models ON models.id = items.model_id
+      WHERE items.id = ${id};`;
 
     return data.rows[0] || null;
   } catch (err) {
@@ -60,19 +77,27 @@ export async function fetchItemsByWarehouseId(warehouseId: number) {
   noStore();
   try {
     const data = await sql<Item>`
-        SELECT
-          *,
-          CASE
-            WHEN active = TRUE THEN 'Yes'
-            ELSE 'No'
-          END AS active,
-          customers.name AS customer_name,
-          (SELECT string_agg(project_id::TEXT, ',') FROM item_projects WHERE item_id = items.id) AS projects,
-          (SELECT string_agg(warehouse_id::TEXT, ',') FROM item_warehouses WHERE item_id = items.id) AS warehouses
-        FROM items
-        LEFT JOIN customers ON customers.id = items.customer_id
-        WHERE items.id IN (SELECT item_id FROM item_warehouses WHERE warehouse_id = ${warehouseId})
-        ORDER BY name DESC;`;
+      SELECT
+        items.*,
+        CASE
+          WHEN items.active = TRUE THEN 'Yes'
+          ELSE 'No'
+        END AS active,
+        customers.name AS customer_name,
+        manufacturers.name AS manufacturer_name,
+        models.name AS model_name,
+        (SELECT string_agg(project_id::TEXT, ',') 
+        FROM item_projects 
+        WHERE item_id = items.id) AS projects_csv,
+        (SELECT string_agg(warehouse_id::TEXT, ',') 
+        FROM item_warehouses 
+        WHERE item_id = items.id) AS warehouses_csv
+      FROM items
+      LEFT JOIN customers ON customers.id = items.customer_id
+      LEFT JOIN manufacturers ON manufacturers.id = items.manufacturer_id
+      LEFT JOIN models ON models.id = items.model_id
+      WHERE items.id IN (SELECT item_id FROM item_warehouses WHERE warehouse_id = ${warehouseId})
+      ORDER BY items.name DESC;`;
 
     return data.rows || null;
   } catch (err) {
@@ -85,28 +110,36 @@ export async function fetchItemsByProjectId(projectId: number) {
   noStore();
   try {
     const data = await sql<Item>`
-        SELECT
-          *,
-          CASE
-            WHEN active = TRUE THEN 'Yes'
-            ELSE 'No'
-          END AS active,
-          customers.name AS customer_name,
-          (SELECT string_agg(project_id::TEXT, ',') FROM item_projects WHERE item_id = items.id) AS projects,
-          (SELECT string_agg(warehouse_id::TEXT, ',') FROM item_warehouses WHERE item_id = items.id) AS warehouses
-        FROM items
-        LEFT JOIN customers ON customers.id = items.customer_id
-        WHERE items.id IN (SELECT item_id FROM item_projects WHERE project_id = ${projectId})
-        ORDER BY name DESC;`;
+      SELECT
+        items.*,
+        CASE
+          WHEN items.active = TRUE THEN 'Yes'
+          ELSE 'No'
+        END AS active,
+        customers.name AS customer_name,
+        manufacturers.name AS manufacturer_name,
+        models.name AS model_name,
+        (SELECT string_agg(project_id::TEXT, ',') 
+        FROM item_projects 
+        WHERE item_id = items.id) AS projects_csv,
+        (SELECT string_agg(warehouse_id::TEXT, ',') 
+        FROM item_warehouses 
+        WHERE item_id = items.id) AS warehouses_csv
+      FROM items
+      LEFT JOIN customers ON customers.id = items.customer_id
+      LEFT JOIN manufacturers ON manufacturers.id = items.manufacturer_id
+      LEFT JOIN models ON models.id = items.model_id
+      WHERE items.id IN (SELECT item_id FROM item_projects WHERE project_id = ${projectId})
+      ORDER BY items.name DESC;`;
 
     return data.rows || null;
   } catch (err) {
     console.error('Database Error:', err);
-    throw new Error(`Failed to fetch items for warehouse ID ${projectId}.`);
+    throw new Error(`Failed to fetch items for project ID ${projectId}.`);
   }
 }
 
-export async function createItem(item: Omit<Item, 'id' | 'date_created'>) {
+export async function createItem(item: Omit<any, 'id' | 'date_created'>) {
   noStore();
   try {
     const { customer_id, name, description, item_number, customer_number, article_number,
@@ -144,10 +177,10 @@ export async function updateItem(
     upc?: string;
     sku?: string;
     uom_id?: number;
-    length?: string;
-    width?: string;
-    height?: string;
-    weight?: string;
+    length?: number;
+    width?: number;
+    height?: number;
+    weight?: number;
     manufacturer_id?: number;
     model_id?: number;
     case_pack_qty?: number;
@@ -155,7 +188,7 @@ export async function updateItem(
     req_sn?: boolean;
     bulk?: boolean;
     image?: string;
-    active?: boolean;
+    active?: any;
   }
 ) {
   noStore(); // Disable caching
@@ -193,6 +226,56 @@ export async function updateItem(
   }
 }
 
+export async function updateItemProjects(
+  item_id: any,
+  project_ids: number[]
+) {
+  noStore();
+  try {
+    await sql`
+      DELETE FROM item_projects
+      WHERE item_id = ${item_id};
+    `;
+
+    for (const project_id of project_ids) {
+      await sql`
+        INSERT INTO item_projects (item_id, project_id)
+        VALUES (${item_id}, ${project_id});
+      `;
+    }
+
+    return { success: true };
+  } catch (err) {
+    console.error('Database Error:', err);
+    throw new Error('Failed to update item projects.');
+  }
+}
+
+export async function updateItemWarehouses(
+  item_id: any,
+  warehouse_ids: number[]
+) {
+  noStore();
+  try {
+    await sql`
+      DELETE FROM item_warehouses
+      WHERE item_id = ${item_id};
+    `;
+
+    for (const wh_id of warehouse_ids) {
+      await sql`
+        INSERT INTO item_warehouses (item_id, warehouse_id)
+        VALUES (${item_id}, ${wh_id});
+      `;
+    }
+
+    return { success: true };
+  } catch (err) {
+    console.error('Database Error:', err);
+    throw new Error('Failed to update item warehouses.');
+  }
+}
+
 //End Items - Start Manufacture and Models\\
 export async function fetchManufacturers() {
   noStore();
@@ -205,7 +288,7 @@ export async function fetchManufacturers() {
           ELSE 'No'
         END AS active
       FROM manufacturers
-      ORDER BY manufacturers.name DESC;
+      ORDER BY manufacturers.name ASC;
     `;
 
     return data.rows || null;
@@ -320,10 +403,31 @@ export async function fetchModelById(id: number) {
           WHERE manufacturers.id = models.manufacturer_id
         ) AS manufacturer_name
       FROM models
-      WHERE id = ${id}
-      ORDER BY name ASC;`;
+      WHERE id = ${id}`;
 
     return data.rows[0] || null;
+  } catch (err) {
+    console.error('Database Error:', err);
+    throw new Error(`Failed to fetch model with ID ${id}.`);
+  }
+}
+
+export async function fetchModelsByManufacturerId(id: number) {
+  noStore();
+  try {
+    const data = await sql<Model & { manufacturer_name?: string }>`
+      SELECT
+        *,
+        (
+          SELECT manufacturers.name
+          FROM manufacturers
+          WHERE manufacturers.id = models.manufacturer_id
+        ) AS manufacturer_name
+      FROM models
+      WHERE manufacturer_id = ${id}
+      ORDER BY name ASC;`;
+
+    return data.rows || null;
   } catch (err) {
     console.error('Database Error:', err);
     throw new Error(`Failed to fetch model with ID ${id}.`);
@@ -379,6 +483,22 @@ export async function updateModel(
   } catch (err) {
     console.error('Database Error:', err);
     throw new Error('Failed to update model.');
+  }
+}
+
+export async function fetchUOM() {
+  noStore();
+  try {
+    const data = await sql<any>` 
+      SELECT *
+      FROM uom
+      ORDER BY uom ASC;
+    `;
+
+    return data.rows || null;
+  } catch (err) {
+    console.error('Database Error:', err);
+    throw new Error('Failed to fetch all units of measurement.');
   }
 }
 
