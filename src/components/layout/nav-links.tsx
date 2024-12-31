@@ -1,6 +1,6 @@
 'use client';
 
-import { CalendarIcon, CheckCircleIcon, HomeIcon, UserPlusIcon, ShoppingCartIcon, RectangleGroupIcon, TruckIcon, UserGroupIcon, CogIcon, ArchiveBoxIcon } from '@heroicons/react/24/outline';
+import { BriefcaseIcon, CalendarIcon, CheckCircleIcon, HomeIcon, UserPlusIcon, ShoppingCartIcon, RectangleGroupIcon, TruckIcon, UserGroupIcon, CogIcon, ArchiveBoxIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useTheme, Box, Tooltip } from '@mui/material';
@@ -13,13 +13,14 @@ const links = [
   { id: 0, name: 'Dashboard', href: '/navigation', icon: HomeIcon, access: '' },
   { id: 1, name: 'Calendar', href: '/navigation/calendar', icon: CalendarIcon, access: 'calendar' },
   { id: 2, name: 'Customers', href: '/navigation/customers', icon: UserPlusIcon, access: 'customers' },
-  { id: 3, name: 'EDI Fulfillment', href: '/navigation/edi', icon: ShoppingCartIcon, access: 'edi_fulfillment' },
-  { id: 4, name: 'Shopify Orders', href: '/navigation/shopify', icon: CheckCircleIcon, access: 'shopify' },
-  { id: 5, name: 'Employees', href: '/navigation/employees', icon: UserGroupIcon, access: 'employees' },
-  { id: 6, name: 'Inventory', href: '/navigation/inventory', icon: ArchiveBoxIcon, access: 'inventory' },
-  { id: 7, name: 'Tasks', href: '/navigation/tasks', icon: RectangleGroupIcon, access: 'tasks' },
-  { id: 8, name: 'Warehousing', href: '/navigation/warehousing', icon: TruckIcon, access: 'warehousing' },
-  { id: 9, name: 'Settings', href: '/navigation/settings', icon: CogIcon, access: 'settings' }
+  { id: 3, name: 'Projects', href: '/navigation/customers/projects', icon: BriefcaseIcon, access: 'projects' },
+  { id: 4, name: 'EDI Fulfillment', href: '/navigation/edi', icon: ShoppingCartIcon, access: 'edi_fulfillment' },
+  { id: 5, name: 'Shopify Orders', href: '/navigation/shopify', icon: CheckCircleIcon, access: 'shopify' },
+  { id: 6, name: 'Employees', href: '/navigation/employees', icon: UserGroupIcon, access: 'employees' },
+  { id: 7, name: 'Inventory', href: '/navigation/inventory', icon: ArchiveBoxIcon, access: 'inventory' },
+  { id: 8, name: 'Tasks', href: '/navigation/tasks', icon: RectangleGroupIcon, access: 'tasks' },
+  { id: 9, name: 'Warehousing', href: '/navigation/warehousing', icon: TruckIcon, access: 'warehousing' },
+  { id: 10, name: 'Settings', href: '/navigation/settings', icon: CogIcon, access: 'settings' }
 ];
 
 export default function NavLinks({ collapsed, sessionUser }: { collapsed: boolean, sessionUser?: User }) {
@@ -35,6 +36,13 @@ export default function NavLinks({ collapsed, sessionUser }: { collapsed: boolea
     <>
       {accessibleLinks.map((link) => {
         const LinkIcon = link.icon;
+
+        // Determine whether the link should be highlighted
+        const isSelected =
+          link.href !== '/navigation' &&
+          ((pathname.startsWith(link.href) && !pathname.includes('/projects')) ||
+            (pathname === link.href));
+
         return (
           <Tooltip key={link.id} title={collapsed ? link.name : ''} placement="right">
             <Box
@@ -49,12 +57,11 @@ export default function NavLinks({ collapsed, sessionUser }: { collapsed: boolea
                 textDecoration: 'none',
                 fontWeight: 'medium',
                 borderColor: 'black',
-                backgroundColor:
-                  link.href !== '/navigation' && pathname.includes(link.href)
+                backgroundColor: isSelected
+                  ? theme.palette.action.selected
+                  : link.href === '/navigation' && pathname === '/navigation'
                     ? theme.palette.action.selected
-                    : link.href === '/navigation' && pathname === '/navigation'
-                      ? theme.palette.action.selected
-                      : theme.palette.primary.main,
+                    : theme.palette.primary.main,
                 color: theme.palette.text.primary,
                 '&:hover': {
                   backgroundColor: theme.palette.action.hover,

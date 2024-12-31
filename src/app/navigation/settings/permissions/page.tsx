@@ -163,7 +163,7 @@ const SystemAccess = () => {
                         fullWidth
                         margin="normal"
                         multiline
-                        rows={8}
+                        rows={5}
                     />
                     <Button onClick={handleSavePermission} variant="contained" color="primary" sx={{ mt: 2 }}>
                         Save

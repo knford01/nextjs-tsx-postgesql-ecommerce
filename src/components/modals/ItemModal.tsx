@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import Image from 'next/image';
 import { Modal, Button, Paper, Typography, Box, Grid, TextField } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
@@ -156,13 +156,6 @@ const ItemModal: React.FC<ItemModalProps> = ({ open, handleClose, itemId, loadIt
     }, [itemData.project_ids]);
 
     useEffect(() => {
-        if (itemData.warehouse_ids && itemData.warehouse_ids.length > 0) {
-            // console.log('itemData.warehouse_ids: ', itemData.warehouse_ids);
-            populateWarehouseLocations(itemData.warehouse_ids);
-        }
-    }, [itemData.warehouse_ids]);
-
-    useEffect(() => {
         if (itemData.manufacturer_id) {
             const loadModels = async () => {
                 try {
@@ -214,50 +207,54 @@ const ItemModal: React.FC<ItemModalProps> = ({ open, handleClose, itemId, loadIt
         }
     };
 
-    const populateWarehouseLocations = async (warehouseIDs: number[]) => {
-        if (warehouseIDs && warehouseIDs.length > 0) {
-            // console.log('Warehouse IDs: ', warehouseIDs);
+    const populateWarehouseLocations = useCallback(
+        async (warehouseIDs: number[]) => {
+            if (warehouseIDs && warehouseIDs.length > 0) {
+                try {
+                    const updatedLocations: { [warehouseId: number]: any[] } = {};
+                    const updatedSelectedLocations: { [warehouseId: number]: number } = {};
 
-            try {
-                const updatedLocations: { [warehouseId: number]: any[] } = {};
-                const updatedSelectedLocations: { [warehouseId: number]: number } = {};
+                    for (const warehouseID of warehouseIDs) {
+                        let preferredLocData = null;
 
-                for (const warehouseID of warehouseIDs) {
-                    let preferredLocData = null;
+                        // Only fetch preferred location if itemId exists
+                        if (itemId) {
+                            preferredLocData = await fetchPreferredLocation(itemId, warehouseID);
+                        }
 
-                    // Only fetch preferred location if itemId exists
-                    if (itemId) {
-                        // console.log('itemId: ', itemId);
-                        preferredLocData = await fetchPreferredLocation(itemId, warehouseID);
+                        const availableLocationsData = await fetchAvailableWarehouseLocations(
+                            warehouseID,
+                            preferredLocData?.location_id
+                        );
+
+                        // Map available locations to the format required for the select dropdown
+                        updatedLocations[warehouseID] = availableLocationsData.map((location: any) => ({
+                            value: location.id,
+                            display: location.name,
+                        }));
+
+                        // Set the preferred location if available
+                        if (preferredLocData) {
+                            updatedSelectedLocations[warehouseID] = preferredLocData.location_id;
+                        }
                     }
 
-                    const availableLocationsData = await fetchAvailableWarehouseLocations(
-                        warehouseID,
-                        preferredLocData?.location_id
-                    );
-                    // console.log('availableLocationsData: ', availableLocationsData);
-
-                    // Map available locations to the format required for the select dropdown
-                    updatedLocations[warehouseID] = availableLocationsData.map((location: any) => ({
-                        value: location.id,
-                        display: location.name,
-                    }));
-                    // console.log('updatedLocations[warehouseID]: ', updatedLocations[warehouseID]);
-
-                    // Set the preferred location if available
-                    if (preferredLocData) {
-                        updatedSelectedLocations[warehouseID] = preferredLocData.location_id;
-                    }
+                    setWarehouseLocations(updatedLocations);
+                    setSelectedLocations((prev) => ({ ...prev, ...updatedSelectedLocations }));
+                } catch (error) {
+                    console.error('Error while fetching warehouse locations: ', error);
+                    showErrorToast('Failed to load warehouse locations');
                 }
-
-                setWarehouseLocations(updatedLocations);
-                setSelectedLocations((prev) => ({ ...prev, ...updatedSelectedLocations }));
-            } catch (error) {
-                console.error('Error while fetching warehouse locations: ', error);
-                showErrorToast('Failed to load warehouse locations');
             }
+        },
+        [itemId]
+    );
+
+    useEffect(() => {
+        if (itemData.warehouse_ids && itemData.warehouse_ids.length > 0) {
+            populateWarehouseLocations(itemData.warehouse_ids);
         }
-    };
+    }, [itemData.warehouse_ids, populateWarehouseLocations]);
 
     const handleInputChange = (e: React.ChangeEvent<any>) => {
         const { name, value } = e.target;

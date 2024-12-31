@@ -5,24 +5,25 @@ import Select, { Props as SelectProps, MultiValue, StylesConfig, GroupBase } fro
 
 export const StyledTextField = (props: any) => {
     const theme = useTheme();
+    const { multiline, rows } = props;
 
     const commonTextFieldStyles = {
         '& .MuiInputBase-root': {
             backgroundColor: `${theme.palette.text.primary} !important`,
             color: `${theme.palette.text.secondary} !important`,
-            height: '2.5em', // Match the height of select fields
+            height: multiline ? 'auto' : '2.5em', // Auto height for multiline
             display: 'flex',
-            alignItems: 'center', // Center text vertically
-            padding: '0 4px', // Consistent padding
+            alignItems: 'center',
+            padding: '0 4px',
         },
         '& .MuiInputBase-input': {
-            height: '100%', // Ensure the input fills the parent height
+            height: multiline ? 'auto' : '100%', // Allow auto-resize for multiline
             boxSizing: 'border-box',
         },
         '& .MuiInputLabel-root': {
             color: `${theme.palette.text.secondary} !important`,
             top: '50%',
-            transform: 'translate(14px, -50%) scale(1)', // Center the label
+            transform: 'translate(14px, -50%) scale(1)', // Center label
             transition: 'all 0.2s ease',
         },
         '& .MuiInputLabel-shrink': {
@@ -30,7 +31,7 @@ export const StyledTextField = (props: any) => {
             top: '-6px',
             transform: 'translate(14px, 0) scale(0.75)', // Move label to top-left when focused or filled
         },
-        mt: 1, // Maintain proper spacing between fields
+        mt: 1,
     };
 
     return (
@@ -38,11 +39,10 @@ export const StyledTextField = (props: any) => {
             {...props}
             fullWidth
             variant="outlined"
-            sx={commonTextFieldStyles} // Apply the styles
+            sx={commonTextFieldStyles}
         />
     );
 };
-
 
 
 interface Option {

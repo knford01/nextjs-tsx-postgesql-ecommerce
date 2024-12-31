@@ -7,7 +7,20 @@ import { unstable_noStore as noStore } from 'next/cache';
 export async function fetchProjects() {
   noStore();
   try {
-    const data = await sql<Project[]>`SELECT * FROM projects order by customer_id, id desc;`;
+    const data = await sql<Project[]>`
+      SELECT 
+        p.*,
+        ps.name AS status_name,
+        ps.class AS status_theme,
+        COALESCE(
+            (SELECT STRING_AGG(w.name, ', ')
+            FROM warehouses w
+            JOIN project_warehouses pw ON w.id = pw.warehouse_id
+            WHERE pw.project_id = p.id
+            ), '') AS warehouses
+      FROM projects p
+      LEFT JOIN project_statuses ps ON ps.id = p.status
+      ORDER BY p.end_date, p.name DESC;`;
     return data.rows || null;
   } catch (err) {
     console.error('Database Error:', err);
