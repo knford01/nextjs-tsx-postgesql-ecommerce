@@ -142,21 +142,42 @@ export async function fetchItemsByProjectId(projectId: number) {
 export async function createItem(item: Omit<any, 'id' | 'date_created'>) {
   noStore();
   try {
-    const { customer_id, name, description, item_number, customer_number, article_number,
-      upc, sku, uom_id, length, width, height, weight, manufacturer_id, model_id,
-      case_pack_qty, low_inv, req_sn, bulk, image, active } = item;
+    const {
+      customer_id,
+      name,
+      description = null,
+      item_number,
+      customer_number = null,
+      article_number = null,
+      upc = null,
+      sku = null,
+      uom_id = null,
+      length = null,
+      width = null,
+      height = null,
+      weight = null,
+      manufacturer_id = null,
+      model_id = null,
+      case_pack_qty = null,
+      low_inv = null,
+      req_sn = false,
+      bulk = false,
+      image = null,
+      active = false,
+    } = item;
 
     const data = await sql`
-        INSERT INTO items (
-          customer_id, name, description, item_number, customer_number, article_number, upc, 
-          sku, uom_id, length, width, height, weight, manufacturer_id, model_id, 
-          case_pack_qty, low_inv, req_sn, bulk, image, active
-        ) VALUES (
-          ${customer_id}, ${name}, ${description}, ${item_number}, ${customer_number}, ${article_number}, ${upc}, 
-          ${sku}, ${uom_id}, ${length}, ${width}, ${height}, ${weight}, ${manufacturer_id}, ${model_id}, 
-          ${case_pack_qty}, ${low_inv}, ${req_sn}, ${bulk}, ${image}, ${active}
-        )
-        RETURNING *;`;
+          INSERT INTO items (
+              customer_id, name, description, item_number, customer_number, article_number, upc, 
+              sku, uom_id, length, width, height, weight, manufacturer_id, model_id, 
+              case_pack_qty, low_inv, req_sn, bulk, image, active
+          ) VALUES (
+              ${customer_id}, ${name}, ${description}, ${item_number}, ${customer_number}, ${article_number}, ${upc}, 
+              ${sku}, ${uom_id}, ${length}, ${width}, ${height}, ${weight}, ${manufacturer_id}, ${model_id}, 
+              ${case_pack_qty}, ${low_inv}, ${req_sn}, ${bulk}, ${image}, ${active}
+          )
+          RETURNING *;
+      `;
 
     return data.rows[0];
   } catch (err) {

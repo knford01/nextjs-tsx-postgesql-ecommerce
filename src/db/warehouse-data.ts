@@ -162,6 +162,65 @@ export async function fetchWarehouseLocationById(id: number) {
     }
 }
 
+export async function fetchPreferredLocation(item_id: number, warehouse_id: number) {
+    noStore();
+    try {
+        const data = await sql<any>`SELECT * FROM item_preferred_location WHERE item_id = ${item_id} AND warehouse_id = ${warehouse_id};`;
+
+        return data.rows[0] || null;
+    } catch (error) {
+        console.error('Database Error:', error);
+        throw new Error('Failed to fetch preferred location.');
+    }
+}
+
+export async function fetchAvailableWarehouseLocations(wh_id: number, loc_id_selected?: number) {
+    noStore();
+    try {
+        const data = loc_id_selected
+            ? await sql<any[]>`
+                SELECT 
+                    wh.*
+                FROM warehouse_locations wh
+                WHERE wh.active = true
+                  AND wh.warehouse_id = ${wh_id}
+                  AND id NOT IN (
+                      SELECT location_id 
+                      FROM item_preferred_location 
+                      WHERE location_id NOT IN (
+                          SELECT id 
+                          FROM warehouse_locations 
+                          WHERE multi_item = true
+                      ) 
+                      AND location_id <> ${loc_id_selected}
+                  )
+                ORDER BY wh.name ASC;
+            `
+            : await sql<any[]>`
+                SELECT 
+                    wh.*
+                FROM warehouse_locations wh
+                WHERE wh.active = true
+                  AND wh.warehouse_id = ${wh_id}
+                  AND id NOT IN (
+                      SELECT location_id 
+                      FROM item_preferred_location 
+                      WHERE location_id NOT IN (
+                          SELECT id 
+                          FROM warehouse_locations 
+                          WHERE multi_item = true
+                      )
+                  )
+                ORDER BY wh.name ASC;
+            `;
+
+        return data.rows || [];
+    } catch (error) {
+        console.error('Database Error:', error);
+        throw new Error('Failed to fetch available warehouse locations.');
+    }
+}
+
 // Create a new warehouse location
 export async function createWarehouseLocation(warehouse_id: number, data: {
     name: string;
@@ -253,4 +312,23 @@ export async function updateWarehouseLocation(id: number, data: {
     }
 }
 
+export async function updateItemPreferredLocation(item_id: any, wh_loc_ids: { [key: number]: number }) {
+    noStore();
+    try {
+        // Delete existing preferred locations for the item
+        await sql`DELETE FROM item_preferred_location WHERE item_id = ${item_id};`;
 
+        // Insert new preferred locations for each warehouse_id and location_id pair
+        for (const [warehouse_id, location_id] of Object.entries(wh_loc_ids)) {
+            await sql`
+                INSERT INTO item_preferred_location (item_id, warehouse_id, location_id) 
+                VALUES (${item_id}, ${Number(warehouse_id)}, ${location_id});
+            `;
+        }
+
+        return { success: true, message: 'Item preferred locations updated successfully.' };
+    } catch (error) {
+        console.error('Database Error:', error);
+        throw new Error('Failed to update item preferred locations.');
+    }
+}

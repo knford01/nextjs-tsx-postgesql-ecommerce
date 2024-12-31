@@ -8,7 +8,7 @@ export async function middleware(req: NextRequest) {
     // Get the session (make sure this function is compatible with Next.js Edge middleware)
     const session = await getSession(req);
 
-    console.log(session);
+    // console.log(session);
 
     // Check if the user session exists
     if (!session || !session.user) {

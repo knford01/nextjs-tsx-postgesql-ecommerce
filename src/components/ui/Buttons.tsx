@@ -76,7 +76,7 @@ export const UpdateUser: React.FC<UpdateUserProps> = ({ id, row, loadUsers }) =>
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const handleSubmit = (data: any) => {
-    console.log('Update User Data:', data);
+    // console.log('Update User Data:', data);
     loadUsers();
     handleClose();
   };
@@ -157,7 +157,7 @@ export const UserStatus: React.FC<UserStatusProps> = ({ id, curStatus, loadUsers
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const handleConfirm = () => {
-    console.log('User Status Changed:', id);
+    // console.log('User Status Changed:', id);
     loadUsers();
     handleClose();
   };

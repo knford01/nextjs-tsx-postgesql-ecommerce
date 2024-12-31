@@ -7,7 +7,7 @@ import { showErrorToast, showSuccessToast } from '@/components/ui/ButteredToast'
 import { createItem, fetchItemById, updateItem, updateItemProjects, fetchManufacturers, fetchModelsByManufacturerId, fetchUOM, updateItemWarehouses } from '@/db/item-data';
 import { fetchCustomers } from '@/db/customer-data';
 import { fetchProjectsByCustomerId } from '@/db/project-data';
-import { fetchWarehouseByProjectId } from '@/db/warehouse-data';
+import { fetchAvailableWarehouseLocations, fetchPreferredLocation, fetchWarehouseByProjectId, updateItemPreferredLocation } from '@/db/warehouse-data';
 
 interface ItemModalProps {
     open: boolean;
@@ -20,7 +20,12 @@ const ItemModal: React.FC<ItemModalProps> = ({ open, handleClose, itemId, loadIt
     const theme = useTheme();
 
     const emptyItemData = useMemo(() => ({
-        customer_id: '' as any,
+        id: 0,
+        date_created: '',
+        customer_name: '',
+        manufacturer_name: '',
+        model_name: '',
+        customer_id: 0,
         projects_csv: '' as any,
         project_ids: [] as any[],
         name: '',
@@ -32,9 +37,9 @@ const ItemModal: React.FC<ItemModalProps> = ({ open, handleClose, itemId, loadIt
         sku: '',
         active: '',
         image: '',
-        manufacturer_id: '' as any,
-        model_id: '' as any,
-        uom_id: '' as any,
+        manufacturer_id: 0,
+        model_id: 0,
+        uom_id: 0,
         bulk: false,
         req_sn: false,
         case_pack_qty: 0,
@@ -44,7 +49,7 @@ const ItemModal: React.FC<ItemModalProps> = ({ open, handleClose, itemId, loadIt
         weight: 0,
         warehouses_csv: '' as any,
         warehouse_ids: [] as any[],
-        low_inv: '' as any,
+        low_inv: 0,
     }), []);
 
     const [itemData, setItemData] = useState(emptyItemData);
@@ -54,6 +59,8 @@ const ItemModal: React.FC<ItemModalProps> = ({ open, handleClose, itemId, loadIt
     const [models, setModels] = useState<{ value: string; display: string }[]>([]);
     const [uoms, setUOMs] = useState<{ value: string; display: string }[]>([]);
     const [warehouses, setWarehouses] = useState<any[]>([]);
+    const [warehouseLocations, setWarehouseLocations] = useState<{ [warehouseId: number]: any[] }>({});
+    const [selectedLocations, setSelectedLocations] = useState<{ [warehouseId: number]: number }>({});
     const [errors, setErrors] = useState({ name: false, item_number: false, active: false, uom_id: false, bulk: false, req_sn: false, warehouses: false });
 
     useEffect(() => {
@@ -90,7 +97,12 @@ const ItemModal: React.FC<ItemModalProps> = ({ open, handleClose, itemId, loadIt
                     const data = await fetchItemById(itemId);
                     setItemData({
                         ...data,
-                        customer_id: data.customer_id.toString(), // Convert to string to match form field type
+                        id: data.id ?? 0,
+                        date_created: data.date_created ? data.date_created.toISOString() : '',
+                        customer_name: data.customer_name || '',
+                        manufacturer_name: data.manufacturer_name || '',
+                        model_name: data.model_name || '',
+                        customer_id: data.customer_id ?? 0,
                         project_ids: data.projects_csv ? data.projects_csv.split(',').map(Number) : [],
                         name: data.name || '',
                         description: data.description || '',
@@ -101,9 +113,9 @@ const ItemModal: React.FC<ItemModalProps> = ({ open, handleClose, itemId, loadIt
                         sku: data.sku || '',
                         active: data.active || '',
                         image: data.image || '',
-                        manufacturer_id: data.manufacturer_id || '',
-                        model_id: data.model_id || '',
-                        uom_id: data.uom_id || '',
+                        manufacturer_id: data.manufacturer_id ?? 0,
+                        model_id: data.model_id ?? 0,
+                        uom_id: data.uom_id ?? 0,
                         bulk: data.bulk ?? false,
                         req_sn: data.req_sn ?? false,
                         case_pack_qty: data.case_pack_qty ?? 0,
@@ -130,6 +142,9 @@ const ItemModal: React.FC<ItemModalProps> = ({ open, handleClose, itemId, loadIt
         } else {
             setItemData(emptyItemData);
             setProjects([]);
+            setWarehouses([]);
+            setWarehouseLocations([]);
+            setSelectedLocations([]);
         }
     }, [open, itemId, emptyItemData]);
 
@@ -139,6 +154,13 @@ const ItemModal: React.FC<ItemModalProps> = ({ open, handleClose, itemId, loadIt
         }
 
     }, [itemData.project_ids]);
+
+    useEffect(() => {
+        if (itemData.warehouse_ids && itemData.warehouse_ids.length > 0) {
+            // console.log('itemData.warehouse_ids: ', itemData.warehouse_ids);
+            populateWarehouseLocations(itemData.warehouse_ids);
+        }
+    }, [itemData.warehouse_ids]);
 
     useEffect(() => {
         if (itemData.manufacturer_id) {
@@ -181,9 +203,58 @@ const ItemModal: React.FC<ItemModalProps> = ({ open, handleClose, itemId, loadIt
                     );
                 } else {
                     setWarehouses([]);
+                    setSelectedLocations([]);
                 }
             } catch (error) {
                 showErrorToast('Failed to load warehouses');
+            }
+        } else {
+            setWarehouses([]);
+            setSelectedLocations([]);
+        }
+    };
+
+    const populateWarehouseLocations = async (warehouseIDs: number[]) => {
+        if (warehouseIDs && warehouseIDs.length > 0) {
+            // console.log('Warehouse IDs: ', warehouseIDs);
+
+            try {
+                const updatedLocations: { [warehouseId: number]: any[] } = {};
+                const updatedSelectedLocations: { [warehouseId: number]: number } = {};
+
+                for (const warehouseID of warehouseIDs) {
+                    let preferredLocData = null;
+
+                    // Only fetch preferred location if itemId exists
+                    if (itemId) {
+                        // console.log('itemId: ', itemId);
+                        preferredLocData = await fetchPreferredLocation(itemId, warehouseID);
+                    }
+
+                    const availableLocationsData = await fetchAvailableWarehouseLocations(
+                        warehouseID,
+                        preferredLocData?.location_id
+                    );
+                    // console.log('availableLocationsData: ', availableLocationsData);
+
+                    // Map available locations to the format required for the select dropdown
+                    updatedLocations[warehouseID] = availableLocationsData.map((location: any) => ({
+                        value: location.id,
+                        display: location.name,
+                    }));
+                    // console.log('updatedLocations[warehouseID]: ', updatedLocations[warehouseID]);
+
+                    // Set the preferred location if available
+                    if (preferredLocData) {
+                        updatedSelectedLocations[warehouseID] = preferredLocData.location_id;
+                    }
+                }
+
+                setWarehouseLocations(updatedLocations);
+                setSelectedLocations((prev) => ({ ...prev, ...updatedSelectedLocations }));
+            } catch (error) {
+                console.error('Error while fetching warehouse locations: ', error);
+                showErrorToast('Failed to load warehouse locations');
             }
         }
     };
@@ -225,10 +296,22 @@ const ItemModal: React.FC<ItemModalProps> = ({ open, handleClose, itemId, loadIt
     };
 
     const handleWarehouseChange = (selectedWarehouses: any[]) => {
+        const warehouseIds = selectedWarehouses.map((option: any) => option.value);
         setItemData((prevData: any) => ({
             ...prevData,
             warehouse_ids: selectedWarehouses.map((option: any) => option.value),
         }));
+
+        populateWarehouseLocations(warehouseIds);
+    };
+
+    const handleLocationChange = (warehouseId: number, selectedLocationId: number) => {
+        setSelectedLocations((prev) => ({
+            ...prev,
+            [warehouseId]: selectedLocationId,
+        }));
+
+        // console.log('selectedLocations: ', selectedLocations);
     };
 
     const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -244,7 +327,7 @@ const ItemModal: React.FC<ItemModalProps> = ({ open, handleClose, itemId, loadIt
 
     const validateFields = () => {
         const newErrors = {
-            customer_id: !itemData.customer_id.trim(),
+            customer_id: !itemData.customer_id,
             projects: !itemData.project_ids,
             name: !itemData.name.trim(),
             item_number: !itemData.item_number.trim(),
@@ -265,11 +348,14 @@ const ItemModal: React.FC<ItemModalProps> = ({ open, handleClose, itemId, loadIt
             return;
         }
 
+        const { id, date_created, customer_name, manufacturer_name, model_name, projects_csv, project_ids, warehouses_csv, warehouse_ids, active, ...restItemData } = itemData;
+        const cleanedItemData = {
+            ...restItemData,
+            active: active === 'Yes', // 'Yes' becomes true, 'No' becomes false
+        };
+        console.log('cleanedItemData: ', cleanedItemData);
+
         try {
-            const { projects_csv, project_ids, warehouses_csv, warehouse_ids, ...cleanedItemData } = itemData;
-
-            console.log('cleanedItemData: ', cleanedItemData);
-
             if (itemId) {
                 await updateItem(itemId, cleanedItemData);
                 if (itemData.project_ids) {
@@ -278,17 +364,21 @@ const ItemModal: React.FC<ItemModalProps> = ({ open, handleClose, itemId, loadIt
                 if (itemData.warehouse_ids) {
                     await updateItemWarehouses(itemId, itemData.warehouse_ids);
                 }
-
+                if (selectedLocations) {
+                    await updateItemPreferredLocation(itemId, selectedLocations);
+                }
                 showSuccessToast('Item Updated Successfully');
             } else {
                 const newItem = await createItem(cleanedItemData);
-                if (itemData.project_ids) {
+                if (newItem && itemData.project_ids) {
                     await updateItemProjects(newItem.id, itemData.project_ids);
                 }
-                if (itemData.warehouse_ids) {
+                if (newItem && itemData.warehouse_ids) {
                     await updateItemWarehouses(newItem.id, itemData.warehouse_ids);
                 }
-
+                if (newItem && selectedLocations) {
+                    await updateItemPreferredLocation(newItem.id, selectedLocations);
+                }
                 showSuccessToast('Item Created Successfully');
             }
 
@@ -299,11 +389,12 @@ const ItemModal: React.FC<ItemModalProps> = ({ open, handleClose, itemId, loadIt
         }
     };
 
-
     const handleModalClose = () => {
         setItemData(emptyItemData);
         setProjects([]);
         setWarehouses([]);
+        setWarehouseLocations([]);
+        setSelectedLocations([]);
         setErrors({ name: false, item_number: false, active: false, uom_id: false, bulk: false, req_sn: false, warehouses: false });
         handleClose();
     };
@@ -658,6 +749,22 @@ const ItemModal: React.FC<ItemModalProps> = ({ open, handleClose, itemId, loadIt
                                 options={warehouses}
                                 required
                             />
+
+                            {/* Render location selects for each warehouse */}
+                            {itemData.warehouse_ids.map((warehouseId: number) => (
+                                <Box key={warehouseId} sx={{ mt: 2 }}>
+                                    <Typography variant="subtitle2" sx={{ mb: 0, color: `${theme.palette.primary.main}` }}>
+                                        Locations for Warehouse {warehouses.find((w: any) => w.value === warehouseId)?.label || warehouseId}
+                                    </Typography>
+                                    <StyledSelectField
+                                        label={`Select Location`}
+                                        value={selectedLocations[warehouseId] || ''}
+                                        onChange={(e) => handleLocationChange(warehouseId, Number(e.target.value))}
+                                        options={warehouseLocations[warehouseId] || []}
+                                        fullWidth
+                                    />
+                                </Box>
+                            ))}
                         </Grid>
                         <Grid item xs={6}>
                             <Box sx={{ flex: 1 }}>
