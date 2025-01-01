@@ -51,7 +51,7 @@ export const deletePermission = async (id: number) => {
 // Get all permissions
 export const getAllPermissions = async (): Promise<Permission[]> => {
   try {
-    const result = await sql`SELECT id, area, sub_areas, active FROM permissions order by area;`;
+    const result = await sql`SELECT id, area, sub_areas, active FROM permissions order by area asc;`;
     return result.rows as Permission[];
   } catch (error) {
     console.error('Error fetching permissions:', error);
