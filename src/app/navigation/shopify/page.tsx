@@ -11,7 +11,7 @@ import { useRouter } from 'next/navigation';
 // import historyTab from '@/components/shopify/historyTab';
 // import settingsTab from '@/components/shopify/settingsTab';
 
-const ShopifyProfilePage = ({ params }: any) => {
+const ShopifyPage = ({ params }: any) => {
     const theme = useTheme();
     const router = useRouter();
     const [activeTab, setActiveTab] = useState<any>(0);
@@ -42,7 +42,7 @@ const ShopifyProfilePage = ({ params }: any) => {
             <Tabs
                 value={activeTab}
                 onChange={handleTabChange}
-                aria-label="shopify-profile-tabs"
+                aria-label="shopify-tabs"
                 variant="scrollable"
                 scrollButtons="auto"
                 sx={{
@@ -88,4 +88,4 @@ const ShopifyProfilePage = ({ params }: any) => {
     );
 };
 
-export default ShopifyProfilePage;
+export default ShopifyPage;

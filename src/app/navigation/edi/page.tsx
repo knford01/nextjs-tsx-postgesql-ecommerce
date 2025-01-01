@@ -11,7 +11,7 @@ import { useRouter } from 'next/navigation';
 // import historyTab from '@/components/edi/historyTab';
 // import settingsTab from '@/components/edi/settingsTab';
 
-const EDIProfilePage = ({ params }: any) => {
+const EDIPage = ({ params }: any) => {
     const theme = useTheme();
     const router = useRouter();
     const [activeTab, setActiveTab] = useState<any>(0);
@@ -42,7 +42,7 @@ const EDIProfilePage = ({ params }: any) => {
             <Tabs
                 value={activeTab}
                 onChange={handleTabChange}
-                aria-label="edi-profile-tabs"
+                aria-label="edi-tabs"
                 variant="scrollable"
                 scrollButtons="auto"
                 sx={{
@@ -88,4 +88,4 @@ const EDIProfilePage = ({ params }: any) => {
     );
 };
 
-export default EDIProfilePage;
+export default EDIPage;
