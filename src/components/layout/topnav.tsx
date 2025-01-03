@@ -23,8 +23,6 @@ interface TopNavProps {
 
 const TopNav: React.FC<TopNavProps> = ({ collapsed, sessionUser, checkSession }) => {
 
-
-
     const theme = useTheme();
     const { setTheme } = useThemeContext();
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);

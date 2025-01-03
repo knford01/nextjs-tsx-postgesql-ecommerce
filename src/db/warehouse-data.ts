@@ -332,3 +332,85 @@ export async function updateItemPreferredLocation(item_id: any, wh_loc_ids: { [k
         throw new Error('Failed to update item preferred locations.');
     }
 }
+
+export async function fetchCarriers(): Promise<any> {
+    noStore();
+    try {
+        const data = await sql` 
+        SELECT
+          *
+        FROM carriers;`;
+
+        return data.rows;
+    } catch (error) {
+        console.error('Database Error:', error);
+        throw new Error('Failed to fetch carriers.');
+    }
+}
+
+export async function fetchActiveCarriers(): Promise<any> {
+    noStore();
+    try {
+        const data = await sql` 
+        SELECT
+          *
+        FROM carriers
+        WHERE active = true;`;
+
+        return data.rows;
+    } catch (error) {
+        console.error('Database Error:', error);
+        throw new Error('Failed to fetch carriers.');
+    }
+}
+
+export async function fetchCarrierById(id: number): Promise<any> {
+    noStore();
+    try {
+        const data = await sql` 
+        SELECT
+          *
+        FROM carriers
+        WHERE id = ${id};`;
+
+        return data.rows[0] || null;
+    } catch (error) {
+        console.error('Database Error:', error);
+        throw new Error('Failed to fetch carrier.');
+    }
+}
+
+export async function createCarrier(name: string, scac: string, active: boolean): Promise<any> {
+    noStore();
+    try {
+        const data = await sql` 
+        INSERT INTO carriers (name, scac, active)
+        VALUES (${name}, ${scac}, ${active})
+        RETURNING *;`;
+
+        return data.rows[0];
+    } catch (error) {
+        console.error('Database Error:', error);
+        throw new Error('Failed to add carrier.');
+    }
+}
+
+export async function updateCarrier(id: number, name?: string, scac?: string, active?: boolean): Promise<any> {
+    noStore();
+    try {
+        const data = await sql` 
+        UPDATE carriers
+        SET
+          name = COALESCE(${name}, name),
+          scac = COALESCE(${scac}, scac),
+          active = COALESCE(${active}, active)
+        WHERE id = ${id}
+        RETURNING *;`;
+
+        return data.rows[0] || null;
+    } catch (error) {
+        console.error('Database Error:', error);
+        throw new Error('Failed to update carrier.');
+    }
+}
+

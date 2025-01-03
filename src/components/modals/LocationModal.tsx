@@ -24,7 +24,7 @@ const LocationModal: React.FC<LocationModalProps> = ({ open, handleClose, locati
                 if (response.ok) {
                     const sessionData = await response.json();
                     setSession(sessionData);
-                    console.log("session: ", sessionData);
+                    // console.log("session: ", sessionData);
                 }
             } catch (error) {
                 console.error('Failed to fetch session:', error);
