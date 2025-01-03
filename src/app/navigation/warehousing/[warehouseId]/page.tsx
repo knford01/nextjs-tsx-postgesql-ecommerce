@@ -20,7 +20,7 @@ const WarehouseProfilePage = ({ params }: any) => {
     const router = useRouter();
     const [warehouse, setWarehouse] = useState<any>(null);
     const [activeTab, setActiveTab] = useState<any>(0);
-    const [receivingAnchorEl, setReceivingAnchorEl] = useState<null | HTMLElement>(null);
+    // const [receivingAnchorEl, setReceivingAnchorEl] = useState<null | HTMLElement>(null);
     const [isWarehouseModalOpen, setIsWarehouseModalOpen] = useState(false);
     const { warehouseId } = params;
     const combinedPermissions = useCombinedPermissions();
@@ -48,30 +48,32 @@ const WarehouseProfilePage = ({ params }: any) => {
         setIsWarehouseModalOpen(false);
     };
 
-    const handleReceivingClick = (event: React.MouseEvent<HTMLElement>) => {
-        setReceivingAnchorEl(event.currentTarget);
-    };
+    // const handleReceivingClick = (event: React.MouseEvent<HTMLElement>) => {
+    //     setReceivingAnchorEl(event.currentTarget);
+    // };
 
-    const handleReceivingClose = () => {
-        setReceivingAnchorEl(null);
-    };
+    // const handleReceivingClose = () => {
+    //     setReceivingAnchorEl(null);
+    // };
 
-    const handleReceivingOptionClick = (option: string) => {
-        setReceivingAnchorEl(null);
-        if (option === 'Staging') {
-            setActiveTab(6);
-        }
-        if (option === 'Put Away') {
-            setActiveTab(7);
-        }
-        if (option === 'History') {
-            setActiveTab(8);
-        }
-    };
+    // const handleReceivingOptionClick = (option: string) => {
+    //     setReceivingAnchorEl(null);
+    //     if (option === 'Staging') {
+    //         setActiveTab(6);
+    //     }
+    //     if (option === 'Put Away') {
+    //         setActiveTab(7);
+    //     }
+    //     if (option === 'History') {
+    //         setActiveTab(8);
+    //     }
+    // };
 
     const tabsConfig = [
         { label: 'Dashboard', permission: 'dashboard' },
-        { label: 'Receiving', permission: 'receiving' },
+        { label: 'Staging', permission: 'receiving' },
+        { label: 'Put Away', permission: 'receiving' },
+        { label: 'History', permission: 'receiving' },
         { label: 'Fulfilment', permission: 'fulfilment' },
         { label: 'Reports', permission: 'reports' },
         { label: 'Locations', permission: 'locations' },
@@ -98,19 +100,19 @@ const WarehouseProfilePage = ({ params }: any) => {
                 }}
             >
                 {accessibleTabs.map((tab) => (
-                    tab.label === 'Receiving' ? (
-                        <Tab
-                            key={tab.label}
-                            label={tab.label}
-                            onClick={handleReceivingClick}
-                        />
-                    ) : (
-                        <Tab key={tab.label} label={tab.label} />
-                    )
+                    // tab.label === 'Receiving' ? (
+                    //     <Tab
+                    //         key={tab.label}
+                    //         label={tab.label}
+                    //         onClick={handleReceivingClick}
+                    //     />
+                    // ) : (
+                    <Tab key={tab.label} label={tab.label} />
+                    // )
                 ))}
             </Tabs>
 
-            <Menu
+            {/* <Menu
                 anchorEl={receivingAnchorEl}
                 open={Boolean(receivingAnchorEl)}
                 onClose={handleReceivingClose}
@@ -118,7 +120,7 @@ const WarehouseProfilePage = ({ params }: any) => {
                 <MenuItem onClick={() => handleReceivingOptionClick('Staging')}>Staging</MenuItem>
                 <MenuItem onClick={() => handleReceivingOptionClick('Put Away')}>Put Away</MenuItem>
                 <MenuItem onClick={() => handleReceivingOptionClick('History')}>History</MenuItem>
-            </Menu>
+            </Menu> */}
 
             {activeTab === 0 && (
                 <DetailsTab
@@ -128,30 +130,34 @@ const WarehouseProfilePage = ({ params }: any) => {
                 />
             )}
 
-            {activeTab === 6 && (
+            {activeTab === 1 && (
                 <StagingTab warehouseId={warehouseId} />
             )}
 
-            {activeTab === 7 && (
+            {activeTab === 2 && (
                 <PutAwayTab />
             )}
 
-            {activeTab === 8 && (
+            {activeTab === 3 && (
                 <RecHistoryTab />
             )}
 
-            {activeTab === 3 && (
+            {activeTab === 4 && (
+                <Box>Fulfilment Coming Soon...</Box>
+            )}
+
+            {activeTab === 5 && (
                 <ReportsTab
                     theme={theme}
                     warehouseId={warehouseId}
                 />
             )}
 
-            {activeTab === 4 && (
+            {activeTab === 6 && (
                 <LocationsTab warehouseId={warehouseId} />
             )}
 
-            {activeTab === 5 && (
+            {activeTab === 7 && (
                 <SettingsTab />
             )}
 
