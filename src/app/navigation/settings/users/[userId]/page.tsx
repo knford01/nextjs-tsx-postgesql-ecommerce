@@ -91,7 +91,7 @@ export default function RolePermissionsPage() {
                     showErrorToast('Failed to load user permissions.');
                 }
             } else {
-                console.log('No user ID provided.');
+                // console.log('No user ID provided.');
             }
         };
 

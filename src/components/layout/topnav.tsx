@@ -51,10 +51,16 @@ const TopNav: React.FC<TopNavProps> = ({ collapsed, sessionUser, checkSession })
 
         const fetchAvatar = async () => {
             const data = await fetchUserAvatar(session?.id);
-            setAvatar(data?.avatar);
+            if (data?.avatar) {
+                setAvatar(data.avatar);
+                setSession((prevSession: any) => ({
+                    ...prevSession,
+                    avatar: data.avatar,
+                }));
+            }
         };
         fetchAvatar();
-    }, [session]);
+    }, [session?.id]);
 
     const handleNotificationsClick = () => {
         setIsNotificationsOpen(true);

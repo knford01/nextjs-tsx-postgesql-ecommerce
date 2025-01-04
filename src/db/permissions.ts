@@ -105,9 +105,9 @@ export const saveRolePermission = async (rolePermissions: any) => {
       await sql`DELETE FROM role_permissions WHERE role_id = ${role_id} AND permission_id = ${permission_id};`;
       await sql`INSERT INTO role_permissions (role_id, permission_id, access) VALUES (${role_id}, ${permission_id}, ${access});`;
     }
-    console.log('Permissions updated successfully');
+    // console.log('Permissions updated successfully');
   } catch (error) {
-    console.error('Error updating permission:', error);
+    // console.error('Error updating permission:', error);
     throw new Error('Failed to update permission');
   }
 };
@@ -154,9 +154,9 @@ export const saveUserPermission = async (rolePermissions: any) => {
       `;
     }
 
-    console.log('Permissions updated successfully');
+    // console.log('Permissions updated successfully');
   } catch (error) {
-    console.error('Error updating permission:', error);
+    // console.error('Error updating permission:', error);
     throw new Error('Failed to update permission');
   }
 };

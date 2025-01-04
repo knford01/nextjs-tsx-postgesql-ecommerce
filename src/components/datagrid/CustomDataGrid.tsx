@@ -19,9 +19,9 @@ interface CustomDataGridProps {
 
 const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text).then(() => {
-        console.log('Copied!');
+        // console.log('Copied!');
     }).catch(err => {
-        console.error('Failed to copy: ', err);
+        // console.error('Failed to copy: ', err);
     });
 };
 

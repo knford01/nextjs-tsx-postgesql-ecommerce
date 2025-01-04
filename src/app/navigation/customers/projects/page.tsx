@@ -19,7 +19,7 @@ const ProjectsPage = () => {
     const loadProjects = useCallback(async () => {
         const projectData = await fetchProjects();
         setProjects(projectData);
-        console.log("projectData: ", projectData);
+        // console.log("projectData: ", projectData);
     }, []);
 
     const combinedPermissions = useCombinedPermissions();

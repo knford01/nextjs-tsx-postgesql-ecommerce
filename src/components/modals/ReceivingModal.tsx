@@ -78,7 +78,7 @@ const ReceivingModal: React.FC<ReceivingModalProps> = ({ open, handleClose, ware
         };
 
         const loadReceivingData = async () => {
-            console.log('receivingID: ', receivingID);
+            // console.log('receivingID: ', receivingID);
             if (receivingID) {
                 try {
                     const data = await fetchReceivingById(receivingID);

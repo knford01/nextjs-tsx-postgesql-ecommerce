@@ -93,7 +93,7 @@ export async function createProject(customer_id: number, data: any) {
 }
 
 export async function updateProject(id: number, data: any) {
-  console.log("data: ", data);
+  // console.log("data: ", data);
   try {
     const result = await sql`
       UPDATE projects SET
@@ -149,7 +149,7 @@ export async function setProjectWarehouses(project_id: number, warehouses: any) 
     for (const warehouse_id of warehouses) {
       await sql`INSERT INTO project_warehouses (project_id, warehouse_id) VALUES (${project_id}, ${warehouse_id});`;
     }
-    console.log('Project warehouses updated successfully.');
+    // console.log('Project warehouses updated successfully.');
   } catch (err) {
     console.error('Database Error:', err);
     throw new Error('Failed to update project warehouses.');

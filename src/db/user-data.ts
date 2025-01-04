@@ -232,7 +232,7 @@ export async function setUserRoles(id: number, data: any) {
 }
 
 export async function createRole(data: any) {
-    console.log(data);
+    // console.log(data);
 
     try {
         await sql`

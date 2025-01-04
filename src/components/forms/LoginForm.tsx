@@ -29,7 +29,7 @@ export default function LoginForm() {
     if (response.ok) {
       // If the response is a redirect, the status will be 303, and there will be no JSON body
       if (response.redirected) {
-        console.log('Redirecting to:', response.url);
+        // console.log('Redirecting to:', response.url);
         window.location.href = response.url; // Perform the redirect
         return;
       }
@@ -37,13 +37,13 @@ export default function LoginForm() {
       // If it's not a redirect but a success, you can handle it here
       const result = await response.json();
       if (result.success) {
-        console.log('Login successful');
+        // console.log('Login successful');
         router.push('/navigation'); // Redirect to a protected page
       }
     } else {
       // Handle the error response
       const result = await response.json();
-      console.log('Error logging in:', result.message);
+      // console.log('Error logging in:', result.message);
       setError(result.message);
     }
   };

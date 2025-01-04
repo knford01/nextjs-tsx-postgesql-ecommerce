@@ -10,7 +10,7 @@ export async function GET(req: Request) {
     if (session && session.user) {
         return NextResponse.json({ user: session.user });
     } else {
-        console.log("Bad Session: ", session);
+        // console.log("Bad Session: ", session);
         return NextResponse.json({ message: 'Not authenticated' }, { status: 401 });
     }
 }
