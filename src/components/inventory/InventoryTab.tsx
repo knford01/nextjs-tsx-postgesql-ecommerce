@@ -117,8 +117,8 @@ export default function InventoryTab() {
                     >
                         Search
                     </Button>
-                </Grid> */}
-                {/* <Grid item xs={2}>
+                </Grid>
+                <Grid item xs={2}>
                     <StyledSearchableSelect
                         label="Warehouse"
                         options={warehouseOptions}

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Box, Typography, Tabs, Tab, useTheme, } from '@mui/material';
+import { Box, Tabs, Tab, } from '@mui/material';
 import { useCombinedPermissions } from '@/components/layout/combinedpermissions';
 import { hasAccess } from '@/utils/permissions2';
 import { useRouter } from 'next/navigation';
@@ -12,20 +12,12 @@ import ModelsTab from '@/components/inventory/ModelsTab';
 
 const InventoryPage = ({ params }: any) => {
     const router = useRouter();
-    const [inventory, setInventory] = useState<any>([]);
     const [activeTab, setActiveTab] = useState<any>(0);
     const combinedPermissions = useCombinedPermissions();
-
-    // const loadInventory = async () => {
-    //     const data = await fetchInventory();
-    //     setInventory(data);
-    // };
 
     useEffect(() => {
         if (!hasAccess(combinedPermissions, 'navigation', 'inventory')) {
             router.push('@app/navigation/403');
-        } else {
-            // loadInventory();
         }
     }, [combinedPermissions, router]);
 
@@ -41,10 +33,6 @@ const InventoryPage = ({ params }: any) => {
     ];
 
     const accessibleTabs = tabsConfig.filter(tab => hasAccess(combinedPermissions, 'inventory', tab.permission));
-
-    if (!inventory) {
-        return <Typography>Failed to load inventory...</Typography>;
-    }
 
     return (
         <Box sx={{ mt: 2 }}>

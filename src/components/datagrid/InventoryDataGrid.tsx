@@ -22,6 +22,43 @@ const InventoryDataGrid: React.FC<{ searchParameters?: SearchParameters }> = ({ 
     const [currentItemId, setCurrentItemId] = useState<number | undefined>(undefined);
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
+    // const loadInventory = useCallback(async () => {
+    //     let data;
+    //     // Construct the WHERE clause from searchParameters
+    //     const conditions = [];
+    //     if (searchParameters) {
+    //         // console.log('searchParameters: ', searchParameters);
+
+    //         if (searchParameters.warehouse_id) {
+    //             conditions.push(`i.warehouse_id = ${searchParameters.warehouse_id}`);
+    //         }
+    //         if (searchParameters) {
+    //             if (searchParameters.item_number) {
+    //                 conditions.push(`i.id = ${searchParameters.item_number.value}`);
+    //             }
+    //         }
+    //         if (searchParameters.location_id) {
+    //             conditions.push(`i.location_id = '${searchParameters.location_id}'`);
+    //         }
+    //         if (searchParameters.pallet_tag) {
+    //             conditions.push(`i.pallet_tag = '${searchParameters.pallet_tag}'`);
+    //         }
+    //         if (searchParameters.serial_number) {
+    //             conditions.push(`i.serial_number = '${searchParameters.serial_number}'`);
+    //         }
+    //     }
+
+    //     let whereClause = '';
+    //     if (conditions.length > 0) {
+    //         whereClause = 'WHERE ' + conditions.join(' AND ');
+    //         console.log('whereClause: ', whereClause);
+    //         data = await fetchFilteredInventory(whereClause);
+    //     } else {
+    //         data = await fetchInventory();
+    //     }
+    //     setInventory(data || []);
+    // }, [searchParameters]);
+
     const loadInventory = useCallback(async () => {
         let data;
         // Construct the WHERE clause from searchParameters

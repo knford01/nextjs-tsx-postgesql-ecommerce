@@ -66,3 +66,36 @@ export async function fetchFilteredInventory(whereClause: number) {
   }
 }
 
+// export async function fetchFilteredInventory(whereClause: string = '') {
+//   noStore();
+
+//   console.log("SELECT i.id, i.name, i.description, CONCAT(i.name, '\n', i.description) as name_description, i.item_number, i.image as avatar, c.name as customer_name, '0' as available, '0' as receiving, '0' as received, '0' as on_order, '0' as picked,'0' as adjusted FROM items i LEFT JOIN customers c ON c.id = i.customer_id " + whereClause + " ORDER BY i.name ASC")
+
+//   try {
+//     const data = await sql<any>`
+//         SELECT
+//           i.id,
+//           i.name,
+//           i.description,
+//           CONCAT(i.name, '\n', i.description) as name_description,
+//           i.item_number,
+//           i.image as avatar,
+//           c.name as customer_name,
+//           '0' as available,
+//           '0' as receiving,
+//           '0' as received,
+//           '0' as on_order,
+//           '0' as picked,
+//           '0' as adjusted
+//         FROM items i
+//         LEFT JOIN customers c ON c.id = i.customer_id
+//         ${whereClause}
+//         ORDER BY i.name ASC;`;
+
+//     return data.rows || null;
+//   } catch (err) {
+//     console.error('Database Error:', err);
+//     throw new Error('Failed to fetch filtered inventory.');
+//   }
+// }
+
