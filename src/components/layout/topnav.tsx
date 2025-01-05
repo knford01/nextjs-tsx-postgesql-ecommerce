@@ -37,7 +37,19 @@ const TopNav: React.FC<TopNavProps> = ({ collapsed, sessionUser, checkSession })
     const [searchExpanded, setSearchExpanded] = useState(false);
 
     useEffect(() => {
+        // console.log('sessionUser :', sessionUser);
         setSession(sessionUser);
+        const fetchAvatar = async () => {
+            const data = await fetchUserAvatar(sessionUser?.id);
+            if (data?.avatar) {
+                setAvatar(data.avatar);
+                setSession((prevSession: any) => ({
+                    ...prevSession,
+                    avatar: data.avatar,
+                }));
+            }
+        };
+        fetchAvatar();
     }, [sessionUser]);
 
     useEffect(() => {
@@ -48,19 +60,7 @@ const TopNav: React.FC<TopNavProps> = ({ collapsed, sessionUser, checkSession })
             setUnreadCount(unread);
         };
         fetchUserNotifications();
-
-        const fetchAvatar = async () => {
-            const data = await fetchUserAvatar(session?.id);
-            if (data?.avatar) {
-                setAvatar(data.avatar);
-                setSession((prevSession: any) => ({
-                    ...prevSession,
-                    avatar: data.avatar,
-                }));
-            }
-        };
-        fetchAvatar();
-    }, [session?.id]);
+    }, []);
 
     const handleNotificationsClick = () => {
         setIsNotificationsOpen(true);
