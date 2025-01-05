@@ -5,7 +5,7 @@ import { Button, useMediaQuery, useTheme, Box } from '@mui/material';
 import { PencilIcon, PlusIcon } from '@heroicons/react/24/outline';
 import { fetchStagingByWarehouseId } from '@/db/receiving-data';
 import ReceivingModal from '../modals/ReceivingModal';
-// import StagingModal from '../modals/StagingModal';
+import StagingModal from '../modals/StagingModal';
 
 interface StagingDataGridProps {
     warehouseId: number;
@@ -16,7 +16,7 @@ const StagingDataGrid: React.FC<StagingDataGridProps> = ({ warehouseId }) => {
     const [stagings, setStaging] = useState<any[]>([]);
     const [modalOpen, setModalOpen] = useState(false);
     const [stagingModalOpen, setStagingModalOpen] = useState(false);
-    const [currentStagingId, setCurrentStagingId] = useState<number | undefined>(undefined);
+    const [currentReceivingID, setCurrentReceivingID] = useState<number | undefined>(undefined);
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
     const loadStaging = useCallback(async () => {
@@ -31,29 +31,29 @@ const StagingDataGrid: React.FC<StagingDataGridProps> = ({ warehouseId }) => {
         loadStaging();
     }, [loadStaging]);
 
-    const handleOpenModal = (stagingId?: number) => {
-        setCurrentStagingId(stagingId);
+    const handleOpenModal = (receivingID?: number) => {
+        setCurrentReceivingID(receivingID);
         setModalOpen(true);
     };
 
     const handleCloseModal = () => {
         setModalOpen(false);
-        setCurrentStagingId(undefined);
+        setCurrentReceivingID(undefined);
     };
 
     const handleEdit = (receivingId: number) => {
-        setCurrentStagingId(receivingId);
+        setCurrentReceivingID(receivingId);
         setModalOpen(true);
     };
 
     const handleOpenStagingModal = (receivingId: number) => {
-        setCurrentStagingId(receivingId);
+        setCurrentReceivingID(receivingId);
         setStagingModalOpen(true);
     };
 
     const handleCloseStagingModal = () => {
         setStagingModalOpen(false);
-        setCurrentStagingId(undefined);
+        setCurrentReceivingID(undefined);
     };
 
     const columns: GridColDef[] = [
@@ -104,7 +104,7 @@ const StagingDataGrid: React.FC<StagingDataGridProps> = ({ warehouseId }) => {
                         sx={{
                             p: 1,
                             pr: 1,
-                            backgroundColor: `${theme.palette.info.main} !important`,
+                            backgroundColor: `${theme.palette.success.main} !important`,
                             color: `${theme.palette.text.primary} !important`,
                             borderColor: `${theme.palette.text.primary} !important`,
                             '&:hover': {
@@ -153,16 +153,15 @@ const StagingDataGrid: React.FC<StagingDataGridProps> = ({ warehouseId }) => {
                 open={modalOpen}
                 handleClose={handleCloseModal}
                 warehouseID={warehouseId}
-                receivingID={currentStagingId}
+                receivingID={currentReceivingID}
                 loadStaging={loadStaging}
             />
-            {/* <StagingModal
-                warehouseID={warehouseId}
+            <StagingModal
                 open={stagingModalOpen}
                 handleClose={handleCloseStagingModal}
-                stagingId={currentStagingId}
+                receivingID={currentReceivingID}
                 loadStaging={loadStaging}
-            /> */}
+            />
         </>
     );
 };
