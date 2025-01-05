@@ -1,5 +1,3 @@
-// src/components/datagrid/CustomDataGrid.tsx
-
 'use client';
 
 import React, { useState } from 'react';
@@ -18,10 +16,8 @@ interface CustomDataGridProps {
 }
 
 const copyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text).then(() => {
-        // console.log('Copied!');
-    }).catch(err => {
-        // console.error('Failed to copy: ', err);
+    navigator.clipboard.writeText(text).catch(err => {
+        console.error('Failed to copy: ', err);
     });
 };
 
@@ -84,19 +80,31 @@ const CustomDataGrid: React.FC<CustomDataGridProps> = ({
                     {buttons}
                 </Box>
             </Box>
-            <DataGrid
-                rows={rows}
-                columns={columns.map(col => ({
-                    ...col,
-                    renderCell: col.field !== 'avatar' && col.field !== 'actions' ? renderCell : col.renderCell,
-                }))}
-                checkboxSelection
-                disableRowSelectionOnClick
-                onCellClick={handleCellClick}
-                onRowSelectionModelChange={handleSelectionChange}
-            />
+            <Box
+                sx={{
+                    overflowX: 'auto', // Enable horizontal scrolling
+                    width: '100%',
+                }}
+            >
+                <Box
+                    sx={{
+                        minWidth: 800, // Set a minimum width for the grid
+                    }}
+                >
+                    <DataGrid
+                        rows={rows}
+                        columns={columns.map(col => ({
+                            ...col,
+                            renderCell: col.field !== 'avatar' && col.field !== 'actions' ? renderCell : col.renderCell,
+                        }))}
+                        checkboxSelection
+                        disableRowSelectionOnClick
+                        onCellClick={handleCellClick}
+                        onRowSelectionModelChange={handleSelectionChange}
+                    />
+                </Box>
+            </Box>
         </Box>
-
     );
 };
 
