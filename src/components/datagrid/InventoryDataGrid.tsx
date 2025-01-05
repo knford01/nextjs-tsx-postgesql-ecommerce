@@ -123,23 +123,6 @@ const InventoryDataGrid: React.FC<{ searchParameters?: SearchParameters }> = ({ 
                 rows={inventory}
                 columns={columns}
                 fileName="inventory_export"
-                buttons={
-                    <Button
-                        startIcon={<PlusIcon className="h-5" />}
-                        onClick={() => handleOpenModal()}
-                        variant="contained"
-                        sx={{
-                            r: 0,
-                            backgroundColor: `${theme.palette.secondary.main} !important`,
-                            color: `${theme.palette.text.primary} !important`,
-                            '&:hover': {
-                                backgroundColor: `${theme.palette.action.hover} !important`,
-                            },
-                        }}
-                    >
-                        {isMobile ? 'Create' : 'Create Item'}
-                    </Button>
-                }
                 columnsToIgnore={['image', 'actions']}
             />
 
