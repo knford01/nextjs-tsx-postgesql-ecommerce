@@ -69,7 +69,16 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     checkSession();
+    const interval = setInterval(() => {
+      checkSession();
+    }, 60000); // 60000ms = 1 minute
+
+    return () => clearInterval(interval);
   }, [checkSession]);
+
+  // useEffect(() => {
+  //   checkSession();
+  // }, [checkSession]);
 
   // Ensure that theme is defined before rendering the layout
   if (!theme) return null;

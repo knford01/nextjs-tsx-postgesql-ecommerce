@@ -3,26 +3,41 @@ import { GridColDef } from '@mui/x-data-grid';
 import CustomDataGrid from './CustomDataGrid';
 import { Button, useMediaQuery, useTheme } from '@mui/material';
 import { PencilIcon, PlusIcon } from '@heroicons/react/24/outline';
-import { fetchItems } from '@/db/item-data';
 import ItemModal from '@/components/modals/ItemModal';
+import { fetchInventory, fetchFilteredInventory } from '@/db/inventory-data';
 import Image from 'next/image';
 
-const ItemsDataGrid: React.FC = () => {
+interface SearchParameters {
+    warehouse_id?: number | null;
+    item_number?: { value: number; label: string } | null;
+    location_id?: string | null;
+    pallet_tag?: string;
+    serial_number?: string;
+}
+
+const InventoryDataGrid: React.FC<{ searchParameters?: SearchParameters }> = ({ searchParameters }) => {
     const theme = useTheme();
-    const [items, setItems] = useState<Item[]>([]);
+    const [inventory, setInventory] = useState<any[]>([]);
     const [modalOpen, setModalOpen] = useState(false);
     const [currentItemId, setCurrentItemId] = useState<number | undefined>(undefined);
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
-    const loadItems = useCallback(async () => {
-        const itemData = await fetchItems();
-        setItems(itemData || []);
-    }, []);
+    const loadInventory = useCallback(async () => {
+        let data;
+        // Construct the WHERE clause from searchParameters
+        if (searchParameters) {
+            if (searchParameters.item_number) {
+                data = await fetchFilteredInventory(searchParameters.item_number.value);
+            } else {
+                data = await fetchInventory();
+            }
+        }
+        setInventory(data || []);
+    }, [searchParameters]);
 
-    // Load items on component mount
     useEffect(() => {
-        loadItems();
-    }, [loadItems]);
+        loadInventory();
+    }, [loadInventory]);
 
     const handleOpenModal = (itemId?: number) => {
         setCurrentItemId(itemId);
@@ -60,12 +75,15 @@ const ItemsDataGrid: React.FC = () => {
                 ) : null
             ),
         },
-        { field: 'name', headerName: 'Name', flex: 1, minWidth: 150 },
-        { field: 'description', headerName: 'Description', flex: 1, minWidth: 200 },
-        { field: 'customer_name', headerName: 'Customer', flex: 1, minWidth: 150 },
-        { field: 'customer_number', headerName: 'Customer Number', flex: 1, minWidth: 150 },
+        { field: 'name', headerName: 'Item', flex: 1, minWidth: 150 },
         { field: 'item_number', headerName: 'Item Number', flex: 1, minWidth: 150 },
-        { field: 'active', headerName: 'Active', flex: 0.5, minWidth: 100 },
+        { field: 'customer_name', headerName: 'Customer', flex: 1, minWidth: 150 },
+        { field: 'available', headerName: 'Available', flex: 0.5, minWidth: 100 },
+        { field: 'receiving', headerName: 'Receiving', flex: 0.5, minWidth: 100 },
+        { field: 'received', headerName: 'Received', flex: 0.5, minWidth: 100 },
+        { field: 'on_order', headerName: 'On Order', flex: 0.5, minWidth: 100 },
+        { field: 'picked', headerName: 'Picked', flex: 0.5, minWidth: 100 },
+        { field: 'adjusted', headerName: 'Adjusted', flex: 0.5, minWidth: 100 },
         {
             field: 'actions',
             headerName: 'Actions',
@@ -79,7 +97,9 @@ const ItemsDataGrid: React.FC = () => {
                     onClick={() => handleOpenModal(params.row.id)}
                     startIcon={<PencilIcon className="w-5" />}
                     sx={{
-                        p: 1, pr: 0, mr: 1,
+                        p: 1,
+                        pr: 0,
+                        mr: 1,
                         backgroundColor: `${theme.palette.info.main} !important`,
                         color: `${theme.palette.text.primary} !important`,
                         borderColor: `${theme.palette.text.primary} !important`,
@@ -92,8 +112,7 @@ const ItemsDataGrid: React.FC = () => {
                             padding: '4px 8px',
                         },
                     }}
-                >
-                </Button>
+                />
             ),
         },
     ];
@@ -101,9 +120,9 @@ const ItemsDataGrid: React.FC = () => {
     return (
         <>
             <CustomDataGrid
-                rows={items}
+                rows={inventory}
                 columns={columns}
-                fileName="items_export"
+                fileName="inventory_export"
                 buttons={
                     <Button
                         startIcon={<PlusIcon className="h-5" />}
@@ -128,10 +147,10 @@ const ItemsDataGrid: React.FC = () => {
                 open={modalOpen}
                 handleClose={handleCloseModal}
                 itemId={currentItemId}
-                loadItems={loadItems}
+                loadItems={loadInventory}
             />
         </>
     );
 };
 
-export default ItemsDataGrid;
+export default InventoryDataGrid;

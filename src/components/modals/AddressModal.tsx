@@ -305,6 +305,8 @@ const AddressModal: React.FC<AddressModalProps> = ({ open, handleClose, addressI
                     ]}
                 />
                 <StyledSearchableSelect
+                    label="State"
+                    required
                     options={states.map(state => ({ value: state.id, label: state.display }))}
                     value={states.find(state => state.id === address.state_province)
                         ? { value: address.state_province as string, label: states.find(state => state.id === address.state_province)?.display as string }
@@ -324,6 +326,8 @@ const AddressModal: React.FC<AddressModalProps> = ({ open, handleClose, addressI
                 />
 
                 <StyledSearchableSelect
+                    label="City"
+                    required
                     options={cities.map((city: CityType) => ({ value: city.id, label: city.display }))}
                     value={cities.find((city: CityType) => city.id === address.city)
                         ? { value: address.city as string, label: cities.find((city: CityType) => city.id === address.city)?.display as string }
@@ -343,6 +347,8 @@ const AddressModal: React.FC<AddressModalProps> = ({ open, handleClose, addressI
                 />
 
                 <StyledSearchableSelect
+                    label="Postal"
+                    required
                     options={postalCodes.map((postal: PostalType) => ({ value: postal.id, label: postal.display }))}
                     value={postalCodes.find((postal: PostalType) => postal.id === address.postal_code)
                         ? { value: address.postal_code as string, label: postalCodes.find((postal: PostalType) => postal.id === address.postal_code)?.display as string }

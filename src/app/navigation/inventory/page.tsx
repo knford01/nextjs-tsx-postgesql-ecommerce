@@ -2,20 +2,18 @@
 
 import React, { useState, useEffect } from 'react';
 import { Box, Typography, Tabs, Tab, useTheme, } from '@mui/material';
-import { fetchInventory } from '@/db/inventory-data';
 import { useCombinedPermissions } from '@/components/layout/combinedpermissions';
 import { hasAccess } from '@/utils/permissions2';
 import { useRouter } from 'next/navigation';
+import InventoryTab from '@/components/inventory/InventoryTab';
+import ItemTab from '@/components/inventory/ItemTab';
 import ManufacturersTab from '@/components/inventory/ManufacturerTab';
 import ModelsTab from '@/components/inventory/ModelsTab';
-import ItemTab from '@/components/inventory/ItemTab';
 
 const InventoryPage = ({ params }: any) => {
-    const theme = useTheme();
     const router = useRouter();
     const [inventory, setInventory] = useState<any>([]);
     const [activeTab, setActiveTab] = useState<any>(0);
-    const { warehouseId } = params;
     const combinedPermissions = useCombinedPermissions();
 
     // const loadInventory = async () => {
@@ -33,10 +31,6 @@ const InventoryPage = ({ params }: any) => {
 
     const handleTabChange = (event: any, newValue: any) => {
         setActiveTab(newValue);
-    };
-
-    const updateSessionWH = () => {
-
     };
 
     const tabsConfig = [
@@ -71,9 +65,7 @@ const InventoryPage = ({ params }: any) => {
             </Tabs>
 
             {activeTab === 0 && (
-                <Box sx={{ mt: 2 }}>
-                    <Typography>Inventory section coming soon...</Typography>
-                </Box>
+                <InventoryTab />
             )}
 
             {activeTab === 1 && (

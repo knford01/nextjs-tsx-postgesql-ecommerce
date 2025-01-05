@@ -5,6 +5,23 @@ import { idID } from '@mui/material/locale';
 import { db, sql, QueryResult } from '@vercel/postgres';
 import { unstable_noStore as noStore } from 'next/cache';
 
+export async function fetchActiveWarehouses() {
+    noStore();
+    try {
+        const data = await sql<Warehouse>` 
+        SELECT
+          *
+        FROM warehouses
+        WHERE active = true
+        ORDER BY name ASC`;
+
+        return data.rows || null;
+    } catch (err) {
+        console.error('Database Error:', err);
+        throw new Error('Failed to fetch all warehouses.');
+    }
+}
+
 export async function fetchWarehouses() {
     noStore();
     try {
@@ -122,6 +139,22 @@ export async function updateWarehouse(id: number, data: Partial<Omit<Warehouse, 
     } catch (error) {
         console.error('Database Error:', error);
         throw new Error('Failed to update warehouse');
+    }
+}
+
+export async function fetchActiveWarehouseLocations() {
+    noStore();
+    try {
+        const data = await sql<WarehouseLocation>`
+        SELECT id, name
+        FROM warehouse_locations
+        WHERE active = true
+        ORDER BY name ASC;`;
+
+        return data.rows || null;
+    } catch (err) {
+        console.error('Database Error:', err);
+        throw new Error('Failed to fetch active warehouse locations.');
     }
 }
 

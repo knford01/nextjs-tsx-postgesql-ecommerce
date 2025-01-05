@@ -10,6 +10,7 @@ export async function fetchItems() {
     const data = await sql<Item>`
       SELECT
         items.*,
+        items.image as avatar,
         CASE
           WHEN items.active = TRUE THEN 'Yes'
           ELSE 'No'
@@ -30,6 +31,42 @@ export async function fetchItems() {
       LEFT JOIN customers ON customers.id = items.customer_id
       LEFT JOIN manufacturers ON manufacturers.id = items.manufacturer_id
       LEFT JOIN models ON models.id = items.model_id
+      ORDER BY items.name ASC;`;
+
+    return data.rows || null;
+  } catch (err) {
+    console.error('Database Error:', err);
+    throw new Error('Failed to fetch all items.');
+  }
+}
+
+export async function fetchActiveItems() {
+  noStore();
+  try {
+    const data = await sql<Item>`
+      SELECT
+        items.*,
+        CASE
+          WHEN items.active = TRUE THEN 'Yes'
+          ELSE 'No'
+        END AS active,
+        customers.name AS customer_name,
+        manufacturers.name AS manufacturer_name,
+        models.name AS model_name,
+
+        (SELECT string_agg(project_id::TEXT, ',') 
+        FROM item_projects 
+        WHERE item_id = items.id) AS projects_csv,
+
+        (SELECT string_agg(warehouse_id::TEXT, ',') 
+        FROM item_warehouses 
+        WHERE item_id = items.id) AS warehouses_csv
+
+      FROM items
+      LEFT JOIN customers ON customers.id = items.customer_id
+      LEFT JOIN manufacturers ON manufacturers.id = items.manufacturer_id
+      LEFT JOIN models ON models.id = items.model_id
+      WHERE items.active = true
       ORDER BY items.name ASC;`;
 
     return data.rows || null;
@@ -97,6 +134,40 @@ export async function fetchItemsByWarehouseId(warehouseId: number) {
       LEFT JOIN manufacturers ON manufacturers.id = items.manufacturer_id
       LEFT JOIN models ON models.id = items.model_id
       WHERE items.id IN (SELECT item_id FROM item_warehouses WHERE warehouse_id = ${warehouseId})
+      ORDER BY items.name DESC;`;
+
+    return data.rows || null;
+  } catch (err) {
+    console.error('Database Error:', err);
+    throw new Error(`Failed to fetch items for warehouse ID ${warehouseId}.`);
+  }
+}
+
+export async function fetchActiveItemsByWarehouseId(warehouseId: number) {
+  noStore();
+  try {
+    const data = await sql<Item>`
+      SELECT
+        items.*,
+        CASE
+          WHEN items.active = TRUE THEN 'Yes'
+          ELSE 'No'
+        END AS active,
+        customers.name AS customer_name,
+        manufacturers.name AS manufacturer_name,
+        models.name AS model_name,
+        (SELECT string_agg(project_id::TEXT, ',') 
+        FROM item_projects 
+        WHERE item_id = items.id) AS projects_csv,
+        (SELECT string_agg(warehouse_id::TEXT, ',') 
+        FROM item_warehouses 
+        WHERE item_id = items.id) AS warehouses_csv
+      FROM items
+      LEFT JOIN customers ON customers.id = items.customer_id
+      LEFT JOIN manufacturers ON manufacturers.id = items.manufacturer_id
+      LEFT JOIN models ON models.id = items.model_id
+      WHERE items.id IN (SELECT item_id FROM item_warehouses WHERE warehouse_id = ${warehouseId})
+      AND items.active = true
       ORDER BY items.name DESC;`;
 
     return data.rows || null;

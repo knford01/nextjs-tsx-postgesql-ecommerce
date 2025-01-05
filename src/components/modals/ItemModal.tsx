@@ -350,7 +350,7 @@ const ItemModal: React.FC<ItemModalProps> = ({ open, handleClose, itemId, loadIt
             ...restItemData,
             active: active === 'Yes', // 'Yes' becomes true, 'No' becomes false
         };
-        console.log('cleanedItemData: ', cleanedItemData);
+        // console.log('cleanedItemData: ', cleanedItemData);
 
         try {
             if (itemId) {

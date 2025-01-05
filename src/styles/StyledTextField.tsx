@@ -266,26 +266,53 @@ interface OptionType {
 }
 
 interface StyledSearchableSelectProps extends SelectProps<OptionType> {
+    label: string;
     error?: boolean;
     helperText?: string;
+    required?: boolean; // Add required prop
+    onValidationError?: (name: string, isValid: boolean) => void; // Optional callback for form-level validation handling
 }
 
-export const StyledSearchableSelect: React.FC<StyledSearchableSelectProps> = ({ error, helperText, ...props }) => {
+export const StyledSearchableSelect: React.FC<StyledSearchableSelectProps> = ({
+    label,
+    error: externalError,
+    helperText,
+    required = false,
+    value,
+    onValidationError,
+    name,
+    ...props
+}) => {
     const theme = useTheme();
+    const [localError, setLocalError] = React.useState(false);
+
+    const handleBlur = () => {
+        if (required && !value) {
+            setLocalError(true);
+            onValidationError?.(name || '', false);
+        } else {
+            setLocalError(false);
+            onValidationError?.(name || '', true);
+        }
+    };
 
     const customStyles = {
         control: (base: any, state: any) => ({
             ...base,
-            color: theme.palette.primary.main,
             backgroundColor: theme.palette.text.primary,
-            borderColor: error ? theme.palette.error.main : theme.palette.primary.main,
+            color: theme.palette.primary.main,
+            border: 'none', // Remove border
+            boxShadow: 'none', // Remove shadow
             '&:hover': {
-                borderColor: error ? theme.palette.error.dark : theme.palette.primary.light,
+                border: 'none', // Ensure no border appears on hover
             },
-            boxShadow: state.isFocused ? `0 0 0 1px ${theme.palette.primary.main}` : base.boxShadow,
-            '&:focus': {
-                borderColor: theme.palette.primary.main,
-            },
+            height: '2.5em',
+            minHeight: 'unset',
+            padding: 0,
+        }),
+        valueContainer: (base: any) => ({
+            ...base,
+            paddingLeft: '12px', // Add padding to the left
         }),
         menu: (base: any) => ({
             ...base,
@@ -316,20 +343,47 @@ export const StyledSearchableSelect: React.FC<StyledSearchableSelectProps> = ({ 
         }),
     };
 
+    const shouldShrink = Boolean(value);
+
     return (
-        <div style={{ marginTop: '16px', color: theme.palette.primary.main }}>
+        <FormControl
+            fullWidth
+            error={localError || externalError}
+            sx={{ mt: 1, position: 'relative' }}
+        >
+            <InputLabel
+                shrink={shouldShrink}
+                required={required}
+                sx={{
+                    position: 'absolute',
+                    top: shouldShrink ? '-10px' : '50%',
+                    left: '12px',
+                    transform: shouldShrink ? 'none' : 'translateY(-50%)',
+                    fontSize: shouldShrink ? '0.875rem' : '1rem',
+                    transition: 'all 0.2s ease',
+                }}
+            >
+                {label}
+            </InputLabel>
             <Select
                 styles={customStyles}
+                value={value}
+                onBlur={handleBlur} // Trigger validation on blur
                 {...props}
+                placeholder=""
+                components={{
+                    IndicatorSeparator: () => null,
+                }}
             />
-            {helperText && (
-                <div style={{ color: theme.palette.error.main, marginTop: '4px', fontSize: '0.75rem' }}>
-                    {helperText}
-                </div>
+            {(localError || externalError) && (
+                <FormHelperText>
+                    {helperText || 'This field is required'}
+                </FormHelperText>
             )}
-        </div>
+        </FormControl>
     );
 };
+
 
 interface StyledCheckboxProps {
     checked: boolean;
