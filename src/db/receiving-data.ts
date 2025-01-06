@@ -1,4 +1,4 @@
-// app/lib/data/warehouse-data.tsx
+// app/lib/data/receiving-data.tsx
 
 'use server';
 import { db, sql, QueryResult } from '@vercel/postgres';

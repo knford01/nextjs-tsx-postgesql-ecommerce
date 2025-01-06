@@ -58,6 +58,7 @@ export async function fetchUsers() {
         SELECT
           u.id,
           u.first_name,
+          u.middle_name,
           u.last_name,
           u.avatar,
           u.role,
@@ -87,6 +88,7 @@ export async function fetchUserById(id: any) {
         SELECT
           u.id,
           u.first_name,
+          u.middle_name,
           u.last_name,
           u.avatar,
           u.role,

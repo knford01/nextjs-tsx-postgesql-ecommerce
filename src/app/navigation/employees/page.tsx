@@ -5,7 +5,7 @@ import { Box, Typography, Tabs, Tab, useTheme } from '@mui/material';
 import { useCombinedPermissions } from '@/components/layout/combinedpermissions';
 import { hasAccess } from '@/utils/permissions2';
 import { useRouter } from 'next/navigation';
-// import employeesTab from '@/components/employees/employeesTab';
+import EmployeesTab from '@/components/employees/EmployeesTab';
 // import schedulingTab from '@/components/employees/schedulingTab';
 // import attendanceTab from '@/components/employees/attendanceTab';
 // import ptoTab from '@/components/employees/ptoTab';
@@ -58,9 +58,7 @@ const EmployeesPage = ({ params }: any) => {
             </Tabs>
 
             {activeTab === 0 && (
-                <Box sx={{ mt: 2 }}>
-                    <Typography>Employees section coming soon...</Typography>
-                </Box>
+                <EmployeesTab />
             )}
 
             {activeTab === 1 && (
