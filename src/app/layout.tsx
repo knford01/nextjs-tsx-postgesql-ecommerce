@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 import { inter } from '@/styles/fonts';
 import "./globals.css";
 import '@/styles/background.css';
-import '@/styles/website.css';
+// import '@/styles/website.css';
 
 export const metadata: Metadata = {
   title: {
@@ -41,4 +41,4 @@ export default function RootLayout({
       <body className={`${inter.className} antialiased`}>{children}</body>
     </html>
   );
-} 
+}  
