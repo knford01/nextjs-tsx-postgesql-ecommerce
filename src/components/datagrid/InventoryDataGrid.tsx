@@ -120,38 +120,7 @@ const InventoryDataGrid: React.FC<{ searchParameters?: SearchParameters }> = ({ 
         { field: 'received', headerName: 'Received', flex: 0.5, minWidth: 100 },
         { field: 'on_order', headerName: 'On Order', flex: 0.5, minWidth: 100 },
         { field: 'picked', headerName: 'Picked', flex: 0.5, minWidth: 100 },
-        { field: 'adjusted', headerName: 'Adjusted', flex: 0.5, minWidth: 100 },
-        {
-            field: 'actions',
-            headerName: 'Actions',
-            flex: 1,
-            sortable: false,
-            minWidth: 250,
-            renderCell: (params) => (
-                <Button
-                    variant="outlined"
-                    color="primary"
-                    onClick={() => handleOpenModal(params.row.id)}
-                    startIcon={<PencilIcon className="w-5" />}
-                    sx={{
-                        p: 1,
-                        pr: 0,
-                        mr: 1,
-                        backgroundColor: `${theme.palette.info.main} !important`,
-                        color: `${theme.palette.text.primary} !important`,
-                        borderColor: `${theme.palette.text.primary} !important`,
-                        '&:hover': {
-                            backgroundColor: `${theme.palette.info.dark} !important`,
-                            color: `${theme.palette.text.secondary} !important`,
-                        },
-                        [theme.breakpoints.down('sm')]: {
-                            minWidth: 'unset',
-                            padding: '4px 8px',
-                        },
-                    }}
-                />
-            ),
-        },
+        { field: 'adjusted', headerName: 'Adjusted', flex: 0.5, minWidth: 100 }
     ];
 
     return (

@@ -29,9 +29,10 @@ const EDIPage = ({ params }: any) => {
 
     const tabsConfig = [
         { label: 'Orders', permission: 'orders' },
-        { label: 'Quality Assurance', permission: 'quality_assurance' },
+        // { label: 'Quality Assurance', permission: 'quality_assurance' },
         { label: 'Shipped', permission: 'shipped' },
-        { label: 'History', permission: 'history' },
+        { label: 'Billing', permission: 'billing' },
+        { label: 'Archived', permission: 'archived' },
         { label: 'Settings', permission: 'settings' },
     ];
 

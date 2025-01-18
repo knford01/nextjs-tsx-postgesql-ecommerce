@@ -386,7 +386,11 @@ export async function fetchActiveCarriers(): Promise<any> {
     try {
         const data = await sql` 
         SELECT
-          *
+            *,
+            CASE
+                WHEN active = TRUE THEN 'Yes'
+                ELSE 'No'
+            END AS active
         FROM carriers
         WHERE active = true;`;
 
