@@ -36,7 +36,8 @@
       "@types/react",
       "@mui/x-data-grid/themeAugmentation",
       "jest" // Added
-    ]
+    ],
+    "target": "ES2017"
   },
   "include": [
     "next-env.d.ts",

@@ -1,0 +1,3 @@
+User-agent: *
+Disallow: /navigation/
+Sitemap: https://www.arsourcesoftware.com/sitemap.xml

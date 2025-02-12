@@ -37,7 +37,7 @@ const HomePage = () => {
         <meta name="keywords" content="supply chain, warehousing, order fulfillment, EDI, API, custom software" />
         <meta property="og:title" content="Supply Chain Management - Warehousing & Order Fulfillment" />
         <meta property="og:description" content="Expert warehousing and order fulfillment services through EDI and API." />
-        <meta property="og:image" content="/images/hero-image.jpg" />
+        <meta property="og:image" content="/images/logos/ars_white.jpg" />
       </Head>
 
       <main className="min-h-screen flex flex-col items-center justify-center z-0 overflow-auto">

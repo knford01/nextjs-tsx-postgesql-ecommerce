@@ -12,16 +12,17 @@ export const metadata: Metadata = {
   description: 'Expert warehousing and order fulfillment services through EDI and API.',
   keywords: ['supply chain', 'warehousing', 'order fulfillment', 'EDI', 'API', 'custom software'],
   openGraph: {
+    type: 'website',
     title: 'Supply Chain Management - Warehousing & Order Fulfillment',
     description: 'Expert warehousing and order fulfillment services through EDI and API.',
-    images: '/images/hero-image.jpg',
+    images: '/images/logos/ars_white.jpg',
     url: 'https://www.arsourcesoftware.com/',
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Supply Chain Management - Warehousing & Order Fulfillment',
     description: 'Expert warehousing and order fulfillment services through EDI and API.',
-    images: '/images/hero-image.jpg',
+    images: '/images/logos/ars_white.jpg',
   },
   metadataBase: new URL('https://www.arsourcesoftware.com/'),
 };

@@ -1,4 +1,5 @@
 // app/navigation/settings/users/page.tsx
+
 'use client';
 
 import React, { useEffect } from 'react';
@@ -10,17 +11,10 @@ import { hasAccess } from '@/utils/permissions2';
 
 const UserDataGrid = dynamic(() => import('@/components/datagrid/UserDataGrid'), { ssr: false });
 
-export default function Page({
-    searchParams,
-}: {
-    searchParams?: {
-        query?: string;
-        page?: string;
-        id?: string;
-    };
-}) {
+export default function Page() {
     const router = useRouter();
     const combinedPermissions = useCombinedPermissions();
+
     useEffect(() => {
         if (!hasAccess(combinedPermissions, 'settings', 'users')) {
             router.push('/navigation/403');
@@ -39,7 +33,7 @@ export default function Page({
                 transition: 'all 0.3s', // Transition for smooth resizing
             }}
         >
-            <UserDataGrid filterId={searchParams?.id} />
+            <UserDataGrid />
         </Container>
     );
-} 
+}

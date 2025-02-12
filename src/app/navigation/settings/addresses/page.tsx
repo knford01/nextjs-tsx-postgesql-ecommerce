@@ -3,17 +3,19 @@
 'use client';
 
 import React, { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import Container from '@mui/material/Container';
 import dynamic from 'next/dynamic';
 import { useCombinedPermissions } from '@/components/layout/combinedpermissions';
 import { hasAccess } from '@/utils/permissions2';
-import { useRouter } from 'next/navigation';
 
+// Dynamically import AddressDataGrid with SSR disabled
 const AddressDataGrid = dynamic(() => import('@/components/datagrid/AddressesDataGrid'), { ssr: false });
 
-export default function Page({ searchParams, }: { searchParams?: { query?: string; page?: string; id?: string; }; }) {
+export default function Page() {
     const router = useRouter();
     const combinedPermissions = useCombinedPermissions();
+
     useEffect(() => {
         if (!hasAccess(combinedPermissions, 'settings', 'addresses')) {
             router.push('/navigation/403');
@@ -34,4 +36,4 @@ export default function Page({ searchParams, }: { searchParams?: { query?: strin
             <AddressDataGrid />
         </Container>
     );
-} 
+}
