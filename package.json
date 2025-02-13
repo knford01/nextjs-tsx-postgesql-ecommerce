@@ -27,11 +27,13 @@
     "cookie": "^0.6.0",
     "file-saver": "^2.0.5",
     "iron-session": "^8.0.2",
+    "lucide-react": "^0.475.0",
     "next": "^15.1.7",
     "nextjs-tsx-postgesql-ecommerce": "file:",
     "react": "^19.0.0",
     "react-calendar": "^5.0.0",
     "react-dom": "^19.0.0",
+    "react-icons": "^5.4.0",
     "react-select": "^5.8.0",
     "react-toastify": "^10.0.5",
     "xlsx": "^0.18.5"
