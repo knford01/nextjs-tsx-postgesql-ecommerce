@@ -13,46 +13,49 @@ const Header = ({ openContactForm }: { openContactForm: () => void }) => {
   const toggleMobileMenu = () => setMobileMenuOpen(!isMobileMenuOpen);
 
   return (
-    <header className="fixed top-0 left-0 w-full bg-[#1E4258] text-white shadow-md flex items-center px-6 md:px-24 h-16 z-50 overflow-hidden">
-      <div className="hidden md:flex gap-4 ml-auto">
-        <button
-          onClick={openContactForm}
-          className="bg-[#0288d1] hover:bg-[#01579b] text-white px-4 py-2 rounded-md transition whitespace-nowrap w-auto"
-        >
-          Contact Us
-        </button>
-        <Link href="/login">
-          <button className="bg-[#2D5F5D] hover:bg-[#265077] text-white px-4 py-2 rounded-md transition whitespace-nowrap w-auto">
-            Login
-          </button>
-        </Link>
-      </div>
+    <header className="fixed top-0 w-full bg-[#1E4258] text-white shadow-md z-50">
+      <div className="max-w-7xl mx-auto flex items-center justify-between p-4 relative">
+        {/* Company Name & Tagline */}
+        <div className="text-center mx-auto flex flex-col items-center translate-x-[-10px]">
+          <h1 className="text-xl font-bold">AR-Source Software</h1>
+          <div className="w-20 h-[1px] bg-[#eb3c00] my-1"></div>
+          <p className="text-sm">Our Source For Software</p>
+        </div>
 
-      <div className="absolute left-1/2 transform -translate-x-1/2 text-center leading-tight">
-        <h1 className="text-lg md:text-xl font-bold m-0 p-0 leading-none">AR-Source Software</h1>
-        <div className="w-full h-[1px] bg-[#eb3c00] m-0 p-0"></div> {/* Ensures no extra space */}
-        <span className="text-xs md:text-sm text-gray-300 m-0 p-0 block leading-none">Our Source For Software</span>
-      </div>
-
-      <div className="flex items-center w-full md:hidden">
-        <button
-          onClick={toggleMobileMenu}
-          className="ml-auto md:hidden p-2 focus:outline-none"
-        >
-          {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
-      </div>
-
-      {isMobileMenuOpen && (
-        <div className="absolute top-full left-0 w-full bg-[#1E4258] shadow-md flex flex-col items-center py-4 space-y-2 md:hidden">
+        {/* Desktop Buttons */}
+        <div className="hidden md:flex space-x-4 absolute right-4">
           <button
             onClick={openContactForm}
-            className="bg-[#0288d1] hover:bg-[#01579b] text-white px-4 py-2 rounded-md transition w-3/4"
+            className="bg-[#0288d1] hover:bg-[#01579b] text-white px-4 py-2 rounded-md"
           >
             Contact Us
           </button>
-          <Link href="/login" className="w-3/4">
-            <button className="bg-[#2D5F5D] hover:bg-[#265077] text-white px-4 py-2 rounded-md transition w-full">
+          <Link href="/login">
+            <button className="bg-[#2D5F5D] hover:bg-[#265077] text-white px-4 py-2 rounded-md">
+              Login
+            </button>
+          </Link>
+        </div>
+
+        {/* Mobile Menu Button */}
+        <div className="md:hidden absolute right-4">
+          <button onClick={toggleMobileMenu} className="text-white">
+            {isMobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
+          </button>
+        </div>
+      </div>
+
+      {/* Mobile Dropdown Menu */}
+      {isMobileMenuOpen && (
+        <div className="md:hidden bg-[#1E4258] text-white text-center py-2">
+          <button
+            onClick={openContactForm}
+            className="block w-full py-2 bg-[#0288d1] hover:bg-[#01579b]"
+          >
+            Contact Us
+          </button>
+          <Link href="/login">
+            <button className="block w-full py-2 bg-[#2D5F5D] hover:bg-[#265077]">
               Login
             </button>
           </Link>
