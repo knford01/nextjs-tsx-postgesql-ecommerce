@@ -229,20 +229,17 @@ export async function setUserRoles(id: number, data: any) {
     try {
         await sql`UPDATE user_roles SET role = ${data.role}, display = ${data.display}, active = ${data.active} WHERE id = ${id}`;
     } catch (error) {
-        throw new Error('Database Error: Failed to Update User.');
+        throw new Error('Database Error: Failed to Update Role.');
     }
 }
 
 export async function createRole(data: any) {
-    // console.log(data);
-
     try {
         await sql`
-            INSERT INTO user_roles 
-                (role, display, active)
-            VALUES 
-                (${data.role}, ${data.display}, 1)`;
+            INSERT INTO user_roles (role, display, active)
+            VALUES (${data.role}, ${data.display}, ${data.active})`;
     } catch (error) {
-        throw new Error('Failed to Create User');
+        console.error('Error creating role:', error);
+        throw new Error('Failed to Create Role');
     }
 }

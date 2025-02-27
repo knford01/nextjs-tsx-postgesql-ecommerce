@@ -38,7 +38,98 @@ export async function fetchEmployees(): Promise<any> {
             LEFT JOIN departments d ON d.id = e.department_id
             LEFT JOIN employment_types et ON et.id = e.employment_type
             LEFT JOIN users u ON u.id = e.user_id
-            LEFT JOIN user_roles ur ON ur.id = u.role;`;
+            LEFT JOIN user_roles ur ON ur.id = u.role
+            ORDER BY u.first_name, u.last_name`;
+
+        return data.rows || null;
+    } catch (error) {
+        console.error('Database Error:', error);
+        throw new Error('Failed to fetch employees.');
+    }
+}
+
+export async function fetchActiveEmployees(): Promise<any> {
+    noStore();
+    try {
+        const data = await sql<any>` 
+            SELECT 
+                e.*,
+                u.id AS user_id,
+                u.first_name,
+                u.middle_name,
+                u.last_name,
+                CONCAT(u.first_name, ' ', u.last_name) AS name,
+                u.avatar,
+                u.role,
+                ur.display AS role_display,
+                u.email, 
+                CONCAT(
+                    EXTRACT(DAY FROM (
+                        CASE 
+                            WHEN NULLIF(e.end_date, '') IS NOT NULL THEN CAST(NULLIF(e.end_date, '') AS DATE)
+                            ELSE NOW()
+                        END - CAST(NULLIF(e.start_date, '') AS DATE)
+                    )), 
+                    ' Days'
+                ) AS time_employed,
+                CASE 
+                    WHEN e.active = TRUE THEN 'Active'
+                    ELSE 'Inactive'
+                END AS active_status,
+                d.name AS department_name,
+                COALESCE(et.name, 'Not Available') AS type_name
+            FROM employees e
+            LEFT JOIN departments d ON d.id = e.department_id
+            LEFT JOIN employment_types et ON et.id = e.employment_type
+            LEFT JOIN users u ON u.id = e.user_id
+            LEFT JOIN user_roles ur ON ur.id = u.role
+            WHERE e.active = TRUE
+            ORDER BY u.first_name, u.last_name`;
+
+        return data.rows || null;
+    } catch (error) {
+        console.error('Database Error:', error);
+        throw new Error('Failed to fetch employees.');
+    }
+}
+
+export async function fetchInactiveEmployees(): Promise<any> {
+    noStore();
+    try {
+        const data = await sql<any>` 
+            SELECT 
+                e.*,
+                u.id AS user_id,
+                u.first_name,
+                u.middle_name,
+                u.last_name,
+                CONCAT(u.first_name, ' ', u.last_name) AS name,
+                u.avatar,
+                u.role,
+                ur.display AS role_display,
+                u.email, 
+                CONCAT(
+                    EXTRACT(DAY FROM (
+                        CASE 
+                            WHEN NULLIF(e.end_date, '') IS NOT NULL THEN CAST(NULLIF(e.end_date, '') AS DATE)
+                            ELSE NOW()
+                        END - CAST(NULLIF(e.start_date, '') AS DATE)
+                    )), 
+                    ' Days'
+                ) AS time_employed,
+                CASE 
+                    WHEN e.active = TRUE THEN 'Active'
+                    ELSE 'Inactive'
+                END AS active_status,
+                d.name AS department_name,
+                COALESCE(et.name, 'Not Available') AS type_name
+            FROM employees e
+            LEFT JOIN departments d ON d.id = e.department_id
+            LEFT JOIN employment_types et ON et.id = e.employment_type
+            LEFT JOIN users u ON u.id = e.user_id
+            LEFT JOIN user_roles ur ON ur.id = u.role
+            WHERE e.active = FALSE
+            ORDER BY u.first_name, u.last_name`;
 
         return data.rows || null;
     } catch (error) {

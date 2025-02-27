@@ -105,6 +105,26 @@ export const UserModal: React.FC<UserModalProps> = ({ open, onClose, onSubmit, i
         },
     };
 
+    const resetForm = () => {
+        setFormData({
+            first_name: '',
+            middle_name: '',
+            last_name: '',
+            email: '',
+            password: '',
+            role: '',
+            active: '',
+            avatar: '',
+        });
+        setErrors({ first_name: false, last_name: false, email: false, password: false, role: false });
+    };
+
+    const handleClose = () => {
+        resetForm();
+        onClose();
+    };
+
+
     const getActiveValue = () => {
         if (formData.active === 'Yes') return '1';
         if (formData.active === 'No') return '0';
@@ -136,6 +156,7 @@ export const UserModal: React.FC<UserModalProps> = ({ open, onClose, onSubmit, i
             }
 
             onSubmit(data);
+            resetForm();  // Reset form after successful submission
             onClose();
         }
     };
@@ -303,7 +324,7 @@ export const UserModal: React.FC<UserModalProps> = ({ open, onClose, onSubmit, i
                             color: `${theme.palette.text.primary} !important`,
                             '&:hover': { backgroundColor: `${theme.palette.warning.dark} !important` }
                         }}
-                        onClick={onClose}
+                        onClick={handleClose} // Use handleClose instead of onClose
                     >
                         Cancel
                     </Button>
