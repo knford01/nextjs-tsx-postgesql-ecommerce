@@ -308,7 +308,7 @@ const EmployeeModal: React.FC<EmployeeModalProps> = ({ open, handleClose, employ
                         <Grid item xs={12} md={6}>
                             <StyledTextField
                                 label="Email"
-                                name="email"
+                                name="personal_email"
                                 type="email"
                                 value={employeeData.personal_email ?? ''}
                                 onChange={handleInputChange}
@@ -378,7 +378,6 @@ const EmployeeModal: React.FC<EmployeeModalProps> = ({ open, handleClose, employ
 
                     <Grid container spacing={2}>
                         <Grid item xs={6}>
-
                             <StyledTextField
                                 label="Start Date"
                                 name="start_date"
@@ -403,6 +402,23 @@ const EmployeeModal: React.FC<EmployeeModalProps> = ({ open, handleClose, employ
                                 InputLabelProps={{ shrink: true }}
                             />
                         </Grid>
+                    </Grid>
+
+                    <Grid container spacing={2}>
+                        <Grid item xs={6}>
+                            <StyledSelectField
+                                label="Active"
+                                name="active"
+                                value={employeeData.active ?? ''}
+                                onChange={handleInputChange}
+                                options={[{ value: 'true', display: 'True' }, { value: 'false', display: 'False' }]}
+                                required
+                                fullWidth
+                                margin="normal"
+                            />
+                        </Grid>
+
+                        <Grid item xs={6}></Grid>
                     </Grid>
                 </Box>
 
