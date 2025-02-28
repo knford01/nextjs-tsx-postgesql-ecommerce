@@ -6,6 +6,12 @@ export function toUpperCamelCase(str: string): string {
         .join('');     // Join the words back together without spaces
 }
 
+export function formatName(str: string): string {
+    return str
+        .replace(/_/g, ' ') // Replace underscores with spaces
+        .replace(/\b\w/g, (char) => char.toUpperCase()); // Capitalize each word
+}
+
 export function convertTo12Hour(time: string): string {
     const [hour, minute] = time.split(':');
     let hours = parseInt(hour);

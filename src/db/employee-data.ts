@@ -1,4 +1,4 @@
-// app/lib/data/employee-data.tsx
+// src/db/employee-data.tsx
 
 'use server';
 import { db, sql, QueryResult } from '@vercel/postgres';
@@ -221,6 +221,42 @@ export async function fetchEmployeeByUserId(userId: any): Promise<any> {
     }
 }
 
+export async function fetchEmployeeRow(employeeId: number): Promise<any> {
+    noStore();
+    try {
+        const data = await sql`SELECT * FROM employees WHERE id = ${employeeId};`;
+
+        return data.rows[0] || null;
+    } catch (error) {
+        console.error('Database Error:', error);
+        throw new Error('Failed to fetch employee row.');
+    }
+}
+
+export async function employeeHistory(action: string, employeeId: number, changeUser: number): Promise<void> {
+    noStore();
+
+    try {
+        // Fetch current employee data
+        const employeeData = await fetchEmployeeRow(employeeId);
+        if (!employeeData) {
+            throw new Error(`Employee with ID ${employeeId} not found.`);
+        }
+
+        // Convert the employee data to JSON format
+        const newValue = JSON.stringify(employeeData);
+
+        // Insert into history table
+        await sql`
+            INSERT INTO employee_history (history_id, action, new_value, change_user)
+            VALUES (${employeeId}, ${action}, ${newValue}, ${changeUser});
+        `;
+    } catch (error) {
+        console.error('Error logging employee history:', error);
+        throw new Error('Failed to log employee history.');
+    }
+}
+
 export async function createEmployee(employee: {
     user_id: number;
     department_id: number;
@@ -235,7 +271,7 @@ export async function createEmployee(employee: {
     start_date: string;
     end_date?: string;
     active?: boolean;
-}): Promise<any> {
+}, sessionUser: { id: number }): Promise<any> {
     try {
         // Assign default values for missing fields
         const sanitizedEmployee = {
@@ -270,6 +306,8 @@ export async function createEmployee(employee: {
             RETURNING *;
         `;
 
+        await employeeHistory('Created', result.rows[0].id, sessionUser.id);
+
         return result.rows[0];
     } catch (error) {
         console.error('Error creating employee:', error);
@@ -290,7 +328,7 @@ export async function updateEmployee(employeeId: number, updates: {
     start_date?: string;
     end_date?: string;
     active?: boolean;
-}): Promise<any> {
+}, sessionUser: { id: number }): Promise<any> {
     try {
         const result = await sql`
             UPDATE employees
@@ -303,7 +341,7 @@ export async function updateEmployee(employeeId: number, updates: {
                 city = COALESCE(${updates.city}, city),
                 state = COALESCE(${updates.state}, state),
                 zip = COALESCE(${updates.zip}, zip),
-                personal_email = COALESCE(${updates.personal_email}, personal_email),
+                personal_email = COALESCE(${updates.personal_email}, personal_email), 
                 start_date = COALESCE(${updates.start_date}, start_date),
                 end_date = COALESCE(${updates.end_date}, end_date),
                 active = COALESCE(${updates.active}, active)
@@ -314,6 +352,8 @@ export async function updateEmployee(employeeId: number, updates: {
         if (result.rowCount === 0) {
             throw new Error('Employee not found.');
         }
+
+        await employeeHistory('Updated', result.rows[0].id, sessionUser.id);
 
         return result.rows[0];
     } catch (error) {

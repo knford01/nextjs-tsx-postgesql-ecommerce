@@ -5,9 +5,10 @@ import { showErrorToast } from '@/components/ui/ButteredToast';
 import { useCombinedPermissions } from '@/components/layout/combinedpermissions';
 import { hasAccess } from '@/utils/permissions2';
 import { Button, useMediaQuery, useTheme } from '@mui/material';
-import { PencilIcon, PlusIcon } from '@heroicons/react/24/outline';
+import { PencilIcon, PlusIcon, ClockIcon } from '@heroicons/react/24/outline';
 import { fetchEmployees, fetchActiveEmployees, fetchInactiveEmployees, fetchEmployeeByUserId } from '@/db/employee-data';
 import EmployeeModal from '@/components/modals/EmployeeModal';
+import HistoryModal from '@/components/modals/HistoryModal';
 import Image from 'next/image';
 
 interface SearchParameters {
@@ -21,6 +22,7 @@ const EmployeesDataGrid: React.FC<{ searchParameters?: SearchParameters }> = ({ 
     const [employees, setEmployees] = useState<any[]>([]);
     const [modalOpen, setModalOpen] = useState(false);
     const [currentEmployeeId, setCurrentEmployeeId] = useState<number | undefined>(undefined);
+    const [historyModalOpen, setHistoryModalOpen] = useState(false);
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
     const userCanEdit = hasAccess(combinedPermissions, 'employees', 'edit_employees');
@@ -73,6 +75,19 @@ const EmployeesDataGrid: React.FC<{ searchParameters?: SearchParameters }> = ({ 
         setCurrentEmployeeId(undefined);
     };
 
+    const handleOpenHistoryModal = (employeeId?: number) => {
+        setCurrentEmployeeId(employeeId);
+
+        setTimeout(() => {
+            setHistoryModalOpen(true);
+        }, 0);
+    };
+
+    const handleCloseHistoryModal = () => {
+        setHistoryModalOpen(false);
+        setCurrentEmployeeId(undefined);
+    };
+
     const columns: GridColDef[] = [
         {
             field: 'avatar',
@@ -113,28 +128,54 @@ const EmployeesDataGrid: React.FC<{ searchParameters?: SearchParameters }> = ({ 
             sortable: false,
             minWidth: 250,
             renderCell: (params) => (
-                <Button
-                    variant="outlined"
-                    color="primary"
-                    onClick={() => handleOpenModal(params.row.id)}
-                    startIcon={<PencilIcon className="w-5" />}
-                    sx={{
-                        p: 1,
-                        pr: 0,
-                        mr: 1,
-                        backgroundColor: `${theme.palette.info.main} !important`,
-                        color: `${theme.palette.text.primary} !important`,
-                        borderColor: `${theme.palette.text.primary} !important`,
-                        '&:hover': {
-                            backgroundColor: `${theme.palette.info.dark} !important`,
-                            color: `${theme.palette.text.secondary} !important`,
-                        },
-                        [theme.breakpoints.down('sm')]: {
-                            minWidth: 'unset',
-                            padding: '4px 8px',
-                        },
-                    }}
-                ></Button>
+                <div style={{ gap: '8px' }}>
+                    {/* Edit Button */}
+                    <Button
+                        variant="outlined"
+                        color="primary"
+                        onClick={() => handleOpenModal(params.row.id)}
+                        startIcon={<PencilIcon className="w-5" />}
+                        sx={{
+                            p: 1,
+                            pr: 0,
+                            mr: 1,
+                            backgroundColor: `${theme.palette.info.main} !important`,
+                            color: `${theme.palette.text.primary} !important`,
+                            borderColor: `${theme.palette.text.primary} !important`,
+                            '&:hover': {
+                                backgroundColor: `${theme.palette.info.dark} !important`,
+                                color: `${theme.palette.text.secondary} !important`,
+                            },
+                            [theme.breakpoints.down('sm')]: {
+                                minWidth: 'unset',
+                                padding: '4px 8px',
+                            },
+                        }}
+                    />
+
+                    {/* History Button */}
+                    <Button
+                        variant="outlined"
+                        color="secondary"
+                        onClick={() => handleOpenHistoryModal(params.row.id)}
+                        startIcon={<ClockIcon className="w-5" />}
+                        sx={{
+                            p: 1,
+                            pr: 0,
+                            backgroundColor: `${theme.palette.warning.main} !important`,
+                            color: `${theme.palette.text.primary} !important`,
+                            borderColor: `${theme.palette.text.primary} !important`,
+                            '&:hover': {
+                                backgroundColor: `${theme.palette.warning.dark} !important`,
+                                color: `${theme.palette.text.secondary} !important`,
+                            },
+                            [theme.breakpoints.down('sm')]: {
+                                minWidth: 'unset',
+                                padding: '4px 8px',
+                            },
+                        }}
+                    />
+                </div>
             ),
         });
     }
@@ -168,6 +209,8 @@ const EmployeesDataGrid: React.FC<{ searchParameters?: SearchParameters }> = ({ 
             />
 
             <EmployeeModal open={modalOpen} handleClose={handleCloseModal} employeeId={currentEmployeeId} loadEmployees={loadEmployees} />
+
+            <HistoryModal open={historyModalOpen} handleClose={handleCloseHistoryModal} table='employee_history' id={currentEmployeeId} />
         </>
     );
 };

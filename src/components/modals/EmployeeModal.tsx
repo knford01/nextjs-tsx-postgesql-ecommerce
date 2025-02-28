@@ -177,15 +177,21 @@ const EmployeeModal: React.FC<EmployeeModalProps> = ({ open, handleClose, employ
         }
 
         try {
+            const session = await fetch('/api/auth/session').then(res => res.json());
+
+            if (!session.user) {
+                throw new Error("User is not authenticated");
+            }
+
             if (employeeId) {
-                await updateEmployee(employeeId, employeeData);
+                await updateEmployee(employeeId, employeeData, session.user);
                 showSuccessToast('Employee Updated Successfully');
             } else {
-                await createEmployee(employeeData);
+                await createEmployee(employeeData, session.user);
                 showSuccessToast('Employee Created Successfully');
             }
             handleClose();
-            loadEmployees();
+            await loadEmployees();
         } catch (error) {
             showErrorToast('Failed to save employee.');
         }
