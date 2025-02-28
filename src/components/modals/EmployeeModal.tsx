@@ -3,7 +3,8 @@ import { Modal, Button, Paper, Typography, Box, Grid } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { StyledSelectField, StyledTextField } from '@/styles/StyledTextField';
 import { showErrorToast, showSuccessToast } from '@/components/ui/ButteredToast';
-import { fetchEmployeeByUserId, fetchEmployeeById, createEmployee, updateEmployee, fetchDepartments } from '@/db/employee-data';
+import { fetchEmployeeByUserId, fetchEmployeeById, createEmployee, updateEmployee } from '@/db/employee-data';
+import { fetchActiveDepartments } from '@/db/employee-settings-data';
 import { fetchUsers, updateUser } from '@/db/user-data';
 
 interface EmployeeModalProps {
@@ -87,7 +88,7 @@ const EmployeeModal: React.FC<EmployeeModalProps> = ({ open, handleClose, employ
         };
         const loadDepartments = async () => {
             try {
-                const fetchedDepartments = await fetchDepartments();
+                const fetchedDepartments = await fetchActiveDepartments();
                 setDepartments(fetchedDepartments);
             } catch (error) {
                 showErrorToast('Failed to load departments.');

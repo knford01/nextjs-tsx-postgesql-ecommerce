@@ -365,7 +365,14 @@ export async function updateEmployee(employeeId: number, updates: {
 export async function fetchDepartments(): Promise<any> {
     noStore();
     try {
-        const data = await sql<any>`SELECT * FROM departments`;
+        const data = await sql<any>`
+            SELECT 
+                d.*, 
+                case 
+                    when d.active = TRUE then 'True'
+                    else 'False'
+                end as active_status
+            FROM departments d`;
 
         return data.rows || null;
     } catch (error) {

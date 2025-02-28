@@ -10,7 +10,7 @@ import EmployeesTab from '@/components/employees/EmployeesTab';
 // import attendanceTab from '@/components/employees/attendanceTab';
 // import ptoTab from '@/components/employees/ptoTab';
 // import reportsTab from '@/components/employees/reportsTab';
-// import settingsTab from '@/components/employees/settingsTab';
+import SettingsTab from '@/components/employees/SettingsTab';
 
 const EmployeesPage = ({ params }: any) => {
     const theme = useTheme();
@@ -86,9 +86,7 @@ const EmployeesPage = ({ params }: any) => {
             )}
 
             {activeTab === 5 && (
-                <Box sx={{ mt: 2 }}>
-                    <Typography>Settings section coming soon...</Typography>
-                </Box>
+                <SettingsTab />
             )}
         </Box>
     );
