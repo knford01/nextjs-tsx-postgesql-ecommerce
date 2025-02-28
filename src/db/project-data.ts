@@ -28,7 +28,7 @@ export async function fetchProjects() {
   }
 }
 
-export async function fetchProjectByID(id: number) {
+export async function fetchProjectByID(id: any) {
   noStore();
   try {
     const data = await sql<Project>`

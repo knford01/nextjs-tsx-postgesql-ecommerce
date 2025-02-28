@@ -26,7 +26,7 @@ export async function fetchCustomers() {
     }
 }
 
-export async function fetchCustomerById(id: number) {
+export async function fetchCustomerById(id: any) {
     noStore();
     try {
         const data = await sql<Customer>`

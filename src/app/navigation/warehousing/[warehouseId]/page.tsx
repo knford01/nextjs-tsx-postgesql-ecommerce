@@ -6,7 +6,7 @@ import { fetchWarehouseById } from '@/db/warehouse-data';
 import WarehouseModal from '@/components/modals/WarehouseModal';
 import { useCombinedPermissions } from '@/components/layout/combinedpermissions';
 import { hasAccess } from '@/utils/permissions2';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import DetailsTab from '@/components/warehousing/DetailsTab';
 import StagingTab from '@/components/warehousing/StagingTab';
 import PutAwayTab from '@/components/warehousing/PutAwayTab';
@@ -15,14 +15,15 @@ import ReportsTab from '@/components/warehousing/ReportsTab';
 import LocationsTab from '@/components/warehousing/LocationsTab';
 import SettingsTab from '@/components/warehousing/SettingsTab';
 
-const WarehouseProfilePage = ({ params }: any) => {
+const WarehouseProfilePage = () => {
     const theme = useTheme();
     const router = useRouter();
     const [warehouse, setWarehouse] = useState<any>(null);
     const [activeTab, setActiveTab] = useState<any>(0);
     const [isWarehouseModalOpen, setIsWarehouseModalOpen] = useState(false);
-    const { warehouseId } = params;
     const combinedPermissions = useCombinedPermissions();
+    const params = useParams();
+    const warehouseId = params.warehouseId as string;
 
     useEffect(() => {
         if (!hasAccess(combinedPermissions, 'navigation', 'warehousing')) {

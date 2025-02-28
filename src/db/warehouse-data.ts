@@ -38,7 +38,7 @@ export async function fetchWarehouses() {
     }
 }
 
-export async function fetchWarehouseById(id: number) {
+export async function fetchWarehouseById(id: any) {
     noStore();
     try {
         const data = await sql<Warehouse>` 

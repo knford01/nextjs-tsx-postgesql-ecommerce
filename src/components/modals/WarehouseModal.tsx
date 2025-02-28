@@ -10,7 +10,7 @@ import { useRouter } from 'next/navigation';
 interface WarehouseModalProps {
     open: boolean;
     handleClose: () => void;
-    warehouseId?: number; // Optional warehouse ID for editing
+    warehouseId?: any; // Optional warehouse ID for editing
     onSave: () => void;
 }
 

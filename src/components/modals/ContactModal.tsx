@@ -9,7 +9,7 @@ interface ContactModalProps {
     open: boolean;
     handleClose: () => void;
     contactId?: string; // Optional contact ID for editing
-    customer_id?: number;
+    customer_id?: any;
     onSave: () => void;  // Callback to trigger when the contact is saved
 }
 
@@ -117,7 +117,7 @@ const ContactModal: React.FC<ContactModalProps> = ({ open, handleClose, contactI
                 <StyledTextField
                     label="First Name"
                     name="first_name"
-                    value={contactData.first_name}
+                    value={contactData.first_name ?? ''}
                     onChange={handleInputChange}
                     required
                     error={errors.first_name}
@@ -129,7 +129,7 @@ const ContactModal: React.FC<ContactModalProps> = ({ open, handleClose, contactI
                 <StyledTextField
                     label="Last Name"
                     name="last_name"
-                    value={contactData.last_name}
+                    value={contactData.last_name ?? ''}
                     onChange={handleInputChange}
                     required
                     error={errors.last_name}
@@ -141,7 +141,7 @@ const ContactModal: React.FC<ContactModalProps> = ({ open, handleClose, contactI
                 <StyledTextField
                     label="Phone Number"
                     name="phone_number"
-                    value={contactData.phone_number}
+                    value={contactData.phone_number ?? ''}
                     onChange={handleInputChange}
                     required
                     error={errors.phone_number}
@@ -153,7 +153,7 @@ const ContactModal: React.FC<ContactModalProps> = ({ open, handleClose, contactI
                 <StyledTextField
                     label="Extension"
                     name="ext"
-                    value={contactData.ext}
+                    value={contactData.ext ?? ''}
                     onChange={handleInputChange}
                     fullWidth
                     margin="normal"
@@ -162,7 +162,7 @@ const ContactModal: React.FC<ContactModalProps> = ({ open, handleClose, contactI
                 <StyledTextField
                     label="Email"
                     name="email"
-                    value={contactData.email}
+                    value={contactData.email ?? ''}
                     onChange={handleInputChange}
                     required
                     error={errors.email}
@@ -174,7 +174,7 @@ const ContactModal: React.FC<ContactModalProps> = ({ open, handleClose, contactI
                 <StyledSelectField
                     label="Primary Contact"
                     name="main"
-                    value={contactData.main}
+                    value={(contactData.main ?? 0).toString()}
                     onChange={handleInputChange}
                     options={[
                         { value: 1, display: 'Yes' },

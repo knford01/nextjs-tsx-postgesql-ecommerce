@@ -14,9 +14,9 @@ import ReportsTab from '@/components/customers/ReportsTab';
 import ProjectsTab from '@/components/customers/ProjectsTab';
 import { useCombinedPermissions } from '@/components/layout/combinedpermissions';
 import { hasAccess } from '@/utils/permissions2';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 
-const CustomerProfilePage = ({ params }: any) => {
+const CustomerProfilePage = () => {
     const theme = useTheme();
     const router = useRouter();
     const [customer, setCustomer] = useState<any>(null);
@@ -27,7 +27,8 @@ const CustomerProfilePage = ({ params }: any) => {
     const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
     const [selectedContactId, setSelectedContactId] = useState<string | null>(null);
     const [emails, setEmails] = useState<any>([]);
-    const { customerId } = params;
+    const params = useParams();
+    const customerId = params.customerId as string;
 
     const combinedPermissions = useCombinedPermissions();
     useEffect(() => {

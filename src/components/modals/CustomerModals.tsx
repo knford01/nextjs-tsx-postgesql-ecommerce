@@ -10,7 +10,7 @@ import { useRouter } from 'next/navigation';
 interface CustomerModalProps {
     open: boolean;
     handleClose: () => void;
-    customerId?: number; // Optional customer ID for editing
+    customerId?: any; // Optional customer ID for editing
     onSave: () => void;
 }
 

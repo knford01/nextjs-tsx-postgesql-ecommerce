@@ -10,10 +10,10 @@ import ProjectContactModal from '@/components/modals/ProjectContactModal';
 import DetailsTab from '@/components/projects/DetailsTab';
 import { useCombinedPermissions } from '@/components/layout/combinedpermissions';
 import { hasAccess } from '@/utils/permissions2';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import ProjectSettingsModal from '@/components/modals/ProjectSettingsModal';
 
-const ProjectProfilePage = ({ params }: any) => {
+const ProjectProfilePage = () => {
     const theme = useTheme();
     const router = useRouter();
     const [project, setProject] = useState<any>(null);
@@ -21,7 +21,8 @@ const ProjectProfilePage = ({ params }: any) => {
     const [isProjectModalOpen, setIsProjectModalOpen] = useState(false);
     const [isProjectContactModalOpen, setIsProjectContactModalOpen] = useState(false);
     const [isProjectSettingsModalOpen, setIsProjectSettingsModalOpen] = useState(false);
-    const { projectId } = params;
+    const params = useParams();
+    const projectId = params.projectId as string;
 
     const combinedPermissions = useCombinedPermissions();
     useEffect(() => {

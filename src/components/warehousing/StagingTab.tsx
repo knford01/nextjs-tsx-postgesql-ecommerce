@@ -11,7 +11,7 @@ import { useRouter } from 'next/navigation';
 
 const StagingDataGrid = dynamic(() => import('@/components/datagrid/WarehouseStagingDataGrid'), { ssr: false });
 
-export default function LocationsTab({ warehouseId }: { warehouseId: number }) {
+export default function LocationsTab({ warehouseId }: { warehouseId: any }) {
     const router = useRouter();
     const combinedPermissions = useCombinedPermissions();
 
