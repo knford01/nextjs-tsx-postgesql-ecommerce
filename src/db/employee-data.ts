@@ -195,12 +195,15 @@ export async function fetchEmployeeByUserId(userId: any): Promise<any> {
                 u.role,
                 ur.display as role_display,
                 u.email, 
-                EXTRACT(DAY FROM (
-                    CASE 
-                        WHEN e.end_date IS NOT NULL THEN CAST(e.end_date AS DATE)
-                        ELSE NOW()
-                    END - CAST(e.start_date AS DATE)
-                )) AS time_employed,
+                CONCAT(
+                    EXTRACT(DAY FROM (
+                        CASE 
+                            WHEN NULLIF(e.end_date, '') IS NOT NULL THEN CAST(NULLIF(e.end_date, '') AS DATE)
+                            ELSE NOW()
+                        END - CAST(NULLIF(e.start_date, '') AS DATE)
+                    )), 
+                    ' Days'
+                ) AS time_employed,
                 CASE 
                     WHEN e.active = TRUE THEN 'Active'
                     ELSE 'In Active'
@@ -214,7 +217,7 @@ export async function fetchEmployeeByUserId(userId: any): Promise<any> {
             left join user_roles ur on ur.id = u.role
             WHERE u.id = ${userId}`;
 
-        return data.rows[0] || null;
+        return data.rows || null;
     } catch (error) {
         console.error('Database Error:', error);
         throw new Error('Failed to fetch employees.');

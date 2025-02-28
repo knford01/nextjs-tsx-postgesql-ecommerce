@@ -5,7 +5,7 @@ import { StyledSelectField, StyledTextField } from '@/styles/StyledTextField';
 import { showErrorToast, showSuccessToast } from '@/components/ui/ButteredToast';
 import { fetchEmployeeByUserId, fetchEmployeeById, createEmployee, updateEmployee } from '@/db/employee-data';
 import { fetchActiveDepartments } from '@/db/employee-settings-data';
-import { fetchUsers, updateUser } from '@/db/user-data';
+import { fetchActiveUsersNotEmployees } from '@/db/user-data';
 
 interface EmployeeModalProps {
     open: boolean;
@@ -80,7 +80,7 @@ const EmployeeModal: React.FC<EmployeeModalProps> = ({ open, handleClose, employ
     useEffect(() => {
         const loadUsers = async () => {
             try {
-                const fetchedUsers = await fetchUsers();
+                const fetchedUsers = await fetchActiveUsersNotEmployees();
                 setUsers(fetchedUsers);
             } catch (error) {
                 showErrorToast('Failed to load users.');
@@ -159,8 +159,6 @@ const EmployeeModal: React.FC<EmployeeModalProps> = ({ open, handleClose, employ
 
 
     const handleSubmit = async () => {
-        console.log('handleSubmit employeeData:', employeeData);
-
         const requiredFields = ['user_id', 'department_id'];
         const hasErrors = requiredFields.some(
             (field) => !employeeData[field] || (typeof employeeData[field] === 'string' && employeeData[field].trim() === '')
@@ -224,21 +222,23 @@ const EmployeeModal: React.FC<EmployeeModalProps> = ({ open, handleClose, employ
                         Personal Details
                     </Typography>
 
-                    <Grid container spacing={2}>
-                        <Grid item xs={12} md={12}>
-                            <StyledSelectField
-                                label="User"
-                                name="user_id"
-                                value={employeeData.user_id ?? ''}
-                                onChange={handleUserChange}
-                                options={users.map((user: any) => ({ value: user.id, display: `${user.first_name} ${user.last_name}` }))}
-                                required
-                                error={errors.user_id}
-                                helperText={errors.user_id ? 'User is required' : ''}
-                                disabled={!!employeeId}
-                            />
+                    {!employeeData.user_id && (
+                        <Grid container spacing={2}>
+                            <Grid item xs={12} md={12}>
+                                <StyledSelectField
+                                    label="User"
+                                    name="user_id"
+                                    value={employeeData.user_id ?? ''}
+                                    onChange={handleUserChange}
+                                    options={users.map((user: any) => ({ value: user.id, display: `${user.first_name} ${user.last_name}` }))}
+                                    required
+                                    error={errors.user_id}
+                                    helperText={errors.user_id ? 'User is required' : ''}
+                                    disabled={!!employeeId}
+                                />
+                            </Grid>
                         </Grid>
-                    </Grid>
+                    )}
 
                     <Grid container spacing={2}>
                         <Grid item xs={6}>
@@ -294,7 +294,7 @@ const EmployeeModal: React.FC<EmployeeModalProps> = ({ open, handleClose, employ
                     </Grid>
 
                     <Grid container spacing={2}>
-                        <Grid item xs={6}>
+                        {/* <Grid item xs={6}>
                             <StyledTextField
                                 label="Social Security Number"
                                 name="social_number"
@@ -304,7 +304,7 @@ const EmployeeModal: React.FC<EmployeeModalProps> = ({ open, handleClose, employ
                                 margin="normal"
                                 placeholder="XXX-XX-XXXX"
                             />
-                        </Grid>
+                        </Grid> */}
 
                         <Grid item xs={12} md={6}>
                             <StyledTextField

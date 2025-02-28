@@ -10,6 +10,7 @@ import { fetchEmployees, fetchActiveEmployees, fetchInactiveEmployees, fetchEmpl
 import EmployeeModal from '@/components/modals/EmployeeModal';
 import HistoryModal from '@/components/modals/HistoryModal';
 import Image from 'next/image';
+import Link from 'next/link';
 
 interface SearchParameters {
     status?: { value: string; label: string };
@@ -89,6 +90,21 @@ const EmployeesDataGrid: React.FC<{ searchParameters?: SearchParameters }> = ({ 
     };
 
     const columns: GridColDef[] = [
+        {
+            field: 'view',
+            headerName: 'View',
+            minWidth: 70,
+            flex: 0.2,
+            sortable: false,
+            renderCell: (params) => (
+                <Link
+                    href={`/navigation/employees/${params.row.id}`}
+                    style={{ textDecoration: 'none', color: theme.palette.text.primary, fontWeight: 'bold' }}
+                >
+                    Visit
+                </Link>
+            ),
+        },
         {
             field: 'avatar',
             headerName: 'Avatar',

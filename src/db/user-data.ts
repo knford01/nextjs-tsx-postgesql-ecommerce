@@ -71,13 +71,45 @@ export async function fetchUsers() {
           end as active
         FROM users u
         left join user_roles ur on ur.id = u.role
-        ORDER BY first_name ASC`;
+        ORDER BY first_name, last_name ASC`;
 
         const users = data.rows;
         return users;
     } catch (err) {
         console.error('Database Error:', err);
         throw new Error('Failed to fetch all users.');
+    }
+}
+
+export async function fetchActiveUsersNotEmployees() {
+    noStore();
+    try {
+        const data = await sql<User>` 
+        SELECT
+          u.id,
+          u.first_name,
+          u.middle_name,
+          u.last_name,
+          u.avatar,
+          u.role,
+          ur.display as role_display,
+          u.email, 
+          'Enter New Password to Change' as password,
+          case
+            when u.active = 1 then 'Yes'
+            else 'No'
+          end as active
+        FROM users u
+        left join user_roles ur on ur.id = u.role
+        WHERE u.id not in (SELECT user_id from employees)
+        and u.active = 1
+        ORDER BY first_name, last_name ASC`;
+
+        const users = data.rows;
+        return users;
+    } catch (err) {
+        console.error('Database Error:', err);
+        throw new Error('Failed to fetch users that arent employees.');
     }
 }
 

@@ -280,7 +280,7 @@ const TopNav: React.FC<TopNavProps> = ({ collapsed, sessionUser, checkSession })
                 onClose={handleClose}
                 PaperProps={{
                     sx: {
-                        backgroundColor: theme.palette.primary.contrastText,
+                        backgroundColor: theme.palette.primary.main,
                         color: theme.palette.text.primary,
                     },
                 }}

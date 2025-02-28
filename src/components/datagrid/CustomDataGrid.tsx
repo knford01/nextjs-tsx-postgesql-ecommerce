@@ -33,7 +33,7 @@ const CustomDataGrid: React.FC<CustomDataGridProps> = ({
     const theme = useTheme();
 
     const handleCellClick = (params: GridCellParams) => {
-        if (params.field !== 'avatar' && params.value) {
+        if (params.field !== 'avatar' && params.field !== 'view' && params.value) {
             copyToClipboard(params.value.toString());
             setTooltipInfo({ rowId: params.id, field: params.field });
             setTimeout(() => setTooltipInfo(null), 2000); // Hide the tooltip after 2 seconds
@@ -95,7 +95,7 @@ const CustomDataGrid: React.FC<CustomDataGridProps> = ({
                         rows={rows}
                         columns={columns.map(col => ({
                             ...col,
-                            renderCell: col.field !== 'avatar' && col.field !== 'actions' ? renderCell : col.renderCell,
+                            renderCell: col.field !== 'avatar' && col.field !== 'actions' && col.field !== 'view' ? renderCell : col.renderCell,
                         }))}
                         checkboxSelection
                         disableRowSelectionOnClick
