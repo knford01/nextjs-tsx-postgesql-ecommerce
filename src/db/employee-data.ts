@@ -224,6 +224,50 @@ export async function fetchEmployeeByUserId(userId: any): Promise<any> {
     }
 }
 
+export async function fetchActiveEmployeesByDepartment(departmentId: any): Promise<any> {
+    noStore();
+    try {
+        const data = await sql<any>` 
+            SELECT 
+                e.*,
+                u.id as user_id,
+                u.first_name,
+                u.middle_name,
+                u.last_name,
+                u.avatar,
+                u.role,
+                ur.display as role_display,
+                u.email, 
+                CONCAT(
+                    EXTRACT(DAY FROM (
+                        CASE 
+                            WHEN NULLIF(e.end_date, '') IS NOT NULL THEN CAST(NULLIF(e.end_date, '') AS DATE)
+                            ELSE NOW()
+                        END - CAST(NULLIF(e.start_date, '') AS DATE)
+                    )), 
+                    ' Days'
+                ) AS time_employed,
+                CASE 
+                    WHEN e.active = TRUE THEN 'Active'
+                    ELSE 'In Active'
+                END AS active_status,
+                d.name AS department_name,
+                COALESCE(et.name, 'Not Available') AS type_name
+            FROM users u
+            LEFT JOIN employees e on e.user_id = u.id
+            LEFT JOIN departments d ON d.id = e.department_id
+            LEFT JOIN employment_types et ON et.id = e.employment_type
+            left join user_roles ur on ur.id = u.role
+            WHERE e.department_id = ${departmentId}
+            and e.active = TRUE`;
+
+        return data.rows || null;
+    } catch (error) {
+        console.error('Database Error:', error);
+        throw new Error('Failed to fetch employees.');
+    }
+}
+
 export async function fetchEmployeeRow(employeeId: number): Promise<any> {
     noStore();
     try {
@@ -294,7 +338,7 @@ export async function createEmployee(employee: {
         };
 
         // Log the sanitized data
-        console.log('Sanitized Employee Data:', sanitizedEmployee);
+        // console.log('Sanitized Employee Data:', sanitizedEmployee);
 
         const result = await sql`
             INSERT INTO employees (
@@ -362,24 +406,5 @@ export async function updateEmployee(employeeId: number, updates: {
     } catch (error) {
         console.error('Error updating employee:', error);
         throw new Error('Failed to update employee.');
-    }
-}
-
-export async function fetchDepartments(): Promise<any> {
-    noStore();
-    try {
-        const data = await sql<any>`
-            SELECT 
-                d.*, 
-                case 
-                    when d.active = TRUE then 'True'
-                    else 'False'
-                end as active_status
-            FROM departments d`;
-
-        return data.rows || null;
-    } catch (error) {
-        console.error('Database Error:', error);
-        throw new Error('Failed to fetch departments.');
     }
 }

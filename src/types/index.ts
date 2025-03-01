@@ -75,6 +75,36 @@ type Contact = {
     active: number;
 };
 
+interface Employee {
+    id: number;
+    user_id: number;
+    first_name: string;
+    middle_name: string | null;
+    last_name: string;
+    email: string;
+    personal_email: string | null;
+    role: number;
+    role_display: string;
+    department_id: number;
+    department_name: string;
+    employment_type: string | null;
+    type_name: string;
+    start_date: string;
+    end_date: string | null;
+    time_employed: string;
+    active: boolean;
+    active_status: string;
+    dob: string;
+    social_number: string | null;
+    address1: string | null;
+    address2: string | null;
+    city: string | null;
+    state: string | null;
+    zip: string | null;
+    avatar: string;
+    date_created: string;
+}
+
 type Item = {
     id: number; // Primary key
     customer_id: number;
@@ -134,6 +164,11 @@ interface Notice {
     name?: string;
     color?: string;
     date_viewed: string;
+}
+
+interface OptionType {
+    value: string;
+    label: string;
 }
 
 type Project = {

@@ -28,7 +28,6 @@ const EmployeeProfilePage = () => {
             try {
                 const employeeData = await fetchEmployeeById(employeeId);
                 setEmployee(employeeData);
-                console.log("employee: ", employee);
             } catch (error) {
                 console.error('Failed to load employee data:', error);
             }

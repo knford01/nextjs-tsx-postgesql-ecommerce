@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from 'react';
 import Container from '@mui/material/Container';
-import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import dynamic from 'next/dynamic';
 import { useTheme } from '@mui/material/styles';
@@ -10,6 +9,7 @@ import { useCombinedPermissions } from '@/components/layout/combinedpermissions'
 import { hasAccess } from '@/utils/permissions2';
 import { useRouter } from 'next/navigation';
 import { StyledSearchableSelect } from '@/styles/StyledTextField';
+import ClearButton from '@/components/ui/buttons/ClearButton';
 
 const EmployeesDataGrid = dynamic(() => import('@/components/datagrid/EmployeesDataGrid'), { ssr: false });
 
@@ -68,17 +68,7 @@ export default function EmployeesTab() {
             {userCanEdit && (
                 <Grid container spacing={2} sx={{ mb: 1.5 }} alignItems="center">
                     <Grid item sx={{ mt: 1 }}>
-                        <Button
-                            variant="contained"
-                            sx={{
-                                backgroundColor: `${theme.palette.warning.main} !important`,
-                                color: `${theme.palette.text.primary} !important`,
-                                '&:hover': { backgroundColor: `${theme.palette.warning.dark} !important` }
-                            }}
-                            onClick={clearSearchParameters}
-                        >
-                            Clear
-                        </Button>
+                        <ClearButton onClick={clearSearchParameters} />
                     </Grid>
                     <Grid item xs={2}>
                         <StyledSearchableSelect

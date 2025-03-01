@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import Container from '@mui/material/Container';
-import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import dynamic from 'next/dynamic';
 import { useTheme } from '@mui/material/styles';
@@ -10,6 +9,7 @@ import { useRouter } from 'next/navigation';
 import { StyledSearchableSelect, StyledTextField } from '@/styles/StyledTextField';
 import { fetchActiveWarehouses, fetchActiveWarehouseLocations, fetchWarehouseLocationsByWarehouseId } from '@/db/warehouse-data';
 import { fetchActiveItems, fetchActiveItemsByWarehouseId } from '@/db/item-data';
+import ClearButton from '@/components/ui/buttons/ClearButton';
 
 const InventoryDataGrid = dynamic(() => import('@/components/datagrid/InventoryDataGrid'), { ssr: false });
 
@@ -93,17 +93,7 @@ export default function InventoryTab() {
         >
             <Grid container spacing={2} sx={{ mb: 1.5 }} alignItems="center">
                 <Grid item sx={{ mt: 1 }}>
-                    <Button
-                        variant="contained"
-                        sx={{
-                            backgroundColor: `${theme.palette.warning.main} !important`,
-                            color: `${theme.palette.text.primary} !important`,
-                            '&:hover': { backgroundColor: `${theme.palette.warning.dark} !important` }
-                        }}
-                        onClick={clearsearchParameters}
-                    >
-                        Clear
-                    </Button>
+                    <ClearButton onClick={clearsearchParameters} />
                 </Grid>
                 {/* <Grid item sx={{ mt: 1 }}>
                     <Button

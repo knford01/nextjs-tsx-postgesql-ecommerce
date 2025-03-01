@@ -14,7 +14,8 @@ export async function fetchDepartments(): Promise<any> {
                     when d.active = TRUE then 'True'
                     else 'False'
                 end as active_status
-            FROM departments d`;
+            FROM departments d
+            order by name`;
 
         return data.rows || null;
     } catch (error) {
@@ -30,7 +31,8 @@ export async function fetchActiveDepartments(): Promise<any> {
             SELECT 
                 d.*
             FROM departments d
-            where d.active = TRUE`;
+            where d.active = TRUE
+            order by name`;
 
         return data.rows || null;
     } catch (error) {

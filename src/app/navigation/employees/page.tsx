@@ -6,10 +6,10 @@ import { useCombinedPermissions } from '@/components/layout/combinedpermissions'
 import { hasAccess } from '@/utils/permissions2';
 import { useRouter } from 'next/navigation';
 import EmployeesTab from '@/components/employees/EmployeesTab';
-// import schedulingTab from '@/components/employees/schedulingTab';
-// import attendanceTab from '@/components/employees/attendanceTab';
-// import ptoTab from '@/components/employees/ptoTab';
-// import reportsTab from '@/components/employees/reportsTab';
+import SchedulingTab from '@/components/employees/SchedulingTab';
+// import TimeLogTab from '@/components/employees/TimeLogTab';
+// import PTOLeaveTab from '@/components/employees/PTOLeaveTab';
+// import ReportsTab from '@/components/employees/ReportsTab';
 import SettingsTab from '@/components/employees/SettingsTab';
 
 const EmployeesPage = ({ params }: any) => {
@@ -31,7 +31,7 @@ const EmployeesPage = ({ params }: any) => {
     const tabsConfig = [
         { label: 'Employees', permission: 'employees' },
         { label: 'Scheduling', permission: 'scheduling' },
-        { label: 'Attendance', permission: 'attendance' },
+        { label: 'Time Logs', permission: 'time_logs' },
         { label: 'PTO Leave', permission: 'pto' },
         { label: 'Reports', permission: 'reports' },
         { label: 'Settings', permission: 'settings' },
@@ -62,14 +62,12 @@ const EmployeesPage = ({ params }: any) => {
             )}
 
             {activeTab === 1 && (
-                <Box sx={{ mt: 2 }}>
-                    <Typography>Scheduling section coming soon...</Typography>
-                </Box>
+                <SchedulingTab />
             )}
 
             {activeTab === 2 && (
                 <Box sx={{ mt: 2 }}>
-                    <Typography>Attendance section coming soon...</Typography>
+                    <Typography>Time Logs section coming soon...</Typography>
                 </Box>
             )}
 
