@@ -4,7 +4,6 @@ import { useTheme } from '@mui/material/styles';
 import { showErrorToast, showSuccessToast } from '@/components/ui/ButteredToast';
 import { createSchedule, updateSchedule } from '@/db/schedule-data';
 import { StyledTextField } from '@/styles/StyledTextField';
-import { format } from 'date-fns';
 
 interface ShiftModalProps {
     open: boolean;
@@ -104,7 +103,7 @@ const ShiftModal: React.FC<ShiftModalProps> = ({ open, handleClose, employee, sc
                 <StyledTextField
                     label="Employee"
                     name="employee"
-                    value={`${employee.first_name} ${employee.last_name}`}
+                    value={`${employee?.first_name} ${employee?.last_name}`}
                     readOnly
                     fullWidth
                     margin="normal"

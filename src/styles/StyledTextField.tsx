@@ -5,31 +5,31 @@ import Select, { Props as SelectProps, MultiValue, StylesConfig, GroupBase } fro
 
 export const StyledTextField = (props: any) => {
     const theme = useTheme();
-    const { multiline, rows } = props;
+    const { multiline, rows, type } = props;
 
     const commonTextFieldStyles = {
         '& .MuiInputBase-root': {
             backgroundColor: `${theme.palette.text.primary} !important`,
             color: `${theme.palette.text.secondary} !important`,
-            height: multiline ? 'auto' : '2.5em', // Auto height for multiline
+            height: multiline ? 'auto' : '2.5em',
             display: 'flex',
             alignItems: 'center',
             padding: '0 4px',
         },
         '& .MuiInputBase-input': {
-            height: multiline ? 'auto' : '100%', // Allow auto-resize for multiline
+            height: multiline ? 'auto' : '100%',
             boxSizing: 'border-box',
         },
         '& .MuiInputLabel-root': {
             color: `${theme.palette.text.secondary} !important`,
-            top: '50%',
-            transform: 'translate(14px, -50%) scale(1)', // Center label
+            top: type === 'time' ? '-6px' : '50%',
+            transform: type === 'time' ? 'translate(14px, 0) scale(0.75)' : 'translate(14px, -50%) scale(1)',
             transition: 'all 0.2s ease',
         },
         '& .MuiInputLabel-shrink': {
             color: `${theme.palette.text.secondary} !important`,
             top: '-6px',
-            transform: 'translate(14px, 0) scale(0.75)', // Move label to top-left when focused or filled
+            transform: 'translate(14px, 0) scale(0.75)',
         },
         mt: 1,
     };
@@ -43,7 +43,6 @@ export const StyledTextField = (props: any) => {
         />
     );
 };
-
 
 interface Option {
     value: any;
