@@ -134,7 +134,13 @@ const ServicesSection = () => {
         <div className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {services.map((service, index) => (
             <div key={index} className="p-6 bg-white border border-borderBottom rounded-lg shadow-lg text-left">
-              <img src={service.image} alt={service.title} className="w-full h-40 object-cover rounded-md" />
+              <Image
+                src={service.image}
+                alt={service.title}
+                width={500}
+                height={250}
+                className="rounded-md object-cover"
+              />
               <h3 className="text-xl font-semibold text-actionHover mt-4">{service.title}</h3>
               <p className="text-sm text-gray-600 mt-2">{service.description}</p>
             </div>
@@ -190,7 +196,13 @@ const SoftwareSuite = () => {
         <div className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {softwareServices.map((service, index) => (
             <div key={index} className="p-6 bg-white border border-borderBottom rounded-lg shadow-lg text-left">
-              <img src={service.image} alt={service.title} className="w-full h-40 object-cover rounded-md" />
+              <Image
+                src={service.image}
+                alt={service.title}
+                width={500}
+                height={250}
+                className="rounded-md object-cover"
+              />
               <h3 className="text-xl font-semibold text-actionHover mt-4">{service.title}</h3>
               <p className="text-sm text-gray-600 mt-2">{service.description}</p>
             </div>
