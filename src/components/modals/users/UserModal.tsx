@@ -1,9 +1,10 @@
 // app/ui/components/modals/UserModal.tsx
 
 import React, { useState, useEffect } from 'react';
-import { Box, Button, MenuItem, Modal, TextField, Typography } from '@mui/material';
+import { Box, Button, MenuItem, Modal, TextField, Typography, IconButton, Tooltip, InputAdornment } from '@mui/material';
+import { Visibility, VisibilityOff, InfoOutlined } from '@mui/icons-material';
 import { useTheme } from '@mui/material/styles';
-import { setUserStatus, fetchUserRoles, createUser, updateUser } from '@/db/user-data';
+import { fetchUserRoles, createUser, updateUser } from '@/db/user-data';
 import Image from 'next/image';
 import { showSuccessToast } from '../../ui/ButteredToast';
 
@@ -20,6 +21,7 @@ export const UserModal: React.FC<UserModalProps> = ({ open, onClose, onSubmit, i
     const [formData, setFormData] = useState(row || {});
     const [roles, setRoles] = useState<{ id: number, display: string }[]>([]);
     const [errors, setErrors] = useState({ first_name: false, last_name: false, email: false, password: false, role: false });
+    const [showPassword, setShowPassword] = useState(false);
 
     useEffect(() => {
         if (id) {
@@ -105,6 +107,27 @@ export const UserModal: React.FC<UserModalProps> = ({ open, onClose, onSubmit, i
         },
     };
 
+    const validatePassword = (password: string) => {
+        if (password === 'Enter New Password to Change') {
+            return true; // Allow the default placeholder
+        }
+        const minLength = password.length >= 6;
+        const hasNumber = /\d/.test(password);
+        const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+        return minLength && hasNumber && hasSpecialChar;
+    };
+
+    const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const password = e.target.value;
+        setFormData({ ...formData, password });
+
+        if (password !== 'Enter New Password to Change') {
+            setErrors({ ...errors, password: !validatePassword(password) });
+        } else {
+            setErrors({ ...errors, password: false });
+        }
+    };
+
     const resetForm = () => {
         setFormData({
             first_name: '',
@@ -119,24 +142,12 @@ export const UserModal: React.FC<UserModalProps> = ({ open, onClose, onSubmit, i
         setErrors({ first_name: false, last_name: false, email: false, password: false, role: false });
     };
 
-    const handleClose = () => {
-        resetForm();
-        onClose();
-    };
-
-
-    const getActiveValue = () => {
-        if (formData.active === 'Yes') return '1';
-        if (formData.active === 'No') return '0';
-        return '';
-    };
-
     const handleSubmit = async () => {
         const newErrors = {
             first_name: !formData.first_name,
             last_name: !formData.last_name,
             email: !formData.email,
-            password: !formData.password,
+            password: formData.password !== 'Enter New Password to Change' && !validatePassword(formData.password || ''),
             role: !formData.role,
         };
         setErrors(newErrors);
@@ -144,7 +155,7 @@ export const UserModal: React.FC<UserModalProps> = ({ open, onClose, onSubmit, i
         if (!Object.values(newErrors).some(error => error)) {
             const data = {
                 ...formData,
-                active: getActiveValue(),
+                active: formData.active === 'Yes' ? '1' : formData.active === 'No' ? '0' : '',
             };
 
             if (id) {
@@ -152,11 +163,11 @@ export const UserModal: React.FC<UserModalProps> = ({ open, onClose, onSubmit, i
                 showSuccessToast('User Updated');
             } else {
                 await createUser(data);
-                showSuccessToast('User created');
+                showSuccessToast('User Created');
             }
 
             onSubmit(data);
-            resetForm();  // Reset form after successful submission
+            resetForm();
             onClose();
         }
     };
@@ -241,18 +252,66 @@ export const UserModal: React.FC<UserModalProps> = ({ open, onClose, onSubmit, i
                     {...commonTextFieldStyles}
                 />
 
-                <TextField
-                    label="Password"
-                    name="password"
-                    // type="password"
-                    value={formData.password || ''}
-                    onChange={handleChange}
-                    required
-                    error={errors.password}
-                    helperText={errors.password ? 'Password is required' : ''}
-                    fullWidth
-                    {...commonTextFieldStyles}
-                />
+                <Tooltip
+                    title="Password must be at least 6 characters long, contain at least one number, and one special character."
+                    placement="right"
+                    arrow
+                >
+                    <TextField
+                        label="Password"
+                        name="password"
+                        type={showPassword ? 'text' : 'password'}
+                        value={formData.password || ''}
+                        onChange={handlePasswordChange}
+                        required
+                        error={errors.password}
+                        helperText={errors.password ? 'Password does not meet requirements' : ''}
+                        fullWidth
+                        sx={{
+                            mt: 2,
+                            '& .MuiInputBase-root': {
+                                bgcolor: `${theme.palette.text.primary} !important`,
+                                color: `${theme.palette.text.secondary} !important`,
+                                height: '2.5em',
+                                padding: '10px 6px',
+                                boxSizing: 'border-box',
+                                display: 'flex',
+                                alignItems: 'center',
+                            },
+                            '& .MuiInputLabel-root': {
+                                color: `${theme.palette.text.secondary} !important`,
+                            },
+                        }}
+                        InputProps={{
+                            endAdornment: (
+                                <InputAdornment position="end">
+                                    <IconButton onClick={() => setShowPassword(!showPassword)} edge="end"
+                                        sx={{
+                                            backgroundColor: `${theme.palette.text.secondary} !important`,
+                                            padding: '4px',
+                                            borderRadius: '4px',
+                                        }}
+                                    >
+                                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                                    </IconButton>
+                                    <InfoOutlined sx={{ ml: 2, color: theme.palette.info.main }} />
+                                </InputAdornment>
+                            ),
+                        }}
+                        InputLabelProps={{
+                            sx: {
+                                '&.MuiInputLabel-shrink': {
+                                    color: `${theme.palette.text.secondary} !important`,
+                                    transform: 'translate(.5, -2.5px) scale(0.75)',
+                                },
+                                '&:not(.MuiInputLabel-shrink)': {
+                                    color: `${theme.palette.text.secondary} !important`,
+                                    transform: 'translate(14px, 10px) scale(1)',
+                                },
+                            },
+                        }}
+                    />
+                </Tooltip>
 
                 <TextField
                     select
@@ -304,14 +363,13 @@ export const UserModal: React.FC<UserModalProps> = ({ open, onClose, onSubmit, i
                         <input type="file" hidden onChange={handleFileChange} />
                     </Button>
                 </Box>
-
                 <Box sx={{ pt: 3, display: 'flex', justifyContent: 'center', gap: 2 }}>
                     <Button
                         variant="contained"
                         sx={{
-                            backgroundColor: `${theme.palette.success.main} !important`,
+                            backgroundColor: theme.palette.success.main,
                             color: `${theme.palette.text.primary} !important`,
-                            '&:hover': { backgroundColor: `${theme.palette.success.dark} !important` }
+                            '&:hover': { backgroundColor: theme.palette.success.dark }
                         }}
                         onClick={handleSubmit}
                     >
@@ -320,61 +378,14 @@ export const UserModal: React.FC<UserModalProps> = ({ open, onClose, onSubmit, i
                     <Button
                         variant="contained"
                         sx={{
-                            backgroundColor: `${theme.palette.warning.main} !important`,
+                            backgroundColor: theme.palette.warning.main,
                             color: `${theme.palette.text.primary} !important`,
-                            '&:hover': { backgroundColor: `${theme.palette.warning.dark} !important` }
+                            '&:hover': { backgroundColor: theme.palette.warning.dark }
                         }}
-                        onClick={handleClose} // Use handleClose instead of onClose
+                        onClick={onClose}
                     >
                         Cancel
                     </Button>
-                </Box>
-            </Box>
-        </Modal>
-    );
-};
-
-interface UserStatusModalProps {
-    open: boolean;
-    onClose: () => void;
-    onConfirm: () => void;
-    userId: string;
-    curStatus: number;
-}
-
-export const UserStatusModal: React.FC<UserStatusModalProps> = ({ open, onClose, onConfirm, userId, curStatus }) => {
-    const theme = useTheme();
-
-    const handleConfirm = async () => {
-        await setUserStatus(userId, curStatus === 1 ? 0 : 1);
-        showSuccessToast('User Status Updated');
-        onConfirm();
-    };
-
-    return (
-        <Modal open={open} onClose={onClose}>
-            <Box sx={{ padding: 4, backgroundColor: `${theme.palette.background.paper} !important`, margin: 'auto', mt: '20vh', width: 400, borderRadius: 2 }}>
-                <Typography sx={{ mb: 1, textAlign: 'center', fontWeight: 'bold', color: `${theme.palette.primary.main} !important` }} variant="h6">
-                    {curStatus === 1 ? 'Confirm Deactivation' : 'Confirm Activation'}
-                </Typography>
-                <Typography sx={{ mb: 2, textAlign: 'center', color: `${theme.palette.primary.main} !important` }}>
-                    {curStatus === 1 ? 'Are you sure you want to deactivate this user?' : 'Are you sure you want to activate this user?'}
-                </Typography>
-                <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2 }}>
-                    <Button variant="contained"
-                        sx={{
-                            backgroundColor: `${theme.palette.success.main} !important`, color: `${theme.palette.text.primary} !important`,
-                            '&:hover': {
-                                backgroundColor: `${theme.palette.success.dark} !important`,
-                            },
-                        }} onClick={handleConfirm}>Yes</Button>
-                    <Button variant="contained"
-                        sx={{
-                            backgroundColor: `${theme.palette.warning.main} !important`, color: `${theme.palette.text.primary} !important`,
-                            '&:hover': {
-                                backgroundColor: `${theme.palette.warning.dark} !important`,
-                            },
-                        }} onClick={onClose}>No</Button>
                 </Box>
             </Box>
         </Modal>

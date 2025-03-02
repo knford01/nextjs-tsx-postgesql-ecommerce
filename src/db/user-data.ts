@@ -230,10 +230,8 @@ export async function fetchUserRoles(active?: number) {
         let data;
 
         if (active === 1 || active === 2) {
-            // Query with WHERE clause
             data = await sql<UserRole>`SELECT id, role, display, active FROM user_roles WHERE active = ${active} ORDER BY role ASC`;
         } else {
-            // Query without WHERE clause
             data = await sql<UserRole>`SELECT id, role, display, active FROM user_roles ORDER BY role ASC`;
         }
 
