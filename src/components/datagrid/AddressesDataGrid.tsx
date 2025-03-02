@@ -4,7 +4,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { GridColDef } from '@mui/x-data-grid';
 import { getAddresses } from '@/db/address-data';
 import CustomDataGrid from './CustomDataGrid';
-import AddressModal from '@/components/modals/AddressModal';
+import AddressModal from '@/components/modals/settings/AddressModal';
 import { Button, useMediaQuery, useTheme } from '@mui/material';
 import { PencilIcon, PlusIcon } from '@heroicons/react/24/outline';
 

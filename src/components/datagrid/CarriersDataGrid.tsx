@@ -4,7 +4,7 @@ import CustomDataGrid from './CustomDataGrid';
 import { Button, useMediaQuery, useTheme } from '@mui/material';
 import { PencilIcon, PlusIcon } from '@heroicons/react/24/outline';
 import { fetchActiveCarriers } from '@/db/warehouse-data';
-import CarrierModal from '@/components/modals/CarrierModal';
+import CarrierModal from '@/components/modals/warehouse/CarrierModal';
 
 const CarriersDataGrid: React.FC = () => {
     const theme = useTheme();

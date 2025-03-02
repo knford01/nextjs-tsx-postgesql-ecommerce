@@ -5,7 +5,8 @@ import { Button, Tooltip, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { PencilIcon, PlusIcon, TrashIcon, StarIcon } from '@heroicons/react/24/outline';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import { UserModal, UserStatusModal } from '@/components/modals/UserModals';
+import { UserModal } from '@/components/modals/users/UserModal';
+import { UserStatusModal } from '@/components/modals/users/UserStatusModal';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;

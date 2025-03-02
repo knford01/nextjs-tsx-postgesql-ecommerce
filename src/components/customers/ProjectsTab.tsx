@@ -6,7 +6,7 @@ import { hasAccess } from '@/utils/permissions2';
 import { fetchProjectsByCustomerId } from '@/db/project-data';
 import SearchIcon from '@mui/icons-material/Search';
 import { PlusIcon } from '@heroicons/react/24/outline';
-import ProjectModal from '@/components/modals/ProjectModal';
+import ProjectModal from '@/components/modals/projects/ProjectModal';
 import { useRouter } from 'next/navigation';
 
 const ProjectsTab = ({ theme, customerId }: any) => {

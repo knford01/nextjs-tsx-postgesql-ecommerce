@@ -5,7 +5,7 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Typography, Tabs, Tab, useTheme } from '@mui/material';
 import { fetchEmployeeById } from '@/db/employee-data';
-import EmployeeModal from '@/components/modals/EmployeeModal';
+import EmployeeModal from '@/components/modals/employees/EmployeeModal';
 import EmployeeDetailsTab from '@/components/employees/EmployeeDetailsTab';
 import { useCombinedPermissions } from '@/components/layout/combinedpermissions';
 import { hasAccess } from '@/utils/permissions2';

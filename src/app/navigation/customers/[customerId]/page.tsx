@@ -6,7 +6,7 @@ import React, { useState, useEffect } from 'react';
 import { Box, Typography, Tabs, Tab, useTheme } from '@mui/material';
 import { fetchCustomerById, fetchCustomerEmails } from '@/db/customer-data';
 import { fetchContactsByCustomerId } from '@/db/contact-data';
-import CustomerModal from '@/components/modals/CustomerModals';
+import CustomerModal from '@/components/modals/customers/CustomerModals';
 import ContactModal from '@/components/modals/ContactModal';
 import CustomerEmailModal from '@/components/modals/EmailModals';
 import DetailsTab from '@/components/customers/DetailsTab';

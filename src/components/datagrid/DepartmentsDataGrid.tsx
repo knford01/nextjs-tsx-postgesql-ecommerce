@@ -4,7 +4,7 @@ import CustomDataGrid from './CustomDataGrid';
 import { Button, useMediaQuery, useTheme } from '@mui/material';
 import { PencilIcon, PlusIcon } from '@heroicons/react/24/outline';
 import { fetchDepartments } from '@/db/employee-settings-data';
-import DepartmentModal from '@/components/modals/DepartmentModal';
+import DepartmentModal from '@/components/modals/employees/DepartmentModal';
 
 const DepartmentsDataGrid: React.FC = () => {
     const theme = useTheme();

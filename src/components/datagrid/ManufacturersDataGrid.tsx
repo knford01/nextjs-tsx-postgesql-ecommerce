@@ -4,7 +4,7 @@ import CustomDataGrid from './CustomDataGrid';
 import { Button, useMediaQuery, useTheme } from '@mui/material';
 import { PencilIcon, PlusIcon } from '@heroicons/react/24/outline';
 import { fetchManufacturers } from '@/db/item-data';
-import ManufacturerModal from '@/components/modals/ManufacturerModal';
+import ManufacturerModal from '@/components/modals/inventory/ManufacturerModal';
 
 const ManufacturersDataGrid: React.FC = () => {
     const theme = useTheme();

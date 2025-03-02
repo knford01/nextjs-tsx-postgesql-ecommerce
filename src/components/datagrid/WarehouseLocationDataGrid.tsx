@@ -4,7 +4,7 @@ import CustomDataGrid from './CustomDataGrid';
 import { Button, useMediaQuery, useTheme } from '@mui/material';
 import { PencilIcon, PlusIcon } from '@heroicons/react/24/outline';
 import { fetchWarehouseLocationsByWarehouseId } from '@/db/warehouse-data';
-import LocationModal from '../modals/LocationModal';
+import LocationModal from '../modals/warehouse/LocationModal';
 
 interface WarehouseLocationDataGridProps {
     warehouseId: number;

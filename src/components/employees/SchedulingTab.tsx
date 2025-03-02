@@ -19,7 +19,7 @@ import { showErrorToast, showSuccessToast } from '@/components/ui/ButteredToast'
 import { format, addWeeks, startOfWeek, endOfWeek } from 'date-fns';
 import { format24HRTime } from '@/functions/common';
 import ClearButton from '@/components/ui/buttons/ClearButton';
-import ShiftModal from '@/components/modals/ShiftModal';
+import ShiftModal from '@/components/modals/employees/ShiftModal';
 import { fetchActiveDepartments } from '@/db/employee-settings-data';
 import { fetchActiveEmployeesAllDepartment, fetchActiveEmployeesByDepartment } from '@/db/employee-data';
 import { fetchShiftByEmployeeIdAndDate } from '@/db/schedule-data';

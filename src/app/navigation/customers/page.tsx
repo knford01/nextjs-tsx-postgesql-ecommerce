@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { fetchCustomers } from '@/db/customer-data';
 import SearchIcon from '@mui/icons-material/Search';
 import { PlusIcon } from '@heroicons/react/24/outline';
-import CustomerModal from '@/components/modals/CustomerModals';
+import CustomerModal from '@/components/modals/customers/CustomerModals';
 import { useCombinedPermissions } from '@/components/layout/combinedpermissions';
 import { hasAccess } from '@/utils/permissions2';
 import { useRouter } from 'next/navigation';

@@ -8,7 +8,7 @@ import { PlusIcon } from '@heroicons/react/24/outline';
 import { useCombinedPermissions } from '@/components/layout/combinedpermissions';
 import { hasAccess } from '@/utils/permissions2';
 import { useRouter } from 'next/navigation';
-import WarehouseModal from '@/components/modals/WarehouseModal';
+import WarehouseModal from '@/components/modals/warehouse/WarehouseModal';
 import { fetchWarehouses } from '@/db/warehouse-data';
 
 const WarehousesPage = () => {

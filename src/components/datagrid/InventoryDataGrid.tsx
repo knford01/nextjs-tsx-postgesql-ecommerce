@@ -3,7 +3,7 @@ import { GridColDef } from '@mui/x-data-grid';
 import CustomDataGrid from './CustomDataGrid';
 import { Button, useMediaQuery, useTheme } from '@mui/material';
 import { PencilIcon, PlusIcon } from '@heroicons/react/24/outline';
-import ItemModal from '@/components/modals/ItemModal';
+import ItemModal from '@/components/modals/inventory/ItemModal';
 import { fetchInventory, fetchFilteredInventory } from '@/db/inventory-data';
 import Image from 'next/image';
 

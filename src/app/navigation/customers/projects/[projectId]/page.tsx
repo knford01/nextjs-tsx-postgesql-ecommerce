@@ -5,13 +5,13 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Typography, Tabs, Tab, useTheme } from '@mui/material';
 import { fetchProjectByID } from '@/db/project-data';
-import ProjectModal from '@/components/modals/ProjectModal';
-import ProjectContactModal from '@/components/modals/ProjectContactModal';
+import ProjectModal from '@/components/modals/projects/ProjectModal';
+import ProjectContactModal from '@/components/modals/projects/ProjectContactModal';
 import DetailsTab from '@/components/projects/DetailsTab';
 import { useCombinedPermissions } from '@/components/layout/combinedpermissions';
 import { hasAccess } from '@/utils/permissions2';
 import { useRouter, useParams } from 'next/navigation';
-import ProjectSettingsModal from '@/components/modals/ProjectSettingsModal';
+import ProjectSettingsModal from '@/components/modals/projects/ProjectSettingsModal';
 
 const ProjectProfilePage = () => {
     const theme = useTheme();

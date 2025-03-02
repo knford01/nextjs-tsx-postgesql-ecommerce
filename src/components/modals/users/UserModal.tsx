@@ -1,11 +1,11 @@
-// app/ui/components/modals/UserModals.tsx
+// app/ui/components/modals/UserModal.tsx
 
 import React, { useState, useEffect } from 'react';
 import { Box, Button, MenuItem, Modal, TextField, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { setUserStatus, fetchUserRoles, createUser, updateUser } from '@/db/user-data';
 import Image from 'next/image';
-import { showSuccessToast } from '../ui/ButteredToast';
+import { showSuccessToast } from '../../ui/ButteredToast';
 
 interface UserModalProps {
     open: boolean;

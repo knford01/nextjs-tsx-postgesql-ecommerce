@@ -10,7 +10,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { useThemeContext } from '@/app/navigation/layout';
 import { themes } from './themes';
 import { fetchUserAvatar, setUserTheme } from '@/db/user-data';
-import { UserModal } from '../modals/UserModals';
+import { UserModal } from '../modals/users/UserModal';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import SearchIcon from '@mui/icons-material/Search';
 import { fetchNotifications } from '@/db/notification-data';

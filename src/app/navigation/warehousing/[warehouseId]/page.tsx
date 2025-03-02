@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Typography, Tabs, Tab, Menu, MenuItem, useTheme } from '@mui/material';
 import { fetchWarehouseById } from '@/db/warehouse-data';
-import WarehouseModal from '@/components/modals/WarehouseModal';
+import WarehouseModal from '@/components/modals/warehouse/WarehouseModal';
 import { useCombinedPermissions } from '@/components/layout/combinedpermissions';
 import { hasAccess } from '@/utils/permissions2';
 import { useRouter, useParams } from 'next/navigation';

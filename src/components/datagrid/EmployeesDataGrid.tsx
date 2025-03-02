@@ -7,7 +7,7 @@ import { hasAccess } from '@/utils/permissions2';
 import { Button, useMediaQuery, useTheme } from '@mui/material';
 import { PencilIcon, PlusIcon, ClockIcon } from '@heroicons/react/24/outline';
 import { fetchEmployees, fetchActiveEmployees, fetchInactiveEmployees, fetchEmployeeByUserId } from '@/db/employee-data';
-import EmployeeModal from '@/components/modals/EmployeeModal';
+import EmployeeModal from '@/components/modals/employees/EmployeeModal';
 import HistoryModal from '@/components/modals/HistoryModal';
 import Image from 'next/image';
 import Link from 'next/link';

@@ -4,7 +4,7 @@ import CustomDataGrid from './CustomDataGrid';
 import { Button, useMediaQuery, useTheme } from '@mui/material';
 import { PencilIcon, PlusIcon } from '@heroicons/react/24/outline';
 import { fetchItems } from '@/db/item-data';
-import ItemModal from '@/components/modals/ItemModal';
+import ItemModal from '@/components/modals/inventory/ItemModal';
 import Image from 'next/image';
 
 const ItemsDataGrid: React.FC = () => {

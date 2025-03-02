@@ -4,8 +4,8 @@ import CustomDataGrid from './CustomDataGrid';
 import { Button, useMediaQuery, useTheme, Box } from '@mui/material';
 import { PencilIcon, PlusIcon } from '@heroicons/react/24/outline';
 import { fetchStagingByWarehouseId } from '@/db/receiving-data';
-import ReceivingModal from '../modals/ReceivingModal';
-import StagingModal from '../modals/StagingModal';
+import ReceivingModal from '../modals/warehouse/ReceivingModal';
+import StagingModal from '../modals/warehouse/StagingModal';
 
 interface StagingDataGridProps {
     warehouseId: number;
