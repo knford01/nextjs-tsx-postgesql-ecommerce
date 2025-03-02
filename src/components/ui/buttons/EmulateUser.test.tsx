@@ -1,11 +1,12 @@
 // src/components/ui/EmulateUser.test.tsx
+
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import EmulateUser from './EmulateUser';
 import { useRouter } from 'next/navigation';
 import useSession from '@/hooks/useSession';
-import { useCheckSession } from '../layout/checksession';
+import { useCheckSession } from '../../layout/checksession';
 
 // Mock dependencies
 jest.mock('next/navigation', () => ({
