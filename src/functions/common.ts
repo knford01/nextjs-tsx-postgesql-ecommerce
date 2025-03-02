@@ -1,3 +1,7 @@
+// src/functions/common.ts
+
+import { format, parse } from 'date-fns';
+
 export function toUpperCamelCase(str: string): string {
     return str
         .toLowerCase() // Convert the entire string to lowercase
@@ -29,6 +33,22 @@ export function formatTime(time: string): string {
         return `${time}:00`; // Add seconds if missing
     } else {
         return '00:00:00'; // Fallback to a default time
+    }
+}
+
+export function format24HRTime(time: string): string {
+    if (!time) return ''; // Handle empty values safely
+    try {
+        // Ensure input is in "HH:mm:ss" format
+        const timeParts = time.split(':');
+        const formattedTime = timeParts.length === 2 ? `${time}:00` : time;
+
+        // Convert 24-hour time to 12-hour format with AM/PM
+        const parsedTime = parse(formattedTime, 'HH:mm:ss', new Date());
+        return format(parsedTime, 'h:mm a');
+    } catch (error) {
+        console.error('Invalid time format:', time);
+        return ''; // Return empty string if parsing fails
     }
 }
 

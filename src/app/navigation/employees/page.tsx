@@ -31,6 +31,7 @@ const EmployeesPage = ({ params }: any) => {
     const tabsConfig = [
         { label: 'Employees', permission: 'employees' },
         { label: 'Scheduling', permission: 'scheduling' },
+        { label: 'Time Cards', permission: 'time_cards' },
         { label: 'Time Logs', permission: 'time_logs' },
         { label: 'PTO Leave', permission: 'pto' },
         { label: 'Reports', permission: 'reports' },
@@ -67,23 +68,29 @@ const EmployeesPage = ({ params }: any) => {
 
             {activeTab === 2 && (
                 <Box sx={{ mt: 2 }}>
-                    <Typography>Time Logs section coming soon...</Typography>
+                    <Typography>Time Cards section coming soon...</Typography>
                 </Box>
             )}
 
             {activeTab === 3 && (
                 <Box sx={{ mt: 2 }}>
-                    <Typography>PTO Leave section coming soon...</Typography>
+                    <Typography>Time Logs section coming soon...</Typography>
                 </Box>
             )}
 
             {activeTab === 4 && (
                 <Box sx={{ mt: 2 }}>
-                    <Typography>Reports section coming soon...</Typography>
+                    <Typography>PTO Leave section coming soon...</Typography>
                 </Box>
             )}
 
             {activeTab === 5 && (
+                <Box sx={{ mt: 2 }}>
+                    <Typography>Reports section coming soon...</Typography>
+                </Box>
+            )}
+
+            {activeTab === 6 && (
                 <SettingsTab />
             )}
         </Box>

@@ -5,7 +5,7 @@ import Select, { Props as SelectProps, MultiValue, StylesConfig, GroupBase } fro
 
 export const StyledTextField = (props: any) => {
     const theme = useTheme();
-    const { multiline, rows, type } = props;
+    const { multiline, type } = props;
 
     const commonTextFieldStyles = {
         '& .MuiInputBase-root': {
@@ -13,12 +13,13 @@ export const StyledTextField = (props: any) => {
             color: `${theme.palette.text.secondary} !important`,
             height: multiline ? 'auto' : '2.5em',
             display: 'flex',
-            alignItems: 'center',
-            padding: '0 4px',
+            alignItems: multiline ? 'flex-start' : 'center', // Align text to top for multiline
+            padding: multiline ? '10px 8px' : '0 8px', // Extra top and left padding for multiline
         },
         '& .MuiInputBase-input': {
             height: multiline ? 'auto' : '100%',
             boxSizing: 'border-box',
+            paddingLeft: '4px', // Ensure slight left padding
         },
         '& .MuiInputLabel-root': {
             color: `${theme.palette.text.secondary} !important`,

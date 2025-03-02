@@ -214,7 +214,7 @@ export async function fetchEmployeeByUserId(userId: any): Promise<any> {
             LEFT JOIN employees e on e.user_id = u.id
             LEFT JOIN departments d ON d.id = e.department_id
             LEFT JOIN employment_types et ON et.id = e.employment_type
-            left join user_roles ur on ur.id = u.role
+            LEFT JOIN user_roles ur on ur.id = u.role
             WHERE u.id = ${userId}`;
 
         return data.rows || null;
@@ -236,8 +236,10 @@ export async function fetchActiveEmployeesByDepartment(departmentId: any): Promi
                 u.last_name,
                 u.avatar,
                 u.role,
+                u.email,
                 ur.display as role_display,
-                u.email, 
+                d.name AS department_name,
+                COALESCE(et.name, 'Not Available') AS type_name, 
                 CONCAT(
                     EXTRACT(DAY FROM (
                         CASE 
@@ -250,16 +252,61 @@ export async function fetchActiveEmployeesByDepartment(departmentId: any): Promi
                 CASE 
                     WHEN e.active = TRUE THEN 'Active'
                     ELSE 'In Active'
-                END AS active_status,
-                d.name AS department_name,
-                COALESCE(et.name, 'Not Available') AS type_name
+                END AS active_status
             FROM users u
             LEFT JOIN employees e on e.user_id = u.id
             LEFT JOIN departments d ON d.id = e.department_id
             LEFT JOIN employment_types et ON et.id = e.employment_type
-            left join user_roles ur on ur.id = u.role
+            LEFT JOIN user_roles ur on ur.id = u.role
             WHERE e.department_id = ${departmentId}
-            and e.active = TRUE`;
+            and e.active = TRUE
+            ORDER BY COALESCE(ur.display, ''), COALESCE(u.first_name, ''), COALESCE(u.last_name, '');
+            `;
+
+        return data.rows || null;
+    } catch (error) {
+        console.error('Database Error:', error);
+        throw new Error('Failed to fetch employees.');
+    }
+}
+
+export async function fetchActiveEmployeesAllDepartment(): Promise<any> {
+    noStore();
+    try {
+        const data = await sql<any>` 
+            SELECT 
+                e.*,
+                u.id as user_id,
+                u.first_name,
+                u.middle_name,
+                u.last_name,
+                u.avatar,
+                u.role,
+                u.email,
+                ur.display as role_display,
+                d.name AS department_name,
+                COALESCE(et.name, 'Not Available') AS type_name, 
+                CONCAT(
+                    EXTRACT(DAY FROM (
+                        CASE 
+                            WHEN NULLIF(e.end_date, '') IS NOT NULL THEN CAST(NULLIF(e.end_date, '') AS DATE)
+                            ELSE NOW()
+                        END - CAST(NULLIF(e.start_date, '') AS DATE)
+                    )), 
+                    ' Days'
+                ) AS time_employed,
+                CASE 
+                    WHEN e.active = TRUE THEN 'Active'
+                    ELSE 'In Active'
+                END AS active_status
+            FROM users u
+            LEFT JOIN employees e on e.user_id = u.id
+            LEFT JOIN departments d ON d.id = e.department_id
+            LEFT JOIN employment_types et ON et.id = e.employment_type
+            LEFT JOIN user_roles ur on ur.id = u.role
+            WHERE e.active = TRUE
+            ORDER BY COALESCE(ur.display, ''), COALESCE(u.first_name, ''), COALESCE(u.last_name, '');
+            `;
 
         return data.rows || null;
     } catch (error) {

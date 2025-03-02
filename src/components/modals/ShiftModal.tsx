@@ -1,28 +1,49 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Button, Paper, Typography, Box, TextField } from '@mui/material';
+import { Modal, Button, Paper, Typography, Box } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { showErrorToast, showSuccessToast } from '@/components/ui/ButteredToast';
-import { createSchedule, updateSchedule } from '@/db/schedule-data';
+import { createShift, updateShift } from '@/db/schedule-data';
 import { StyledTextField } from '@/styles/StyledTextField';
 
 interface ShiftModalProps {
     open: boolean;
     handleClose: () => void;
     employee: any;
-    schedule?: any;
+    shift?: any;
     date: any;
     onSave: () => void;
 }
 
-const ShiftModal: React.FC<ShiftModalProps> = ({ open, handleClose, employee, schedule, date, onSave }) => {
+const ShiftModal: React.FC<ShiftModalProps> = ({ open, handleClose, employee, shift, date, onSave }) => {
+    // console.log("shift: ", shift);
     const theme = useTheme();
 
-    const [scheduleInfo, setScheduleInfo] = useState({
-        start_time: schedule?.start_time || '',
-        end_time: schedule?.end_time || '',
-        color: schedule?.color || '#4caf50',
-        notes: schedule?.notes || '',
+    const [sessionUser, setSessionUser] = useState<any>(null);
+    useEffect(() => {
+        const checkSession = async () => {
+            try {
+                const response = await fetch('/api/auth/session');
+                const session = await response.json();
+                setSessionUser(session.user);
+            } catch (error) {
+                showErrorToast('Failed to fetch session');
+            }
+        };
+
+        checkSession();
+    }, []);
+
+    const [shiftInfo, setShiftInfo] = useState({
+        start_time: shift?.start_time || '',
+        end_time: shift?.end_time || '',
+        color: shift?.color || '#4caf50',
+        note: shift?.note || '',
     });
+
+    const closeShiftModal = () => {
+        setShiftInfo({ start_time: '', end_time: '', color: '#4caf50', note: '' });
+        handleClose();
+    };
 
     const [errors, setErrors] = useState({
         start_time: false,
@@ -30,19 +51,19 @@ const ShiftModal: React.FC<ShiftModalProps> = ({ open, handleClose, employee, sc
     });
 
     useEffect(() => {
-        if (schedule) {
-            setScheduleInfo({
-                start_time: schedule.start_time || '',
-                end_time: schedule.end_time || '',
-                color: schedule.color || '#4caf50',
-                notes: schedule.notes || '',
+        if (shift) {
+            setShiftInfo({
+                start_time: shift.start_time || '',
+                end_time: shift.end_time || '',
+                color: shift.color || '#4caf50',
+                note: shift.note || '',
             });
         }
-    }, [schedule]);
+    }, [shift]);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
-        setScheduleInfo((prevData) => ({
+        setShiftInfo((prevData) => ({
             ...prevData,
             [name]: value,
         }));
@@ -55,32 +76,32 @@ const ShiftModal: React.FC<ShiftModalProps> = ({ open, handleClose, employee, sc
     };
 
     const handleSubmit = async () => {
-        if (!scheduleInfo.start_time || !scheduleInfo.end_time) {
+        if (!shiftInfo.start_time || !shiftInfo.end_time) {
             setErrors({
-                start_time: !scheduleInfo.start_time,
-                end_time: !scheduleInfo.end_time,
+                start_time: !shiftInfo.start_time,
+                end_time: !shiftInfo.end_time,
             });
             showErrorToast('Please fill out all required fields');
             return;
         }
 
         try {
-            if (schedule) {
-                // await updateSchedule(schedule.id, scheduleInfo);
-                showSuccessToast('Schedule Updated Successfully');
+            if (shift) {
+                await updateShift(shift.id, shiftInfo);
+                showSuccessToast('Shift Updated Successfully');
             } else {
-                // await createSchedule(employee.id, { ...scheduleInfo, date });
-                showSuccessToast('Schedule Created Successfully');
+                await createShift(employee.id, sessionUser.id, date, shiftInfo);
+                showSuccessToast('Shift Created Successfully');
             }
-            handleClose();
+            closeShiftModal();
             onSave();
         } catch (error) {
-            showErrorToast('Failed to Save Schedule');
+            showErrorToast('Failed to Save Shift');
         }
     };
 
     return (
-        <Modal open={open} onClose={handleClose}>
+        <Modal open={open} onClose={closeShiftModal}>
             <Paper
                 sx={{
                     margin: 'auto',
@@ -97,7 +118,7 @@ const ShiftModal: React.FC<ShiftModalProps> = ({ open, handleClose, employee, sc
                     sx={{ mb: 1, textAlign: 'center', fontWeight: 'bold', color: theme.palette.primary.main }}
                     variant="h6"
                 >
-                    {schedule ? 'Edit Shift' : 'Create Shift'}
+                    {shift ? 'Edit Shift' : 'Create Shift'}
                 </Typography>
 
                 <StyledTextField
@@ -124,7 +145,7 @@ const ShiftModal: React.FC<ShiftModalProps> = ({ open, handleClose, employee, sc
                     label="Start Time"
                     name="start_time"
                     type="time"
-                    value={scheduleInfo.start_time}
+                    value={shiftInfo.start_time}
                     onChange={handleInputChange}
                     required
                     error={errors.start_time}
@@ -137,7 +158,7 @@ const ShiftModal: React.FC<ShiftModalProps> = ({ open, handleClose, employee, sc
                     label="End Time"
                     name="end_time"
                     type="time"
-                    value={scheduleInfo.end_time}
+                    value={shiftInfo.end_time}
                     onChange={handleInputChange}
                     required
                     error={errors.end_time}
@@ -148,16 +169,16 @@ const ShiftModal: React.FC<ShiftModalProps> = ({ open, handleClose, employee, sc
                     label="Color"
                     name="color"
                     type="color"
-                    value={scheduleInfo.color}
+                    value={shiftInfo.color}
                     onChange={handleInputChange}
                     fullWidth
                     margin="normal"
                 />
 
                 <StyledTextField
-                    label="Notes"
-                    name="notes"
-                    value={scheduleInfo.notes}
+                    label="Note"
+                    name="note"
+                    value={shiftInfo.note}
                     onChange={handleInputChange}
                     fullWidth
                     margin="normal"
@@ -184,7 +205,7 @@ const ShiftModal: React.FC<ShiftModalProps> = ({ open, handleClose, employee, sc
                             color: theme.palette.text.primary,
                             '&:hover': { backgroundColor: theme.palette.warning.dark },
                         }}
-                        onClick={handleClose}
+                        onClick={closeShiftModal}
                     >
                         Cancel
                     </Button>

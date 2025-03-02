@@ -52,8 +52,8 @@ const EmployeeProfilePage = () => {
 
     const tabsConfig = [
         { label: 'Details', permission: 'employee_details' },
-        { label: 'Schedule', permission: 'employee_schedule' },
-        { label: 'Attendance', permission: 'employee_attendance' },
+        { label: 'Time Card', permission: 'employee_time_card' },
+        { label: 'Time Logs', permission: 'employee_time_logs' },
         { label: 'Leave Requests', permission: 'employee_leave' },
     ];
 
@@ -93,13 +93,13 @@ const EmployeeProfilePage = () => {
 
                 {activeTab === 1 && (
                     <Box sx={{ mt: 2 }}>
-                        <Typography>Employee Schedule coming soon...</Typography>
+                        <Typography>Employee Time Card coming soon...</Typography>
                     </Box>
                 )}
 
                 {activeTab === 2 && (
                     <Box sx={{ mt: 2 }}>
-                        <Typography>Employee Attendance coming soon...</Typography>
+                        <Typography>Employee Time Logs coming soon...</Typography>
                     </Box>
                 )}
 

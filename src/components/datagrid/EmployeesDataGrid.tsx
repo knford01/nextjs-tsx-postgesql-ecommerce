@@ -221,7 +221,7 @@ const EmployeesDataGrid: React.FC<{ searchParameters?: SearchParameters }> = ({ 
                         </Button>
                     )
                 }
-                columnsToIgnore={['avatar', 'actions']}
+                columnsToIgnore={['avatar', 'actions', 'view']}
             />
 
             <EmployeeModal open={modalOpen} handleClose={handleCloseModal} employeeId={currentEmployeeId} loadEmployees={loadEmployees} />

@@ -99,11 +99,13 @@ const WarehouseProfilePage = () => {
             )}
 
             {activeTab === 2 && (
-                <PutAwayTab />
+                // <PutAwayTab />
+                <Box>Put Away Coming Soon...</Box>
             )}
 
             {activeTab === 3 && (
-                <RecHistoryTab />
+                // <RecHistoryTab />
+                <Box>Receiving History Coming Soon...</Box>
             )}
 
             {activeTab === 4 && (
