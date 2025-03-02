@@ -38,7 +38,6 @@ const EmulateUser: React.FC<EmulateUserProps> = ({ row, loadUsers }) => {
 
     const handleEmulateClick = async () => {
         if (isEmulating) {
-            // Stop emulating
             await fetch('/api/auth/emulate', {
                 method: 'POST',
                 body: JSON.stringify({
@@ -53,9 +52,11 @@ const EmulateUser: React.FC<EmulateUserProps> = ({ row, loadUsers }) => {
             loadUsers();
             setIsEmulating(false);
             checkSession();
+            router.refresh();
         } else {
-            // Start emulating
-            await fetch('/api/auth/emulate', {
+            window.location.href = '/navigation';
+
+            fetch('/api/auth/emulate', {
                 method: 'POST',
                 body: JSON.stringify({
                     emulate: true,
@@ -65,16 +66,16 @@ const EmulateUser: React.FC<EmulateUserProps> = ({ row, loadUsers }) => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-            });
-            loadUsers();
-            setIsEmulating(true);
-            checkSession();
+            }).then(() => {
+                loadUsers();
+                setIsEmulating(true);
+                checkSession();
+            }).catch(error => console.error('Error starting emulation:', error));
         }
-        router.refresh(); // Refresh the page to reflect session changes
     };
 
     return (
-        <Tooltip title={'Emulate User'} placement="top">
+        <Tooltip title={isEmulating ? 'Stop Emulation' : 'Emulate User'} placement="top">
             <Button
                 variant="outlined"
                 color="primary"

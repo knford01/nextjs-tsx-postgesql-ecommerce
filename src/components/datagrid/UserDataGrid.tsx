@@ -5,11 +5,11 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { GridColDef } from '@mui/x-data-grid';
 import Image from 'next/image';
+import EmulateUser from '../ui/buttons/EmulateUser';
 import { AddUser, UpdateUser, UserAccess, UserStatus } from '@/components/ui/buttons/Buttons';
 import { User } from '@/types/user';
 import { fetchUsers } from '@/db/user-data';
 import CustomDataGrid from './CustomDataGrid';
-import EmulateUser from '../ui/buttons/EmulateUser';
 
 interface UserDataGridProps {
     filterId?: string;
