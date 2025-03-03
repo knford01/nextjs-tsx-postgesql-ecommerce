@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Button, Typography, Box, Modal, Paper, Grid } from '@mui/material';
-import { StyledTextField, StyledSelectField } from '@/styles/StyledTextField'; // Adjust the import path as necessary
+import { StyledTextField, StyledSelectField } from '@/styles/inputs/StyledTextField'; // Adjust the import path as necessary
 import AddIcon from '@mui/icons-material/Add';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';

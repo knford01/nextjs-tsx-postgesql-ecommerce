@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Modal, Button, Paper, Typography, Box } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import Image from 'next/image';
-import { StyledTextField } from '@/styles/StyledTextField';
+import { StyledTextField } from '@/styles/inputs/StyledTextField';
 import { showErrorToast, showSuccessToast } from '@/components/ui/ButteredToast';
 import { createWarehouse, updateWarehouse, fetchWarehouseById } from '@/db/warehouse-data'; // Adjusted import
 import { useRouter } from 'next/navigation';

@@ -3,7 +3,7 @@ import { Modal, Button, Paper, Typography, Box } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { showErrorToast, showSuccessToast } from '@/components/ui/ButteredToast';
 import { createShift, updateShift } from '@/db/schedule-data';
-import { StyledTextField } from '@/styles/StyledTextField';
+import { StyledTextField } from '@/styles/inputs/StyledTextField';
 
 interface ShiftModalProps {
     open: boolean;

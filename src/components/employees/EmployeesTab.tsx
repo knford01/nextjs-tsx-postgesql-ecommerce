@@ -8,7 +8,7 @@ import { useTheme } from '@mui/material/styles';
 import { useCombinedPermissions } from '@/components/layout/combinedpermissions';
 import { hasAccess } from '@/utils/permissions2';
 import { useRouter } from 'next/navigation';
-import { StyledSearchableSelect } from '@/styles/StyledTextField';
+import { StyledSearchableSelect } from '@/styles/inputs/StyledTextField';
 import ClearButton from '@/components/ui/buttons/ClearButton';
 
 const EmployeesDataGrid = dynamic(() => import('@/components/datagrid/EmployeesDataGrid'), { ssr: false });

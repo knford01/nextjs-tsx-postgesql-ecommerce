@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Modal, Button, Paper, Typography, Box } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import { StyledSelectField, StyledTextField, StyledCheckbox } from '@/styles/StyledTextField';
+import { StyledSelectField, StyledTextField, StyledCheckbox } from '@/styles/inputs/StyledTextField';
 import { showErrorToast, showSuccessToast } from '@/components/ui/ButteredToast';
 import { createManufacturer, updateManufacturer, fetchManufacturerById } from '@/db/item-data';
 

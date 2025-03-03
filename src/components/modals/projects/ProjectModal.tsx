@@ -7,7 +7,7 @@ import Image from 'next/image';
 import { showErrorToast, showSuccessToast } from '@/components/ui/ButteredToast';
 import { createProject, updateProject, fetchProjectByID, fetchProjectStatuses } from '@/db/project-data';
 import { useRouter } from 'next/navigation';
-import { StyledSelectField, StyledTextField } from '@/styles/StyledTextField';
+import { StyledSelectField, StyledTextField } from '@/styles/inputs/StyledTextField';
 import { dateToday, formatDate } from '@/functions/common';
 
 interface ProjectModalProps {

@@ -6,7 +6,7 @@ import { useTheme } from '@mui/material/styles';
 import { useCombinedPermissions } from '@/components/layout/combinedpermissions';
 import { hasAccess } from '@/utils/permissions2';
 import { useRouter } from 'next/navigation';
-import { StyledSearchableSelect, StyledTextField } from '@/styles/StyledTextField';
+import { StyledSearchableSelect, StyledTextField } from '@/styles/inputs/StyledTextField';
 import { fetchActiveWarehouses, fetchActiveWarehouseLocations, fetchWarehouseLocationsByWarehouseId } from '@/db/warehouse-data';
 import { fetchActiveItems, fetchActiveItemsByWarehouseId } from '@/db/item-data';
 import ClearButton from '@/components/ui/buttons/ClearButton';

@@ -88,7 +88,9 @@ export const SearchableSelect: React.FC<SearchableSelectProps> = ({
         }),
     };
 
-    const shouldShrink = Boolean(value);
+    const [isFocused, setIsFocused] = React.useState(false);
+
+    const shouldShrink = Boolean(value) || isFocused;
 
     return (
         <FormControl
@@ -113,7 +115,11 @@ export const SearchableSelect: React.FC<SearchableSelectProps> = ({
             <Select
                 styles={customStyles}
                 value={value}
-                onBlur={handleBlur} // Trigger validation on blur
+                onFocus={() => setIsFocused(true)}
+                onBlur={() => {
+                    setIsFocused(false);
+                    handleBlur();
+                }}
                 {...props}
                 placeholder=""
                 components={{

@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { Modal, Button, Paper, Typography, Box, MenuItem } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import { StyledTextField } from '@/styles/StyledTextField';
+import { StyledTextField } from '@/styles/inputs/StyledTextField';
 import { showErrorToast, showSuccessToast } from '@/components/ui/ButteredToast';
 import { setProjectWarehouses, updateProject } from '@/db/project-data';
 import { fetchWarehouses } from '@/db/warehouse-data';

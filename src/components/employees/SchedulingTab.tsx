@@ -14,7 +14,7 @@ import { useTheme } from '@mui/material/styles';
 import { useCombinedPermissions } from '@/components/layout/combinedpermissions';
 import { hasAccess } from '@/utils/permissions2';
 import { useRouter } from 'next/navigation';
-import { SearchableSelect } from '@/styles/SearchableSelect';
+import { SearchableSelect } from '@/styles/inputs/SearchableSelect';
 import { showErrorToast, showSuccessToast } from '@/components/ui/ButteredToast';
 import { format, addWeeks, startOfWeek, endOfWeek } from 'date-fns';
 import { format24HRTime } from '@/functions/common';

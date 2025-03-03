@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import Image from 'next/image';
 import { Modal, Button, Paper, Typography, Box, Grid, TextField } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import { StyledTextField, StyledMultiSelectField, StyledSelectField } from '@/styles/StyledTextField';
+import { StyledTextField, StyledMultiSelectField, StyledSelectField } from '@/styles/inputs/StyledTextField';
 import { showErrorToast, showSuccessToast } from '@/components/ui/ButteredToast';
 import { createItem, fetchItemById, updateItem, updateItemProjects, fetchManufacturers, fetchModelsByManufacturerId, fetchUOM, updateItemWarehouses } from '@/db/item-data';
 import { fetchCustomers } from '@/db/customer-data';

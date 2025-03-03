@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { StyledTextField } from '@/styles/StyledTextField';
+import { StyledTextField } from '@/styles/inputs/StyledTextField';
 import { createPermission, getAllPermissions, updatePermission, deletePermission } from '@/db/permissions';
 import { Box, Grid, Card, CardContent, Typography, Button, Modal, Paper } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
