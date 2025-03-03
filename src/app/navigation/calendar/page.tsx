@@ -24,9 +24,9 @@ const CalendarComponent: React.FC = () => {
     const [editModalOpen, setEditModalOpen] = useState(false);
     const [viewModalOpen, setViewModalOpen] = useState(false);
     const [selectedEvent, setSelectedEvent] = useState<any>(null);
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
     const combinedPermissions = useCombinedPermissions();
-    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
     useEffect(() => {
         if (!hasAccess(combinedPermissions, 'navigation', 'calendar')) {
@@ -35,6 +35,8 @@ const CalendarComponent: React.FC = () => {
             buildCalendar();
         }
     }, [combinedPermissions, router]);
+
+    const userCanEdit = hasAccess(combinedPermissions, 'calendar', 'edit_calendar');
 
     const buildCalendar = async () => {
         const data = await getCalendarEvents();
@@ -207,11 +209,11 @@ const CalendarComponent: React.FC = () => {
                         dayGrid: { dayMaxEventRows: 6 },
                         timeGrid: { dayMaxEventRows: 6 },
                     }}
-                    editable={true}
-                    selectable={true}
-                    select={handleDateClick}
+                    editable={userCanEdit}
+                    selectable={userCanEdit}
+                    select={userCanEdit ? handleDateClick : undefined}
                     eventClick={handleEventClick}
-                    eventDrop={handleDragDrop}
+                    eventDrop={userCanEdit ? handleDragDrop : undefined}
                     events={events}
                     dayCellContent={(dayCell) => (
                         <Box sx={{ backgroundColor: theme.palette.text.primary, color: theme.palette.primary.main, padding: '4px' }}>
@@ -236,13 +238,14 @@ const CalendarComponent: React.FC = () => {
                 <EventViewModal
                     open={viewModalOpen}
                     onClose={() => setViewModalOpen(false)}
-                    onEdit={() => {
+                    onEdit={userCanEdit ? () => {
                         setViewModalOpen(false);
                         setEditModalOpen(true);
-                    }}
-                    onDelete={handleEventDelete}
+                    } : undefined}
+                    onDelete={userCanEdit ? handleEventDelete : undefined}
                     event={selectedEvent}
                 />
+
             </Box>
         </Box>
     );

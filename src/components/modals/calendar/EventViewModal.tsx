@@ -15,12 +15,14 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CloseIcon from '@mui/icons-material/Close';
 import { convertTo12Hour, getDayNames, toUpperCamelCase } from '@/functions/common';
+import { useCombinedPermissions } from '@/components/layout/combinedpermissions';
+import { hasAccess } from '@/utils/permissions2';
 
 interface EventViewModalProps {
     open: boolean;
     onClose: () => void;
-    onEdit: () => void;
-    onDelete: () => void;
+    onEdit?: () => void;
+    onDelete?: () => void;
     event: any;
 }
 
@@ -32,6 +34,8 @@ const EventViewModal: React.FC<EventViewModalProps> = ({
     event,
 }) => {
     const theme = useTheme();
+    const combinedPermissions = useCombinedPermissions();
+    const userCanEdit = hasAccess(combinedPermissions, 'calendar', 'edit_calendar');
     // console.log(event);
     return (
         <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
@@ -121,22 +125,26 @@ const EventViewModal: React.FC<EventViewModalProps> = ({
                     </Grid>
                 </DialogContent>
                 <DialogActions>
-                    <Button
-                        onClick={onEdit}
-                        variant="contained"
-                        sx={{ backgroundColor: theme.palette.info.main }}
-                        startIcon={<EditIcon />}
-                    >
-                        Edit
-                    </Button>
-                    <Button
-                        onClick={onDelete}
-                        variant="contained"
-                        sx={{ backgroundColor: theme.palette.error.main }}
-                        startIcon={<DeleteIcon />}
-                    >
-                        Delete
-                    </Button>
+                    {userCanEdit && (
+                        <>
+                            <Button
+                                onClick={onEdit}
+                                variant="contained"
+                                sx={{ backgroundColor: theme.palette.info.main }}
+                                startIcon={<EditIcon />}
+                            >
+                                Edit
+                            </Button>
+                            <Button
+                                onClick={onDelete}
+                                variant="contained"
+                                sx={{ backgroundColor: theme.palette.error.main }}
+                                startIcon={<DeleteIcon />}
+                            >
+                                Delete
+                            </Button>
+                        </>
+                    )}
                     <Button
                         onClick={onClose}
                         variant="contained"
