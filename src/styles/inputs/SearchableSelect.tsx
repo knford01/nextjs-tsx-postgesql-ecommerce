@@ -63,7 +63,11 @@ export const SearchableSelect: React.FC<SearchableSelectProps> = ({
             ...base,
             color: theme.palette.primary.main,
             backgroundColor: theme.palette.background.paper,
-            zIndex: 9999,
+            zIndex: 1300,
+        }),
+        menuPortal: (base: any) => ({
+            ...base,
+            zIndex: 1400, // Higher than MUI dialogs and DataGrid
         }),
         option: (base: any, state: any) => ({
             ...base,
@@ -125,6 +129,8 @@ export const SearchableSelect: React.FC<SearchableSelectProps> = ({
                 components={{
                     IndicatorSeparator: () => null,
                 }}
+                menuPortalTarget={typeof document !== 'undefined' ? document.body : undefined}
+                menuPosition="fixed"
             />
             {(localError || externalError) && (
                 <FormHelperText>

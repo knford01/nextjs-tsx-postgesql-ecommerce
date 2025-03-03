@@ -1,10 +1,8 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import Container from '@mui/material/Container';
-import Grid from '@mui/material/Grid';
+import { Container, Grid, useTheme, useMediaQuery } from '@mui/material';
 import dynamic from 'next/dynamic';
-import { useTheme } from '@mui/material/styles';
 import { useCombinedPermissions } from '@/components/layout/combinedpermissions';
 import { hasAccess } from '@/utils/permissions2';
 import { useRouter } from 'next/navigation';
@@ -25,9 +23,16 @@ const statusOptions: OptionType[] = [
 ];
 
 export default function EmployeesTab() {
-    const theme = useTheme();
     const router = useRouter();
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
     const combinedPermissions = useCombinedPermissions();
+    useEffect(() => {
+        if (!hasAccess(combinedPermissions, 'employees', 'employees')) {
+            router.push('/navigation/403');
+        }
+    }, [combinedPermissions, router]);
 
     const [searchParameters, setSearchParameters] = useState<{ status: OptionType }>({
         status: statusOptions[0], // Default to 'Active'
@@ -48,12 +53,6 @@ export default function EmployeesTab() {
         });
     };
 
-    useEffect(() => {
-        if (!hasAccess(combinedPermissions, 'employees', 'employees')) {
-            router.push('/navigation/403');
-        }
-    }, [combinedPermissions, router]);
-
     return (
         <Container
             maxWidth={false}
@@ -66,11 +65,32 @@ export default function EmployeesTab() {
             }}
         >
             {userCanEdit && (
-                <Grid container spacing={2} sx={{ mb: 1.5 }} alignItems="center">
-                    <Grid item sx={{ mt: 1 }}>
+                <Grid
+                    container
+                    spacing={2}
+                    sx={{
+                        mb: 1.5,
+                        alignItems: 'center', // Ensures vertical alignment
+                        flexWrap: isMobile ? 'nowrap' : 'wrap',
+                        overflowX: isMobile ? 'auto' : 'visible',
+                        whiteSpace: isMobile ? 'nowrap' : 'normal',
+                        gap: isMobile ? 2 : 0,
+                        '&::-webkit-scrollbar': { display: 'none' },
+                        position: 'relative', // Ensures dropdown can render correctly
+                    }}
+                >
+                    <Grid item sx={{ flexShrink: 0, mt: 1 }}>
                         <ClearButton onClick={clearSearchParameters} />
                     </Grid>
-                    <Grid item xs={2}>
+                    <Grid
+                        item
+                        xs={12}
+                        sm={2}
+                        sx={{
+                            minWidth: isMobile ? '150px' : 'auto',
+                            overflow: 'visible' // Prevents dropdown from being clipped 
+                        }}
+                    >
                         <SearchableSelect
                             label="Status"
                             options={statusOptions}

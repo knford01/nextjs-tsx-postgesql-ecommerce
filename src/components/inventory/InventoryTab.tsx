@@ -1,8 +1,8 @@
+'use client';
+
 import React, { useEffect, useState } from 'react';
-import Container from '@mui/material/Container';
-import Grid from '@mui/material/Grid';
+import { Container, Grid, useTheme, useMediaQuery } from '@mui/material';
 import dynamic from 'next/dynamic';
-import { useTheme } from '@mui/material/styles';
 import { useCombinedPermissions } from '@/components/layout/combinedpermissions';
 import { hasAccess } from '@/utils/permissions2';
 import { useRouter } from 'next/navigation';
@@ -19,8 +19,9 @@ interface Option {
 }
 
 export default function InventoryTab() {
-    const theme = useTheme();
     const router = useRouter();
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
     const combinedPermissions = useCombinedPermissions();
 
     const [searchParameters, setsearchParameters] = useState({
@@ -91,8 +92,21 @@ export default function InventoryTab() {
                 transition: 'all 0.3s',
             }}
         >
-            <Grid container spacing={2} sx={{ mb: 1.5 }} alignItems="center">
-                <Grid item sx={{ mt: 1 }}>
+            <Grid
+                container
+                spacing={2}
+                sx={{
+                    mb: 1.5,
+                    alignItems: 'center', // Ensures vertical alignment
+                    flexWrap: isMobile ? 'nowrap' : 'wrap',
+                    overflowX: isMobile ? 'auto' : 'visible',
+                    whiteSpace: isMobile ? 'nowrap' : 'normal',
+                    gap: isMobile ? 2 : 0,
+                    '&::-webkit-scrollbar': { display: 'none' },
+                    position: 'relative', // Ensures dropdown can render correctly
+                }}
+            >
+                <Grid item sx={{ flexShrink: 0, mt: 1 }}>
                     <ClearButton onClick={clearsearchParameters} />
                 </Grid>
                 {/* <Grid item sx={{ mt: 1 }}>
@@ -117,7 +131,17 @@ export default function InventoryTab() {
                         placeholder="Select Warehouse"
                     />
                 </Grid> */}
-                <Grid item xs={2}>
+                <Grid
+                    item
+                    xs={12}
+                    sm={2}
+                    sx={{
+                        // display: 'flex',
+                        // gap: 2,
+                        minWidth: isMobile ? '300px' : 'auto',
+                        overflow: 'visible'
+                    }}
+                >
                     <SearchableSelect
                         label="Item Number"
                         options={itemNumberOptions}
@@ -153,63 +177,4 @@ export default function InventoryTab() {
             <InventoryDataGrid searchParameters={searchParameters} />
         </Container>
     );
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
