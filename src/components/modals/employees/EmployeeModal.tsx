@@ -106,7 +106,7 @@ const EmployeeModal: React.FC<EmployeeModalProps> = ({ open, handleClose, employ
                     const result = await fetchEmployeeById(employeeId);
                     const sanitizedData = sanitizeEmployeeData(result);
                     setEmployeeData(sanitizedData);
-                    // Reset user_id error if valid user_id is fetched
+
                     if (sanitizedData.user_id) {
                         setErrors((prevErrors: any) => ({ ...prevErrors, user_id: false }));
                     }
@@ -127,7 +127,7 @@ const EmployeeModal: React.FC<EmployeeModalProps> = ({ open, handleClose, employ
         if (userId) {
             try {
                 const result = await fetchEmployeeByUserId(userId);
-                const sanitizedData = sanitizeEmployeeData(result);
+                const sanitizedData = sanitizeEmployeeData(result[0]);
                 const { user_id, ...restSanitizedData } = sanitizedData;
 
                 setEmployeeData((prev: any) => ({ ...prev, ...restSanitizedData }));
