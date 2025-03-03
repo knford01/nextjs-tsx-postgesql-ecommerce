@@ -7,7 +7,7 @@ import { useTheme } from '@mui/material/styles';
 import PersonIcon from '@mui/icons-material/Person';
 import CancelIcon from '@mui/icons-material/Cancel';
 import useSession from '@/hooks/useSession';
-import { useCheckSession } from '../../layout/checksession';
+import { useCheckSession } from '@/components/layout/checksession';
 
 interface EmulateUserProps {
     row: {

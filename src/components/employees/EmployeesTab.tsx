@@ -8,8 +8,8 @@ import { useTheme } from '@mui/material/styles';
 import { useCombinedPermissions } from '@/components/layout/combinedpermissions';
 import { hasAccess } from '@/utils/permissions2';
 import { useRouter } from 'next/navigation';
-import { StyledSearchableSelect } from '@/styles/inputs/StyledTextField';
 import ClearButton from '@/components/ui/buttons/ClearButton';
+import { SearchableSelect } from '@/styles/inputs/SearchableSelect';
 
 const EmployeesDataGrid = dynamic(() => import('@/components/datagrid/EmployeesDataGrid'), { ssr: false });
 
@@ -71,7 +71,7 @@ export default function EmployeesTab() {
                         <ClearButton onClick={clearSearchParameters} />
                     </Grid>
                     <Grid item xs={2}>
-                        <StyledSearchableSelect
+                        <SearchableSelect
                             label="Status"
                             options={statusOptions}
                             value={searchParameters.status}

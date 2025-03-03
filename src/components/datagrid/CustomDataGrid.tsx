@@ -4,7 +4,6 @@ import React, { useState } from 'react';
 import Box from '@mui/material/Box';
 import { DataGrid, GridColDef, GridCellParams, GridRowSelectionModel } from '@mui/x-data-grid';
 import Tooltip from '@mui/material/Tooltip';
-import { useTheme } from '@mui/material';
 import DataGridExporter from './DataGridExporter';
 
 interface CustomDataGridProps {
@@ -30,7 +29,6 @@ const CustomDataGrid: React.FC<CustomDataGridProps> = ({
 }) => {
     const [tooltipInfo, setTooltipInfo] = useState<{ rowId: string | number, field: string } | null>(null);
     const [selectedRows, setSelectedRows] = useState<any[]>([]);
-    const theme = useTheme();
 
     const handleCellClick = (params: GridCellParams) => {
         if (params.field !== 'avatar' && params.field !== 'view' && params.value) {

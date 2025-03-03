@@ -137,7 +137,6 @@ const EmployeeModal: React.FC<EmployeeModalProps> = ({ open, handleClose, employ
         }
     };
 
-
     const handleInputChange = (e: any) => {
         const { name, value, type } = e.target;
         const parsedValue = type === 'checkbox' && e.target instanceof HTMLInputElement

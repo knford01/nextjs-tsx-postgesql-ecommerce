@@ -5,10 +5,11 @@ import { Modal, Button, Paper, Typography, Box } from '@mui/material';
 import { createAddress, updateAddress, getAddressById } from '@/db/address-data';
 import { useTheme } from '@mui/material/styles';
 import { showErrorToast, showSuccessToast } from '../../ui/ButteredToast';
-import { StyledSearchableSelect, StyledTextField, StyledSelectField } from '@/styles/inputs/StyledTextField';
+import { StyledTextField, StyledSelectField } from '@/styles/inputs/StyledTextField';
 import { fetchStates } from '@/app/api/geoLoc/fetchStates';
 import { fetchCities } from '@/app/api/geoLoc/fetchCities';
 import { fetchPostal } from '@/app/api/geoLoc/fetchPostal';
+import { SearchableSelect } from '@/styles/inputs/SearchableSelect';
 
 interface AddressModalProps {
     open: boolean;
@@ -304,7 +305,7 @@ const AddressModal: React.FC<AddressModalProps> = ({ open, handleClose, addressI
                         { value: 'CA', display: 'CA - Canada' }
                     ]}
                 />
-                <StyledSearchableSelect
+                <SearchableSelect
                     label="State"
                     required
                     options={states.map(state => ({ value: state.id, label: state.display }))}
@@ -325,7 +326,7 @@ const AddressModal: React.FC<AddressModalProps> = ({ open, handleClose, addressI
                     helperText={errors.state_province ? 'State/Province is required' : ''}
                 />
 
-                <StyledSearchableSelect
+                <SearchableSelect
                     label="City"
                     required
                     options={cities.map((city: CityType) => ({ value: city.id, label: city.display }))}
@@ -346,7 +347,7 @@ const AddressModal: React.FC<AddressModalProps> = ({ open, handleClose, addressI
                     helperText={errors.city ? 'City is required' : ''}
                 />
 
-                <StyledSearchableSelect
+                <SearchableSelect
                     label="Postal"
                     required
                     options={postalCodes.map((postal: PostalType) => ({ value: postal.id, label: postal.display }))}
