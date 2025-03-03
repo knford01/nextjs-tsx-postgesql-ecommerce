@@ -10,6 +10,18 @@ export function toUpperCamelCase(str: string): string {
         .join('');     // Join the words back together without spaces
 }
 
+export function toPascalCase(str: string): string {
+    return str
+        .replace(/_/g, ' ')
+        .replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
+};
+
+export function toLowerSnakeCase(str: string): string {
+    return str
+        .replace(/\s+/g, '_')
+        .toLowerCase();
+};
+
 export function formatName(str: string): string {
     return str
         .replace(/_/g, ' ') // Replace underscores with spaces

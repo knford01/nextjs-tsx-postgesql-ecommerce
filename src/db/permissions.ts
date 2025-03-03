@@ -102,12 +102,16 @@ export const getRolePermissions = async (id: number): Promise<Permission[]> => {
 export const saveRolePermission = async (rolePermissions: any) => {
   try {
     for (const { role_id, permission_id, access } of rolePermissions) {
-      await sql`DELETE FROM role_permissions WHERE role_id = ${role_id} AND permission_id = ${permission_id};`;
+      await sql`DELETE FROM role_permissions WHERE role_id = ${role_id};`;
+      break;
+    }
+
+    for (const { role_id, permission_id, access } of rolePermissions) {
+      if (access == '') continue;
       await sql`INSERT INTO role_permissions (role_id, permission_id, access) VALUES (${role_id}, ${permission_id}, ${access});`;
     }
-    // console.log('Permissions updated successfully');
+
   } catch (error) {
-    // console.error('Error updating permission:', error);
     throw new Error('Failed to update permission');
   }
 };

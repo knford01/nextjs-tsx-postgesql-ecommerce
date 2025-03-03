@@ -9,6 +9,7 @@ import { useTheme } from '@mui/material';
 import { showErrorToast, showSuccessToast } from '@/components/ui/ButteredToast';
 import { useCombinedPermissions } from '@/components/layout/combinedpermissions';
 import { hasAccess } from '@/utils/permissions2';
+import { toLowerSnakeCase, toPascalCase } from '@/functions/common';
 
 interface RolePermission {
     role_id: number;
@@ -30,18 +31,6 @@ interface Role {
     display: string;
 }
 
-const toPascalCase = (str: string) => {
-    return str
-        .replace(/_/g, ' ')
-        .replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
-};
-
-const toLowerSnakeCase = (str: string) => {
-    return str
-        .replace(/\s+/g, '_')
-        .toLowerCase();
-};
-
 export default function RolePermissionsPage() {
     const theme = useTheme();
     const router = useRouter();
@@ -61,8 +50,11 @@ export default function RolePermissionsPage() {
                 setSelectedRole(role);
 
                 const rolePermissions: RolePermission[] = await getRolePermissions(Number(roleId));
+                console.log("rolePermissions: ", rolePermissions);
 
                 const permissionsData = await getAllActivePermissions();
+                console.log("permissionsData: ", permissionsData);
+
                 const formattedPermissions = permissionsData.map((permission: any) => {
                     const subAreas = permission.sub_areas.split(',').map((subArea: string) => toPascalCase(subArea.trim()));
                     return {
@@ -140,7 +132,6 @@ export default function RolePermissionsPage() {
 
         try {
             await saveRolePermission(selectedPermissions);
-            // Redirect after 3 seconds
             showSuccessToast('Access Updated');
             router.push('/navigation/settings/access');
         } catch (error) {
