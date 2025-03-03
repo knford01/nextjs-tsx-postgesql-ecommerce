@@ -197,103 +197,120 @@ const EmployeeModal: React.FC<EmployeeModalProps> = ({ open, handleClose, employ
 
     return (
         <Modal open={open} onClose={onClose}>
-            <Paper style={{ margin: 'auto', marginTop: '5%', padding: 20, maxWidth: 600 }}>
-                <Typography
-                    sx={{ mb: 1, textAlign: 'center', fontWeight: 'bold', color: `${theme.palette.primary.main} !important` }}
-                    variant="h6"
+            <Box
+                sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    height: '100vh',
+                    p: 2,
+                }}
+            >
+                <Paper
+                    style={{
+                        maxHeight: '90vh',
+                        overflowY: 'auto',
+                        width: '100%',
+                        maxWidth: 600,
+                        padding: 20,
+                    }}
                 >
-                    {employeeId ? 'Edit Employee' : 'Create Employee'}
-                </Typography>
-
-                <Box sx={{ mb: 2 }}>
                     <Typography
-                        variant="subtitle1"
-                        sx={{
-                            fontWeight: 'bold',
-                            mb: 1,
-                            color: `${theme.palette.text.primary}`,
-                            textAlign: 'center',
-                            backgroundColor: theme.palette.background.default,
-                            padding: 1,
-                            borderRadius: 1,
-                        }}
+                        sx={{ mb: 1, textAlign: 'center', fontWeight: 'bold', color: `${theme.palette.primary.main} !important` }}
+                        variant="h6"
                     >
-                        Personal Details
+                        {employeeId ? 'Edit Employee' : 'Create Employee'}
                     </Typography>
 
-                    {!employeeData.user_id && (
+                    <Box sx={{ mb: 2 }}>
+                        <Typography
+                            variant="subtitle1"
+                            sx={{
+                                fontWeight: 'bold',
+                                mb: 1,
+                                color: `${theme.palette.text.primary}`,
+                                textAlign: 'center',
+                                backgroundColor: theme.palette.background.default,
+                                padding: 1,
+                                borderRadius: 1,
+                            }}
+                        >
+                            Personal Details
+                        </Typography>
+
+                        {!employeeData.user_id && (
+                            <Grid container spacing={2}>
+                                <Grid item xs={12} md={12}>
+                                    <StyledSelectField
+                                        label="User"
+                                        name="user_id"
+                                        value={employeeData.user_id ?? ''}
+                                        onChange={handleUserChange}
+                                        options={users.map((user: any) => ({ value: user.id, display: `${user.first_name} ${user.last_name}` }))}
+                                        required
+                                        error={errors.user_id}
+                                        helperText={errors.user_id ? 'User is required' : ''}
+                                        disabled={!!employeeId}
+                                    />
+                                </Grid>
+                            </Grid>
+                        )}
+
                         <Grid container spacing={2}>
-                            <Grid item xs={12} md={12}>
-                                <StyledSelectField
-                                    label="User"
-                                    name="user_id"
-                                    value={employeeData.user_id ?? ''}
-                                    onChange={handleUserChange}
-                                    options={users.map((user: any) => ({ value: user.id, display: `${user.first_name} ${user.last_name}` }))}
-                                    required
-                                    error={errors.user_id}
-                                    helperText={errors.user_id ? 'User is required' : ''}
-                                    disabled={!!employeeId}
+                            <Grid item xs={6}>
+                                <StyledTextField
+                                    label="First Name"
+                                    name="first_name"
+                                    value={employeeData.first_name ?? ''}
+                                    onChange={handleInputChange}
+                                    fullWidth
+                                    margin="normal"
+                                    disabled
+                                />
+                            </Grid>
+
+                            <Grid item xs={6}>
+                                <StyledTextField
+                                    label="Middle Name"
+                                    name="middle_name"
+                                    value={employeeData.middle_name ?? ''}
+                                    onChange={handleInputChange}
+                                    fullWidth
+                                    margin="normal"
+                                    disabled
                                 />
                             </Grid>
                         </Grid>
-                    )}
 
-                    <Grid container spacing={2}>
-                        <Grid item xs={6}>
-                            <StyledTextField
-                                label="First Name"
-                                name="first_name"
-                                value={employeeData.first_name ?? ''}
-                                onChange={handleInputChange}
-                                fullWidth
-                                margin="normal"
-                                disabled
-                            />
+                        <Grid container spacing={2}>
+                            <Grid item xs={6}>
+                                <StyledTextField
+                                    label="Last Name"
+                                    name="last_name"
+                                    value={employeeData.last_name ?? ''}
+                                    onChange={handleInputChange}
+                                    fullWidth
+                                    margin="normal"
+                                    disabled
+                                />
+                            </Grid>
+
+                            <Grid item xs={6}>
+                                <StyledTextField
+                                    label="Date of Birth"
+                                    name="dob"
+                                    type="date"
+                                    value={employeeData.dob ?? ''}
+                                    onChange={handleInputChange}
+                                    fullWidth
+                                    margin="normal"
+                                    InputLabelProps={{ shrink: true }}
+                                />
+                            </Grid>
                         </Grid>
 
-                        <Grid item xs={6}>
-                            <StyledTextField
-                                label="Middle Name"
-                                name="middle_name"
-                                value={employeeData.middle_name ?? ''}
-                                onChange={handleInputChange}
-                                fullWidth
-                                margin="normal"
-                                disabled
-                            />
-                        </Grid>
-                    </Grid>
-
-                    <Grid container spacing={2}>
-                        <Grid item xs={6}>
-                            <StyledTextField
-                                label="Last Name"
-                                name="last_name"
-                                value={employeeData.last_name ?? ''}
-                                onChange={handleInputChange}
-                                fullWidth
-                                margin="normal"
-                                disabled
-                            />
-                        </Grid>
-
-                        <Grid item xs={6}>
-                            <StyledTextField
-                                label="Date of Birth"
-                                name="dob"
-                                type="date"
-                                value={employeeData.dob ?? ''}
-                                onChange={handleInputChange}
-                                fullWidth
-                                margin="normal"
-                                InputLabelProps={{ shrink: true }}
-                            />
-                        </Grid>
-                    </Grid>
-
-                    <Grid container spacing={2}>
-                        {/* <Grid item xs={6}>
+                        <Grid container spacing={2}>
+                            {/* <Grid item xs={6}>
                             <StyledTextField
                                 label="Social Security Number"
                                 name="social_number"
@@ -305,148 +322,149 @@ const EmployeeModal: React.FC<EmployeeModalProps> = ({ open, handleClose, employ
                             />
                         </Grid> */}
 
-                        <Grid item xs={12} md={6}>
-                            <StyledTextField
-                                label="Email"
-                                name="personal_email"
-                                type="email"
-                                value={employeeData.personal_email ?? ''}
-                                onChange={handleInputChange}
-                                fullWidth
-                                margin="normal"
-                            />
+                            <Grid item xs={12} md={6}>
+                                <StyledTextField
+                                    label="Email"
+                                    name="personal_email"
+                                    type="email"
+                                    value={employeeData.personal_email ?? ''}
+                                    onChange={handleInputChange}
+                                    fullWidth
+                                    margin="normal"
+                                />
+                            </Grid>
                         </Grid>
-                    </Grid>
-                </Box>
+                    </Box>
 
-                <Box sx={{ mb: 3 }}>
-                    <Typography
-                        variant="subtitle1"
-                        sx={{
-                            fontWeight: 'bold',
-                            mb: 1,
-                            color: `${theme.palette.text.primary}`,
-                            textAlign: 'center',
-                            backgroundColor: theme.palette.background.default,
-                            padding: 1,
-                            borderRadius: 1,
-                        }}
-                    >
-                        Employee Details
-                    </Typography>
+                    <Box sx={{ mb: 3 }}>
+                        <Typography
+                            variant="subtitle1"
+                            sx={{
+                                fontWeight: 'bold',
+                                mb: 1,
+                                color: `${theme.palette.text.primary}`,
+                                textAlign: 'center',
+                                backgroundColor: theme.palette.background.default,
+                                padding: 1,
+                                borderRadius: 1,
+                            }}
+                        >
+                            Employee Details
+                        </Typography>
 
-                    <Grid container spacing={2}>
-                        <Grid item xs={12}>
-                            <StyledTextField
-                                label="Company Email"
-                                name="email"
-                                value={employeeData.email ?? ''}
-                                onChange={handleInputChange}
-                                fullWidth
-                                margin="normal"
-                                disabled
-                            />
-                        </Grid>
-                    </Grid>
-
-                    <Grid container spacing={2}>
-                        <Grid item xs={6}>
-                            <StyledTextField
-                                label="Role"
-                                name="role_display" // Updated field
-                                value={employeeData.role_display ?? ''}
-                                onChange={handleInputChange}
-                                fullWidth
-                                margin="normal"
-                                disabled
-                            />
+                        <Grid container spacing={2}>
+                            <Grid item xs={12}>
+                                <StyledTextField
+                                    label="Company Email"
+                                    name="email"
+                                    value={employeeData.email ?? ''}
+                                    onChange={handleInputChange}
+                                    fullWidth
+                                    margin="normal"
+                                    disabled
+                                />
+                            </Grid>
                         </Grid>
 
-                        <Grid item xs={6}>
-                            <StyledSelectField
-                                label="Department"
-                                name="department_id"
-                                value={employeeData.department_id ?? ''}
-                                onChange={handleInputChange}
-                                options={departments.map((department: any) => ({ value: department.id, display: department.name }))}
-                                required
-                                error={errors.department_id}
-                                helperText={errors.department_id ? 'Department is required' : ''}
-                            />
-                        </Grid>
-                    </Grid>
+                        <Grid container spacing={2}>
+                            <Grid item xs={6}>
+                                <StyledTextField
+                                    label="Role"
+                                    name="role_display" // Updated field
+                                    value={employeeData.role_display ?? ''}
+                                    onChange={handleInputChange}
+                                    fullWidth
+                                    margin="normal"
+                                    disabled
+                                />
+                            </Grid>
 
-                    <Grid container spacing={2}>
-                        <Grid item xs={6}>
-                            <StyledTextField
-                                label="Start Date"
-                                name="start_date"
-                                type="date"
-                                value={employeeData.start_date ?? ''}
-                                onChange={handleInputChange}
-                                fullWidth
-                                margin="normal"
-                                InputLabelProps={{ shrink: true }}
-                            />
-                        </Grid>
-
-                        <Grid item xs={6}>
-                            <StyledTextField
-                                label="End Date"
-                                name="end_date"
-                                type="date"
-                                value={employeeData.end_date ?? ''}
-                                onChange={handleInputChange}
-                                fullWidth
-                                margin="normal"
-                                InputLabelProps={{ shrink: true }}
-                            />
-                        </Grid>
-                    </Grid>
-
-                    <Grid container spacing={2}>
-                        <Grid item xs={6}>
-                            <StyledSelectField
-                                label="Active"
-                                name="active"
-                                value={employeeData.active ?? ''}
-                                onChange={handleInputChange}
-                                options={[{ value: 'true', display: 'True' }, { value: 'false', display: 'False' }]}
-                                required
-                                fullWidth
-                                margin="normal"
-                            />
+                            <Grid item xs={6}>
+                                <StyledSelectField
+                                    label="Department"
+                                    name="department_id"
+                                    value={employeeData.department_id ?? ''}
+                                    onChange={handleInputChange}
+                                    options={departments.map((department: any) => ({ value: department.id, display: department.name }))}
+                                    required
+                                    error={errors.department_id}
+                                    helperText={errors.department_id ? 'Department is required' : ''}
+                                />
+                            </Grid>
                         </Grid>
 
-                        <Grid item xs={6}></Grid>
-                    </Grid>
-                </Box>
+                        <Grid container spacing={2}>
+                            <Grid item xs={6}>
+                                <StyledTextField
+                                    label="Start Date"
+                                    name="start_date"
+                                    type="date"
+                                    value={employeeData.start_date ?? ''}
+                                    onChange={handleInputChange}
+                                    fullWidth
+                                    margin="normal"
+                                    InputLabelProps={{ shrink: true }}
+                                />
+                            </Grid>
 
-                <Box sx={{ pt: 3, display: 'flex', justifyContent: 'center', gap: 2 }}>
-                    <Button
-                        variant="contained"
-                        sx={{
-                            backgroundColor: `${theme.palette.success.main} !important`,
-                            color: `${theme.palette.text.primary} !important`,
-                            '&:hover': { backgroundColor: `${theme.palette.success.dark} !important` },
-                        }}
-                        onClick={handleSubmit}
-                    >
-                        Submit
-                    </Button>
-                    <Button
-                        variant="contained"
-                        sx={{
-                            backgroundColor: `${theme.palette.warning.main} !important`,
-                            color: `${theme.palette.text.primary} !important`,
-                            '&:hover': { backgroundColor: `${theme.palette.warning.dark} !important` },
-                        }}
-                        onClick={onClose}
-                    >
-                        Cancel
-                    </Button>
-                </Box>
-            </Paper>
+                            <Grid item xs={6}>
+                                <StyledTextField
+                                    label="End Date"
+                                    name="end_date"
+                                    type="date"
+                                    value={employeeData.end_date ?? ''}
+                                    onChange={handleInputChange}
+                                    fullWidth
+                                    margin="normal"
+                                    InputLabelProps={{ shrink: true }}
+                                />
+                            </Grid>
+                        </Grid>
+
+                        <Grid container spacing={2}>
+                            <Grid item xs={6}>
+                                <StyledSelectField
+                                    label="Active"
+                                    name="active"
+                                    value={employeeData.active ?? ''}
+                                    onChange={handleInputChange}
+                                    options={[{ value: 'true', display: 'True' }, { value: 'false', display: 'False' }]}
+                                    required
+                                    fullWidth
+                                    margin="normal"
+                                />
+                            </Grid>
+
+                            <Grid item xs={6}></Grid>
+                        </Grid>
+                    </Box>
+
+                    <Box sx={{ pt: 3, display: 'flex', justifyContent: 'center', gap: 2 }}>
+                        <Button
+                            variant="contained"
+                            sx={{
+                                backgroundColor: `${theme.palette.success.main} !important`,
+                                color: `${theme.palette.text.primary} !important`,
+                                '&:hover': { backgroundColor: `${theme.palette.success.dark} !important` },
+                            }}
+                            onClick={handleSubmit}
+                        >
+                            Submit
+                        </Button>
+                        <Button
+                            variant="contained"
+                            sx={{
+                                backgroundColor: `${theme.palette.warning.main} !important`,
+                                color: `${theme.palette.text.primary} !important`,
+                                '&:hover': { backgroundColor: `${theme.palette.warning.dark} !important` },
+                            }}
+                            onClick={onClose}
+                        >
+                            Cancel
+                        </Button>
+                    </Box>
+                </Paper>
+            </Box>
         </Modal >
     );
 };

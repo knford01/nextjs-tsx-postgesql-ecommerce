@@ -38,7 +38,7 @@ const AddressDataGrid: React.FC = () => {
     const columns: GridColDef[] = [
         { field: 'company', headerName: 'Company', flex: 1, minWidth: 150 },
         { field: 'name', headerName: 'Name', flex: 1, minWidth: 150 },
-        { field: 'email', headerName: 'Email', flex: 1, minWidth: 200 },
+        // { field: 'email', headerName: 'Email', flex: 1, minWidth: 200 },
         { field: 'phone', headerName: 'Phone', flex: 1, minWidth: 150 },
         { field: 'address1', headerName: 'Address', flex: 1, minWidth: 200 },
         { field: 'city', headerName: 'City', flex: 1, minWidth: 150 },

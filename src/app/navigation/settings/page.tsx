@@ -18,8 +18,8 @@ import { useRouter } from 'next/navigation';
 const links = [
     { id: 'addresses', name: 'Addresses', description: 'Create and update system addresses', icon: <LocationOnIcon /> },
     { id: 'access', name: 'Role Access', description: 'Assign roles their access levels', icon: <LockOutlinedIcon /> },
-    { id: 'permissions', name: 'System Permissions', description: 'Define system-wide permissions', icon: <SettingsIcon /> },
-    { id: 'users', name: 'Users', description: 'Manage users and their individual permissions', icon: <PeopleIcon /> },
+    { id: 'permissions', name: 'Permissions', description: 'Define system-wide permissions', icon: <SettingsIcon /> },
+    { id: 'users', name: 'Users', description: 'Manage users and their permissions', icon: <PeopleIcon /> },
     { id: 'roles', name: 'User Roles', description: 'Manage user roles', icon: <SecurityIcon /> },
 ];
 
