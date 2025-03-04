@@ -81,6 +81,31 @@ export async function fetchUsers() {
     }
 }
 
+export async function fetchActiveUsers() {
+    noStore();
+    try {
+        const data = await sql<User>` 
+        SELECT
+          u.id,
+          u.first_name,
+          u.last_name,
+          COALESCE(u.first_name, '') || ' ' || COALESCE(u.last_name, '') AS user_name,
+          u.avatar,
+          u.role,
+          ur.display AS role_display,
+          u.email
+        FROM users u
+        LEFT JOIN user_roles ur ON ur.id = u.role
+        WHERE u.active = 1
+        ORDER BY u.first_name, u.last_name ASC`;
+
+        return data.rows;
+    } catch (err) {
+        console.error('Database Error:', err);
+        throw new Error('Failed to fetch all users.');
+    }
+}
+
 export async function fetchActiveUsersNotEmployees() {
     noStore();
     try {
