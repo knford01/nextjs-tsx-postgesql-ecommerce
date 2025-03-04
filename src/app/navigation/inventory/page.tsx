@@ -7,8 +7,7 @@ import { hasAccess } from '@/utils/permissions2';
 import { useRouter } from 'next/navigation';
 import InventoryTab from '@/components/inventory/InventoryTab';
 import ItemTab from '@/components/inventory/ItemTab';
-import ManufacturersTab from '@/components/inventory/ManufacturerTab';
-import ModelsTab from '@/components/inventory/ModelsTab';
+import SettingsTab from '@/components/inventory/SettingsTab';
 
 const InventoryPage = ({ params }: any) => {
     const router = useRouter();
@@ -28,8 +27,7 @@ const InventoryPage = ({ params }: any) => {
     const tabsConfig = [
         { label: 'Inventory', permission: 'inventory' },
         { label: 'Items', permission: 'items' },
-        { label: 'Manufacturers', permission: 'manufacturers' },
-        { label: 'Models', permission: 'models' },
+        { label: 'Settings', permission: 'settings' },
     ];
 
     const accessibleTabs = tabsConfig.filter(tab => hasAccess(combinedPermissions, 'inventory', tab.permission));
@@ -61,11 +59,7 @@ const InventoryPage = ({ params }: any) => {
             )}
 
             {activeTab === 2 && (
-                <ManufacturersTab />
-            )}
-
-            {activeTab === 3 && (
-                <ModelsTab />
+                <SettingsTab />
             )}
         </Box>
     );
