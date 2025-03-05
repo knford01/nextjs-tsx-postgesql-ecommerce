@@ -102,7 +102,7 @@ export async function fetchInactiveGroups(): Promise<any> {
     }
 }
 
-export async function fetchGroupById(id: number): Promise<any> {
+export async function fetchGroupById(id: any): Promise<any> {
     noStore();
     try {
         const data = await sql<any>`

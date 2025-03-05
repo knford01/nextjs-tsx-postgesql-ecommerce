@@ -249,6 +249,39 @@ export async function setUserTheme(id: string, theme: string) {
     }
 }
 
+export async function fetchUserTaskBoardGroup(id: string) {
+    noStore();
+    try {
+        const data = await sql<any>`
+            SELECT 
+                u.taskboard_group as value,
+                tg.name as label
+            FROM users u
+            LEFT JOIN task_groups tg on tg.id = u.taskboard_group
+            WHERE u.id = ${id}`;
+        return data.rows[0] || null;
+    } catch (err) {
+        console.error('Database Error:', err);
+        throw new Error('Failed to fetch user taskboard_group.');
+    }
+}
+
+export async function setUserTaskBoardGroup(user_id: number, group_id: any): Promise<any> {
+    noStore();
+    try {
+        const data = await sql`
+        UPDATE users SET
+          taskboard_group = COALESCE(${group_id}, taskboard_group)
+        WHERE id = ${user_id}
+        RETURNING *;`;
+
+        return data.rows[0] || null;
+    } catch (error) {
+        console.error('Database Error:', error);
+        throw new Error('Failed to update user task group.');
+    }
+}
+
 export async function fetchUserRoles(active?: number) {
     noStore();
     try {

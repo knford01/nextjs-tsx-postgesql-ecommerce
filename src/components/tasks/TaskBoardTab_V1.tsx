@@ -52,7 +52,8 @@ export default function SchedulingTab() {
                 setSessionUser(session.user);
 
                 const taskBoardGroup = await fetchUserTaskBoardGroup(session.user.id);
-                if (taskBoardGroup.value !== null && taskBoardGroup.value !== undefined) {
+                console.log("taskBoardGroup:", taskBoardGroup);
+                if (taskBoardGroup) {
                     setSelectedGroup(taskBoardGroup);
                 }
             } catch (error) {
@@ -65,6 +66,7 @@ export default function SchedulingTab() {
 
     useEffect(() => {
         const loadGroupUsersCSV = async (): Promise<string | null> => {
+            console.log("selectedGroup: ", selectedGroup);
             try {
                 if (!selectedGroup) return null;
                 const fetchedUsersCSV = await fetchGroupById(selectedGroup.value);
@@ -97,7 +99,9 @@ export default function SchedulingTab() {
 
     useEffect(() => {
         const saveUserGroupPreference = async () => {
-            if (sessionUser !== null && sessionUser !== undefined && selectedGroup !== null && selectedGroup !== undefined) {
+            if (sessionUser && selectedGroup) {
+                console.log("sessionUser.id: ", sessionUser.id);
+                console.log("selectedGroup.value: ", selectedGroup.value);
                 try {
                     await setUserTaskBoardGroup(sessionUser.id, selectedGroup.value);
                 } catch (error) {
