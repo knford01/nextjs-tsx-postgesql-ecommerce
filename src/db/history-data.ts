@@ -5,7 +5,7 @@ import { sql } from '@vercel/postgres';
 import { unstable_noStore as noStore } from 'next/cache';
 
 // Allowed tables and columns to prevent SQL injection
-const allowedTables = ['employee_history'];
+const allowedTables = ['employee_history', 'task_history'];
 
 export async function fetchHistoryRows(table: string, id: number): Promise<any> {
     noStore();

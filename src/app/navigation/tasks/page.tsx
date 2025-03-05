@@ -6,7 +6,8 @@ import { useCombinedPermissions } from '@/components/layout/combinedpermissions'
 import { hasAccess } from '@/utils/permissions2';
 import { useRouter } from 'next/navigation';
 import TaskBoardTab from '@/components/tasks/TaskBoardTab';
-// import reportsTab from '@/components/tasks/reportsTab';
+import TaskTab from '@/components/tasks/TaskTab';
+// import ReportsTab from '@/components/tasks/ReportsTab';
 import SettingsTab from '@/components/tasks/SettingsTab';
 
 const TasksPage = ({ params }: any) => {
@@ -57,9 +58,7 @@ const TasksPage = ({ params }: any) => {
             )}
 
             {activeTab === 1 && (
-                <Box sx={{ mt: 2 }}>
-                    <Typography>Tasks section coming soon...</Typography>
-                </Box>
+                <TaskTab />
             )}
 
             {activeTab === 2 && (

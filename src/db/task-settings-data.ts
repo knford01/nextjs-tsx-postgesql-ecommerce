@@ -85,6 +85,23 @@ export async function fetchActiveGroups(): Promise<any> {
     }
 }
 
+export async function fetchInactiveGroups(): Promise<any> {
+    noStore();
+    try {
+        const data = await sql<any>`
+            SELECT 
+                tg.*
+            FROM task_groups tg
+            WHERE tg.active = FALSE
+            ORDER BY name;`;
+
+        return data.rows || null;
+    } catch (error) {
+        console.error('Database Error:', error);
+        throw new Error('Failed to fetch active task groups.');
+    }
+}
+
 export async function fetchGroupById(id: number): Promise<any> {
     noStore();
     try {
