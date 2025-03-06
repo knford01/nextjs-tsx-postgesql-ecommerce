@@ -12,13 +12,13 @@ import { User } from '@/types/user';
 const links = [
   { id: 0, name: 'Dashboard', href: '/navigation', icon: HomeIcon, access: '' },
   { id: 1, name: 'Calendar', href: '/navigation/calendar', icon: CalendarIcon, access: 'calendar' },
-  { id: 2, name: 'Customers', href: '/navigation/customers', icon: UserPlusIcon, access: 'customers' },
-  { id: 3, name: 'Projects', href: '/navigation/customers/projects', icon: BriefcaseIcon, access: 'projects' },
-  { id: 4, name: 'EDI Fulfillment', href: '/navigation/edi', icon: ShoppingCartIcon, access: 'edi_fulfillment' },
-  { id: 5, name: 'Shopify Orders', href: '/navigation/shopify', icon: CheckCircleIcon, access: 'shopify' },
-  { id: 6, name: 'Employees', href: '/navigation/employees', icon: UserGroupIcon, access: 'employees' },
-  { id: 7, name: 'Inventory', href: '/navigation/inventory', icon: ArchiveBoxIcon, access: 'inventory' },
-  { id: 8, name: 'Tasks', href: '/navigation/tasks', icon: RectangleGroupIcon, access: 'tasks' },
+  { id: 2, name: 'Employees', href: '/navigation/employees', icon: UserGroupIcon, access: 'employees' },
+  { id: 3, name: 'Customers', href: '/navigation/customers', icon: UserPlusIcon, access: 'customers' },
+  { id: 4, name: 'Projects', href: '/navigation/customers/projects', icon: BriefcaseIcon, access: 'projects' },
+  { id: 5, name: 'Tasks', href: '/navigation/tasks', icon: RectangleGroupIcon, access: 'tasks' },
+  { id: 6, name: 'EDI Fulfillment', href: '/navigation/edi', icon: ShoppingCartIcon, access: 'edi_fulfillment' },
+  { id: 7, name: 'Shopify Orders', href: '/navigation/shopify', icon: CheckCircleIcon, access: 'shopify' },
+  { id: 8, name: 'Inventory', href: '/navigation/inventory', icon: ArchiveBoxIcon, access: 'inventory' },
   { id: 9, name: 'Warehousing', href: '/navigation/warehousing', icon: TruckIcon, access: 'warehousing' },
   { id: 10, name: 'Settings', href: '/navigation/settings', icon: CogIcon, access: 'settings' }
 ];
