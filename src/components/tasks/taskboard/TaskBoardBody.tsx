@@ -1,24 +1,42 @@
 import { TableBody, TableRow, TableCell, useTheme } from '@mui/material';
 
 interface TaskBoardBodyProps {
-    headers: string[]; // Headers define the columns, tasks will be mapped to them later
-    tasks?: any[]; // Placeholder for task data to be added later
+    headers: string[];
+    tasksByColumn: Record<string, any[][]>;
 }
 
-export default function TaskBoardBody({ headers, tasks = [] }: TaskBoardBodyProps) {
+export default function TaskBoardBody({ headers, tasksByColumn }: TaskBoardBodyProps) {
     const theme = useTheme();
 
     return (
         <TableBody>
-            {/* Placeholder row for now, will be replaced with dynamic task rows later */}
-            <TableRow>
-                {headers.map((_, index) => (
-                    <TableCell key={index} sx={{ borderRight: '1px solid #ccc', backgroundColor: theme.palette.secondary.main }}>
-                        {/* Placeholder text, to be replaced with actual task data */}
-                        {tasks.length > 0 ? 'Task Data' : 'No Data'}
-                    </TableCell>
-                ))}
-            </TableRow>
+            {Array.from({
+                length: Math.max(...Object.values(tasksByColumn).map(arr => arr.length || 0), 1)
+            }).map((_, rowIndex) => (
+                <TableRow key={rowIndex}>
+                    {headers.map((header, colIndex) => {
+                        const tasks = tasksByColumn[header]?.[rowIndex] ?? [];
+
+                        return (
+                            <TableCell
+                                key={colIndex}
+                                sx={{
+                                    borderRight: colIndex === headers.length - 1 ? 'none' : '1px solid #ccc', // Only right border
+                                    borderBottom: 'none',
+                                    backgroundColor: theme.palette.secondary.main,
+                                    color: theme.palette.text.primary
+                                }}
+                            >
+                                {tasks.length > 0 &&
+                                    tasks.map(task => (
+                                        <div key={task.id}>{task.title}</div>
+                                    ))
+                                }
+                            </TableCell>
+                        );
+                    })}
+                </TableRow>
+            ))}
         </TableBody>
     );
 }

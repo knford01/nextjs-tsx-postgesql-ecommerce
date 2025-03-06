@@ -36,6 +36,7 @@ export async function fetchActiveTaskBoardTasks(): Promise<any> {
                 t.*,
                 COALESCE(u.first_name, '') || ' ' || COALESCE(u.last_name, '') AS user_name,
                 ts.name AS status_name,
+                ts.class,
                 p.name AS project_name,
                 c.name AS customer_name
             FROM tasks t

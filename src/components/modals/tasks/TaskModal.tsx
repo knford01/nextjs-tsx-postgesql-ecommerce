@@ -23,7 +23,7 @@ const TaskModal: React.FC<TaskModalProps> = ({ open, handleClose, taskId, loadTa
     const [customers, setCustomers] = useState<any[]>([]);
     const [projects, setProjects] = useState<any[]>([]);
 
-    const [taskInfo, setTaskInfo] = useState<any>({
+    const initialTaskState = {
         customer_id: '',
         project_id: '',
         title: '',
@@ -32,9 +32,11 @@ const TaskModal: React.FC<TaskModalProps> = ({ open, handleClose, taskId, loadTa
         start_date: date,
         end_date: date,
         status_id: '1',
-        postion: '0',
+        position: '0',
         active: 'true'
-    });
+    };
+
+    const [taskInfo, setTaskInfo] = useState<any>(initialTaskState);
 
     const [errors, setErrors] = useState({
         customer_id: false,
@@ -115,6 +117,24 @@ const TaskModal: React.FC<TaskModalProps> = ({ open, handleClose, taskId, loadTa
         }
     };
 
+    const resetForm = () => {
+        setTaskInfo(initialTaskState);
+        setErrors({
+            customer_id: false,
+            project_id: false,
+            title: false,
+            scope: false,
+            start_date: false,
+            end_date: false,
+        });
+        setProjects([]); // Reset projects when customer changes
+    };
+
+    const handleCloseModal = () => {
+        resetForm();
+        handleClose();
+    };
+
     const handleSubmit = async () => {
         const requiredFields = ['customer_id', 'project_id', 'title', 'scope', 'start_date', 'end_date'];
 
@@ -151,7 +171,7 @@ const TaskModal: React.FC<TaskModalProps> = ({ open, handleClose, taskId, loadTa
                 await createTask(taskInfo, session.user);
                 showSuccessToast('Task Created Successfully');
             }
-            handleClose();
+            handleCloseModal();
             loadTasks();
         } catch (error) {
             showErrorToast('Failed to Save Task');
@@ -159,7 +179,7 @@ const TaskModal: React.FC<TaskModalProps> = ({ open, handleClose, taskId, loadTa
     };
 
     return (
-        <Modal open={open} onClose={handleClose}>
+        <Modal open={open} onClose={handleCloseModal}>
             <Box
                 sx={{
                     display: 'flex',
@@ -298,7 +318,7 @@ const TaskModal: React.FC<TaskModalProps> = ({ open, handleClose, taskId, loadTa
                                 color: theme.palette.text.primary,
                                 '&:hover': { backgroundColor: theme.palette.warning.dark },
                             }}
-                            onClick={handleClose}
+                            onClick={handleCloseModal}
                         >
                             Cancel
                         </Button>

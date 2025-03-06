@@ -11,6 +11,7 @@ import ClearButton from '@/components/ui/buttons/ClearButton';
 import TaskBoardTable from './taskboard/TaskBoardTable';
 import { useTaskBoardData } from '@/hooks/taskboard/useTaskBoardData';
 import { useGroupUsers } from '@/hooks/taskboard/useGroupUsers';
+import { useTaskBoardTasks } from '@/hooks/taskboard/useTaskBoardTasks';
 
 export default function SchedulingTab() {
     const router = useRouter();
@@ -30,6 +31,7 @@ export default function SchedulingTab() {
     const handleClear = () => setSelectedGroup(null);
 
     const headerTitles = ['On Hold', 'Pending', ...groupUsers.map(user => user.user_name), 'Completed', 'Canceled'];
+    const tasksByColumn = useTaskBoardTasks(headerTitles, groupUsers);
 
     return (
         <Container maxWidth={false} sx={{ mt: 5, width: 'auto', transition: 'all 0.3s' }}>
@@ -48,7 +50,7 @@ export default function SchedulingTab() {
                 </Grid>
             </Grid>
 
-            <TaskBoardTable headers={headerTitles} />
+            <TaskBoardTable headers={headerTitles} tasksByColumn={tasksByColumn} />
         </Container>
     );
 }
