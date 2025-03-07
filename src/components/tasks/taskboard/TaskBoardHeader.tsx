@@ -2,6 +2,7 @@ import { TableHead, TableRow, TableCell, useTheme } from '@mui/material';
 
 export default function TaskBoardHeader({ headers }: { headers: string[] }) {
     const theme = useTheme();
+    const columnWidth = `${100 / headers.length}%`;
 
     return (
         <TableHead sx={{ backgroundColor: theme.palette.primary.main }}>
@@ -12,9 +13,13 @@ export default function TaskBoardHeader({ headers }: { headers: string[] }) {
                         sx={{
                             fontWeight: 'bold',
                             textTransform: 'capitalize',
-                            borderTop: '2px solid #ccc', // Top border
-                            borderBottom: '2px solid #ccc', // Bottom border
-                            borderRight: i === headers.length - 1 ? 'none' : '1px solid #ccc', // Right border except for last column
+                            borderTop: '2px solid #ccc',
+                            borderBottom: '2px solid #ccc',
+                            borderRight: i === headers.length - 1 ? 'none' : '1px solid #ccc',
+                            textAlign: 'center',
+                            verticalAlign: 'middle',
+                            width: columnWidth,
+                            minWidth: '120px',
                         }}
                     >
                         {title}

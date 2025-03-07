@@ -38,7 +38,16 @@ export async function fetchActiveTaskBoardTasks(): Promise<any> {
                 ts.name AS status_name,
                 ts.class,
                 p.name AS project_name,
-                c.name AS customer_name
+                c.name AS customer_name,
+                (
+                    SELECT COALESCE(SUM(COALESCE(end_time, NOW()) - start_time), INTERVAL '0 seconds')::TEXT 
+                    FROM task_times 
+                    WHERE task_id = t.id AND active = TRUE
+                ) AS sum_time,
+                TO_CHAR(
+                    INTERVAL '1 hour' * t.original_estimate::NUMERIC, 
+                    'HH24:MI:SS'
+                ) AS estimated_time
             FROM tasks t
             LEFT JOIN users u ON u.id = t.assigned_user_id
             LEFT JOIN task_statuses ts ON ts.id = t.status_id
@@ -48,7 +57,7 @@ export async function fetchActiveTaskBoardTasks(): Promise<any> {
             AND t.completed_user IS NULL
             AND t.canceled_user IS NULL
             ORDER BY t.status_id, t.assigned_user_id, t.position;
-        `;
+            `;
 
         return data.rows || null;
     } catch (error) {
