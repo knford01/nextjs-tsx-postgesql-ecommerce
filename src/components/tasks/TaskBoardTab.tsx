@@ -18,7 +18,7 @@ export default function SchedulingTab() {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
-    const { groups, selectedGroup, setSelectedGroup } = useTaskBoardData();
+    const { groups, selectedGroup, setSelectedGroup, sessionUser } = useTaskBoardData();
     const groupUsers = useGroupUsers(selectedGroup);
 
     const combinedPermissions = useCombinedPermissions();
@@ -50,7 +50,7 @@ export default function SchedulingTab() {
                 </Grid>
             </Grid>
 
-            <TaskBoardTable headers={headerTitles} tasksByColumn={tasksByColumn} />
+            <TaskBoardTable headers={headerTitles} tasksByColumn={tasksByColumn} sessionUser={sessionUser} />
         </Container>
     );
 }

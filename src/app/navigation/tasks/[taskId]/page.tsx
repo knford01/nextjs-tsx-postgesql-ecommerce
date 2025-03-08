@@ -1,4 +1,4 @@
-// src/app/navication/employees/[taskId]/page.tsx
+// src/app/navigation/tasks/[taskId]/page.tsx
 
 'use client';
 

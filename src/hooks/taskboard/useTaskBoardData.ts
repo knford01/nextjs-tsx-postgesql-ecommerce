@@ -42,5 +42,5 @@ export function useTaskBoardData() {
         }
     }, [selectedGroup, sessionUser]);
 
-    return { groups, selectedGroup, setSelectedGroup };
+    return { groups, selectedGroup, setSelectedGroup, sessionUser };
 }

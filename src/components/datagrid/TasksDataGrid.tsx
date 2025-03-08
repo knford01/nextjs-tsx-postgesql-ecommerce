@@ -96,21 +96,21 @@ const TasksDataGrid: React.FC<{ searchParameters?: SearchParameters }> = ({ sear
     };
 
     const columns: GridColDef[] = [
-        // {
-        //     field: 'view',
-        //     headerName: 'View',
-        //     minWidth: 70,
-        //     flex: 0.2,
-        //     sortable: false,
-        //     renderCell: (params) => (
-        //         <Link
-        //             href={`/navigation/tasks/${params.row.id}`}
-        //             style={{ textDecoration: 'none', color: theme.palette.text.primary, fontWeight: 'bold' }}
-        //         >
-        //             Visit
-        //         </Link>
-        //     ),
-        // },
+        {
+            field: 'view',
+            headerName: 'View',
+            minWidth: 70,
+            flex: 0.2,
+            sortable: false,
+            renderCell: (params) => (
+                <Link
+                    href={`/navigation/tasks/${params.row.id}`}
+                    style={{ textDecoration: 'none', color: theme.palette.text.primary, fontWeight: 'bold' }}
+                >
+                    Visit
+                </Link>
+            ),
+        },
         { field: 'title', headerName: 'Title', flex: 1, minWidth: 200 },
         { field: 'customer_name', headerName: 'Customer Name', flex: 1, minWidth: 200 },
         { field: 'project_name', headerName: 'Project Name', flex: 1, minWidth: 200 },

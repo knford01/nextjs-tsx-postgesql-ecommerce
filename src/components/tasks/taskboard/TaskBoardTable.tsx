@@ -5,14 +5,15 @@ import TaskBoardBody from './TaskBoardBody';
 interface TaskBoardTableProps {
     headers: string[];
     tasksByColumn: Record<string, any[][]>;
+    sessionUser: any;
 }
 
-export default function TaskBoardTable({ headers, tasksByColumn }: TaskBoardTableProps) {
+export default function TaskBoardTable({ headers, tasksByColumn, sessionUser }: TaskBoardTableProps) {
     return (
         <TableContainer>
             <Table>
                 <TaskBoardHeader headers={headers} />
-                <TaskBoardBody headers={headers} tasksByColumn={tasksByColumn} />
+                <TaskBoardBody headers={headers} tasksByColumn={tasksByColumn} sessionUser={sessionUser} />
             </Table>
         </TableContainer>
     );
