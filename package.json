@@ -10,6 +10,9 @@
     "test": "jest"
   },
   "dependencies": {
+    "@apollo/client": "^3.13.5",
+    "@apollo/server": "^4.11.3",
+    "@as-integrations/next": "^3.2.0",
     "@dnd-kit/accessibility": "^3.1.1",
     "@dnd-kit/core": "^6.3.1",
     "@dnd-kit/sortable": "^10.0.0",
@@ -28,10 +31,12 @@
     "@radix-ui/react-scroll-area": "^1.2.3",
     "@vercel/postgres": "^0.9.0",
     "@vercel/speed-insights": "^1.0.12",
+    "apollo-server-micro": "^3.13.0",
     "bcrypt": "^5.1.1",
     "cookie": "^1.0.2",
     "date-fns": "^4.1.0",
     "file-saver": "^2.0.5",
+    "graphql": "^16.10.0",
     "iron-session": "^8.0.2",
     "lucide-react": "^0.475.0",
     "next": "^15.1.7",

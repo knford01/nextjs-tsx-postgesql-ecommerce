@@ -1,96 +1,38 @@
-import React, { useState, useEffect, useCallback } from 'react';
+// src/components/datagrid/InventoryDataGrid.tsx
+
+'use client';
+
+import React from 'react';
+import Image from 'next/image';
 import { GridColDef } from '@mui/x-data-grid';
 import CustomDataGrid from './CustomDataGrid';
-import { Button, useMediaQuery, useTheme } from '@mui/material';
-import { PencilIcon, PlusIcon } from '@heroicons/react/24/outline';
-import ItemModal from '@/components/modals/inventory/ItemModal';
-import { fetchInventory, fetchFilteredInventory } from '@/db/inventory-data';
-import Image from 'next/image';
+import { useInventory } from '@/hooks/inventory/useInventory';
 
 interface SearchParameters {
-    warehouse_id?: number | null;
+    warehouse_id?: { value: number; label: string } | null;
+    location_id?: { value: number; label: string } | null;
+    customer_id?: { value: number; label: string } | null;
     item_number?: { value: number; label: string } | null;
-    location_id?: string | null;
     pallet_tag?: string;
     serial_number?: string;
 }
 
 const InventoryDataGrid: React.FC<{ searchParameters?: SearchParameters }> = ({ searchParameters }) => {
-    const theme = useTheme();
-    const [inventory, setInventory] = useState<any[]>([]);
-    const [modalOpen, setModalOpen] = useState(false);
-    const [currentItemId, setCurrentItemId] = useState<number | undefined>(undefined);
-    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+    const warehouseID = searchParameters?.warehouse_id?.value ?? undefined;
+    const locationID = searchParameters?.location_id?.value ?? undefined;
+    const customerID = searchParameters?.customer_id?.value ?? undefined;
 
-    // const loadInventory = useCallback(async () => {
-    //     let data;
-    //     // Construct the WHERE clause from searchParameters
-    //     const conditions = [];
-    //     if (searchParameters) {
-    //         // console.log('searchParameters: ', searchParameters);
-
-    //         if (searchParameters.warehouse_id) {
-    //             conditions.push(`i.warehouse_id = ${searchParameters.warehouse_id}`);
-    //         }
-    //         if (searchParameters) {
-    //             if (searchParameters.item_number) {
-    //                 conditions.push(`i.id = ${searchParameters.item_number.value}`);
-    //             }
-    //         }
-    //         if (searchParameters.location_id) {
-    //             conditions.push(`i.location_id = '${searchParameters.location_id}'`);
-    //         }
-    //         if (searchParameters.pallet_tag) {
-    //             conditions.push(`i.pallet_tag = '${searchParameters.pallet_tag}'`);
-    //         }
-    //         if (searchParameters.serial_number) {
-    //             conditions.push(`i.serial_number = '${searchParameters.serial_number}'`);
-    //         }
-    //     }
-
-    //     let whereClause = '';
-    //     if (conditions.length > 0) {
-    //         whereClause = 'WHERE ' + conditions.join(' AND ');
-    //         console.log('whereClause: ', whereClause);
-    //         data = await fetchFilteredInventory(whereClause);
-    //     } else {
-    //         data = await fetchInventory();
-    //     }
-    //     setInventory(data || []);
-    // }, [searchParameters]);
-
-    const loadInventory = useCallback(async () => {
-        let data;
-        // Construct the WHERE clause from searchParameters
-        if (searchParameters) {
-            if (searchParameters.item_number) {
-                data = await fetchFilteredInventory(searchParameters.item_number.value);
-            } else {
-                data = await fetchInventory();
-            }
-        }
-        setInventory(data || []);
-    }, [searchParameters]);
-
-    useEffect(() => {
-        loadInventory();
-    }, [loadInventory]);
-
-    const handleOpenModal = (itemId?: number) => {
-        setCurrentItemId(itemId);
-        setModalOpen(true);
-    };
-
-    const handleCloseModal = () => {
-        setModalOpen(false);
-        setCurrentItemId(undefined);
-    };
+    const { inventory, loading, error, refetch } = useInventory({
+        warehouseID,
+        locationID,
+        customerID,
+    });
 
     const columns: GridColDef[] = [
         {
             field: 'avatar',
             headerName: 'Image',
-            minWidth: 70, // Set minimum width to prevent squishing
+            minWidth: 70,
             flex: 0.2,
             sortable: false,
             renderCell: (params) => (
@@ -130,13 +72,6 @@ const InventoryDataGrid: React.FC<{ searchParameters?: SearchParameters }> = ({ 
                 columns={columns}
                 fileName="inventory_export"
                 columnsToIgnore={['image', 'actions']}
-            />
-
-            <ItemModal
-                open={modalOpen}
-                handleClose={handleCloseModal}
-                itemId={currentItemId}
-                loadItems={loadInventory}
             />
         </>
     );

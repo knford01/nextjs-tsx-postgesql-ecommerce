@@ -1,6 +1,8 @@
 //src/app/navigation/layout.tsx
 'use client';
 
+import { ApolloProvider } from '@apollo/client';
+import client from '@/lib/apollo-client';
 import { Box } from '@mui/material';
 import React, { createContext, useState, useContext, ReactNode, useEffect, useCallback } from 'react';
 import { ThemeProvider, Theme } from '@mui/material/styles';
@@ -84,61 +86,63 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   if (!theme) return null;
 
   return (
-    <ThemeContext.Provider value={{ theme, setTheme }}>
-      <ThemeProvider theme={theme}>
-        <CombinedPermissionsProvider combinedPermissions={combinedPermissions}>
-          <CheckSessionProvider checkSession={checkSession}>
-            <div className="flex h-screen overflow-hidden">
-              <SideNav collapsed={collapsed} setCollapsed={setCollapsed} sessionUser={sessionUser} />
-              <Box
-                sx={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  overflowX: 'auto',
-                  flexGrow: 1,
-                  transition: 'margin-left 0.3s',
-                  marginLeft: collapsed ? '64px' : '240px',  // Adjust based on collapsed state
-                }}
-              >
-                <TopNav
-                  collapsed={collapsed}
-                  sessionUser={sessionUser}
-                  checkSession={checkSession}  // Pass checkSession to TopNav
-                />
+    <ApolloProvider client={client}>
+      <ThemeContext.Provider value={{ theme, setTheme }}>
+        <ThemeProvider theme={theme}>
+          <CombinedPermissionsProvider combinedPermissions={combinedPermissions}>
+            <CheckSessionProvider checkSession={checkSession}>
+              <div className="flex h-screen overflow-hidden">
+                <SideNav collapsed={collapsed} setCollapsed={setCollapsed} sessionUser={sessionUser} />
                 <Box
                   sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    overflowX: 'auto',
                     flexGrow: 1,
-                    overflowY: 'auto',
-                    overflowX: 'auto',  // Allows horizontal scrolling
-                    backgroundColor: theme?.palette?.background?.paper || themes.defaultTheme.palette.background.paper,
-                    padding: { xs: 4 },
-                    transition: 'all 0.3s',
-                    paddingTop: '1rem',
-                    className: "child-element"
+                    transition: 'margin-left 0.3s',
+                    marginLeft: collapsed ? '64px' : '240px',  // Adjust based on collapsed state
                   }}
                 >
-                  <Box sx={{ p: 0, pt: 5, display: 'flex', justifyContent: 'space-between' }}>
-                    <Breadcrumbs />
-                    <ToastContainer
-                      position="top-right"
-                      autoClose={5000}
-                      hideProgressBar={false}
-                      newestOnTop={false}
-                      closeOnClick
-                      rtl={false}
-                      pauseOnFocusLoss
-                      draggable
-                      pauseOnHover
-                      theme="colored"
-                    />
+                  <TopNav
+                    collapsed={collapsed}
+                    sessionUser={sessionUser}
+                    checkSession={checkSession}  // Pass checkSession to TopNav
+                  />
+                  <Box
+                    sx={{
+                      flexGrow: 1,
+                      overflowY: 'auto',
+                      overflowX: 'auto',  // Allows horizontal scrolling
+                      backgroundColor: theme?.palette?.background?.paper || themes.defaultTheme.palette.background.paper,
+                      padding: { xs: 4 },
+                      transition: 'all 0.3s',
+                      paddingTop: '1rem',
+                      className: "child-element"
+                    }}
+                  >
+                    <Box sx={{ p: 0, pt: 5, display: 'flex', justifyContent: 'space-between' }}>
+                      <Breadcrumbs />
+                      <ToastContainer
+                        position="top-right"
+                        autoClose={5000}
+                        hideProgressBar={false}
+                        newestOnTop={false}
+                        closeOnClick
+                        rtl={false}
+                        pauseOnFocusLoss
+                        draggable
+                        pauseOnHover
+                        theme="colored"
+                      />
+                    </Box>
+                    {children}
                   </Box>
-                  {children}
                 </Box>
-              </Box>
-            </div>
-          </CheckSessionProvider>
-        </CombinedPermissionsProvider>
-      </ThemeProvider>
-    </ThemeContext.Provider>
+              </div>
+            </CheckSessionProvider>
+          </CombinedPermissionsProvider>
+        </ThemeProvider>
+      </ThemeContext.Provider>
+    </ApolloProvider>
   );
 }

@@ -26,6 +26,28 @@ export async function fetchCustomers() {
     }
 }
 
+export async function fetchActiveCustomers() {
+    noStore();
+    try {
+        const data = await sql<Customer>` 
+        SELECT
+          *,
+          case
+            when active = 1 then 'Yes'
+            else 'No'
+          end as active
+        FROM customers
+        WHERE active = 1
+        ORDER BY name ASC`;
+
+        const customer = data.rows;
+        return customer;
+    } catch (err) {
+        console.error('Database Error:', err);
+        throw new Error('Failed to fetch all customer.');
+    }
+}
+
 export async function fetchCustomerById(id: any) {
     noStore();
     try {
@@ -43,6 +65,28 @@ export async function fetchCustomerById(id: any) {
     } catch (error) {
         console.error('Database Error:', error);
         throw new Error('Failed to fetch customer.');
+    }
+}
+
+export async function fetchActiveCustomersByWarehouseId(id: any) {
+    noStore();
+    try {
+        const data = await sql<Customer>`
+            SELECT DISTINCT ON (c.id)
+                c.*,
+                CASE
+                    WHEN c.active = 1 THEN 'Yes'
+                    ELSE 'No'
+                END AS active
+            FROM customers c
+            LEFT JOIN items i ON i.customer_id = c.id
+            LEFT JOIN item_warehouses iw ON iw.item_id = i.id
+            WHERE iw.warehouse_id = ${id};`;
+
+        return data.rows;
+    } catch (error) {
+        console.error('Database Error:', error);
+        throw new Error('Failed to fetch customers.');
     }
 }
 

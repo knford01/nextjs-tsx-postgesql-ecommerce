@@ -195,7 +195,9 @@ export default function TaskBoardBody({ headers, tasksByColumn, sessionUser }: T
                                                     })
                                                 ) : (
                                                     // Show empty drop area if there are no tasks in the column
-                                                    <div style={{ padding: '10px', minHeight: '50px', textAlign: 'center', color: '#aaa' }}></div>
+                                                    <div style={{ padding: '10px', minHeight: '50px', textAlign: 'center', color: '#aaa' }}>
+                                                        Drop Task Here
+                                                    </div>
                                                 )}
                                                 {provided.placeholder}
                                             </div>
